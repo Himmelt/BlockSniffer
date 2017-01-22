@@ -37,18 +37,18 @@ public class Config {
     }
 
     public void loadComment(boolean server) {
-        hudX.setComment(server? "HudX" : I18n.format("config.hudX"));
-        hudX.setComment(server? "HudY" : I18n.format("config.hudY"));
-    }
-
-    private void bind() {
-        hudX.bind(config);
-        hudY.bind(config);
+        hudX.setComment(server? "HudX" : I18n.format("sniffer.config.hudX"));
+        hudY.setComment(server? "HudY" : I18n.format("sniffer.config.hudY"));
     }
 
     public void save() {
         config.save();
         saveTargets();
+    }
+
+    private void bind() {
+        hudX.bind(config);
+        hudY.bind(config);
     }
 
     private void loadTargets() {
@@ -62,6 +62,8 @@ public class Config {
             }
         } catch (IOException e) {
             logger.error(e.getMessage());
+        } finally {
+            proxy.sniffer.reset();
         }
     }
 

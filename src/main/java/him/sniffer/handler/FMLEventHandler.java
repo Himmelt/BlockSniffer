@@ -6,18 +6,19 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.Type;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
 import static him.sniffer.Sniffer.*;
 
+@SideOnly(Side.CLIENT)
 public class FMLEventHandler {
     @SubscribeEvent
     public void onKeyInput(KeyInputEvent event) {
         GuiScreen screen = Minecraft.getMinecraft().currentScreen;
         if (screen == null) {
             if (proxy.keySwitch.isPressed()) {
-                logger.info("Switch Key is Pressed!");
                 proxy.sniffer.switchTarget();
             }
         }

@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import him.sniffer.config.Target;
 import him.sniffer.config.Targets;
 import net.minecraft.block.Block;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -13,6 +14,7 @@ import net.minecraft.world.chunk.EmptyChunk;
 import java.awt.Color;
 import java.util.Iterator;
 
+import static him.sniffer.Sniffer.*;
 import static him.sniffer.constant.ModInfo.*;
 
 @SideOnly(Side.CLIENT)
@@ -25,9 +27,8 @@ public class BlockSniffer {
     public long delay = 500;
     private Iterator<Target> iterator;
     public final SnifferHud Hud = new SnifferHud();
-
     private final ParticleEffect particleEffect = new ParticleEffect();
-    private static final String MINECRAFT_KEY_PREFIX = "minecraft:";
+
     public ScanResult result = new ScanResult(null, false, 0, 0, 0);
 
     public void spawnParticles(World worldObj, double fromX, double fromY, double fromZ, double toX, double toY,
@@ -35,13 +36,15 @@ public class BlockSniffer {
         particleEffect.spawnParticles(worldObj, fromX, fromY, fromZ, toX, toY, toZ, color);
     }
 
-
-    public void setTarget(Target target) {
-        this.target = target;
-    }
-
     public Target getTarget() {
         return target;
+    }
+
+    public void reset() {
+        active = false;
+        iterator = null;
+        target = null;
+        result = new ScanResult(null, false, 0, 0, 0);
     }
 
     public void switchTarget() {
@@ -49,12 +52,16 @@ public class BlockSniffer {
             iterator = targets.getIterator();
         }
         if (iterator.hasNext()) {
+            if (!active) {
+                proxy.addChatMessage(I18n.format("sniffer.chat.avtive"));
+            }
             active = true;
+            result = new ScanResult(null, false, 0, 0, 0);
             target = iterator.next();
+            last = System.currentTimeMillis();
         } else {
-            iterator = null;
-            active = false;
-            target = null;
+            reset();
+            proxy.addChatMessage(I18n.format("sniffer.chat.inactive"));
         }
     }
 
@@ -64,8 +71,8 @@ public class BlockSniffer {
             int chunkZ = player.chunkCoordZ;
             int hRange = target.hRange;
             int length = RANGE.length;
-            for (int i = 0; RANGE[i][0] >= -hRange && RANGE[i][0] <= hRange &&
-                            RANGE[i][1] >= -hRange && RANGE[i][1] <= hRange && i < length; i++) {
+            for (int i = 0; i < length && RANGE[i][0] >= -hRange && RANGE[i][0] <= hRange &&
+                            RANGE[i][1] >= -hRange && RANGE[i][1] <= hRange; i++) {
                 Chunk chunk = player.worldObj.getChunkFromChunkCoords(chunkX + RANGE[i][0], chunkZ + RANGE[i][1]);
                 if (!(chunk instanceof EmptyChunk)) {
                     ScanResult result = scanChunk(chunk, player);

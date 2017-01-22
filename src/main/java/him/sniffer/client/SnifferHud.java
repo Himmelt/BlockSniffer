@@ -14,7 +14,7 @@ import static him.sniffer.Sniffer.*;
 @SideOnly(Side.CLIENT)
 public class SnifferHud {
 
-    private final ItemHudRenderer itemRenderer = new ItemHudRenderer();
+    private final HudRenderer itemRenderer = new HudRenderer();
 
     public double getHudX() {
         return proxy.config.hudX.get();
@@ -33,7 +33,6 @@ public class SnifferHud {
         if (result.found && result.getDistance() >= 1.0D) {
             label = String.format("%s: %.2f", name, result.getDistance() - 1.0D);
         }
-        logger.info("draw:" + label);
         int width = scaledresolution.getScaledWidth();
         int height = scaledresolution.getScaledHeight();
         byte iconHeight = 20;

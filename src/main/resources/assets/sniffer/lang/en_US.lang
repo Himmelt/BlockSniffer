@@ -1,0 +1,8 @@
+sniffer.switch=Enable/Disable Sniffer
+sniffer.chat.avtive=[Sniffer] Sniffer is avtived!
+sniffer.chat.inactive=[Sniffer] Sniffer is inactived!
+
+sniffer.cfg.hudX=The x coordinate of the HUD (Head-Up Display). Valid is anything between 0.0 (left) and 1.0 (right).
+sniffer.cfg.hudY=The y coordinate of the HUD (Head-Up Display). Valid is anything between 0.0 (top) and 1.0 (bottom).
+
+sniffer.cmd.usage1="/sniffer add sub [hold|look] [all|meta]"

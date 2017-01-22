@@ -1,0 +1,18 @@
+sniffer.switch=启用/禁用方块探测
+sniffer.chat.avtive=[方块探测] 探测器已开启!愉快地作弊吧!  23333333333
+sniffer.chat.inactive=[方块探测] 探测器已关闭!
+
+sniffer.cfg.hudX=模拟显示(头显)的x坐标,有效值[0.0(左),1.0(右)].
+sniffer.cfg.hudY=模拟显示(头显)的y坐标,有效值[0.0(上),1.0(下)].
+sniffer.cfg.save=[方块探测] 配置已保存.
+sniffer.cfg.reload=[方块探测] 配置已重新加载.
+
+sniffer.help.0=[方块探测]-------------------------------------------
+sniffer.help.1=[方块探测] /sniffer help   --- [帮助]
+sniffer.help.2=[方块探测] /sniffer sub    --- [设置子目标]需要开启探测
+sniffer.help.3=[方块探测] /sniffer target --- [设置目标]
+sniffer.help.4=[方块探测] /sniffer reload --- [重载配置]
+sniffer.help.5=[方块探测] /sniffer save   --- [保存配置]
+
+sniffer.log.worlderr=[方块探测] 目标世界不能执行该命令.
+sniffer.log.notplayer[方块探测] 该命令只能由玩家在游戏世界内执行.

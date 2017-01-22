@@ -24,6 +24,7 @@ public class Sniffer {
     public void preInit(FMLPreInitializationEvent event) {
         proxy.loadConfig(event.getModConfigurationDirectory());
         proxy.registKeyBinding();
+        proxy.registCommand();
     }
 
     @Mod.EventHandler

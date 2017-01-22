@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class ItemHudRenderer {
+public class HudRenderer {
 
     private final RenderItem itemRenderer = new RenderItem();
     private final Minecraft minecraft = FMLClientHandler.instance().getClient();

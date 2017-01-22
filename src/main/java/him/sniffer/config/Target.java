@@ -5,10 +5,12 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
 import java.awt.Color;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Target {
+public class Target implements Serializable {
+    private static final transient long serialVersionUID = 5468612871816526011L;
     @SerializedName("subs")
     private final Set<SubTarget> subs;
     @SerializedName("color")
@@ -22,7 +24,7 @@ public class Target {
     @SerializedName("v_range")
     public int vRange;
 
-    private SubTarget delegate;
+    private transient SubTarget delegate;
 
     public Target(String name, String color) {
         this(name, Color.decode(color));
@@ -49,6 +51,10 @@ public class Target {
                 match = block.equals(sub.getBlock());
             } else {
                 match = block.equals(sub.getBlock()) && meta == sub.getMeta();
+            }
+            if (match) {
+                delegate = sub;
+                break;
             }
         }
         return match;
@@ -82,14 +88,15 @@ public class Target {
         return delegate;
     }
 
-    public static class SubTarget {
+    public static class SubTarget implements Serializable {
+        private static final transient long serialVersionUID = -7506408081661144887L;
         @SerializedName("name")
         private final String name;
         @SerializedName("meta")
         private final Integer meta;
 
-        private Block block;
-        private ItemStack itemStack;
+        private transient Block block;
+        private transient ItemStack itemStack;
 
         public SubTarget(String name) {
             this.name = name;
