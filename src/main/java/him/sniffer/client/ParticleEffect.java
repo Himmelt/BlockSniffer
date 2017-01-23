@@ -15,8 +15,8 @@ public class ParticleEffect {
     private final Minecraft minecraft = FMLClientHandler.instance().getClient();
     private final float[] colorComponents = new float[3];
 
-    public void spawnParticles(World worldObj, double fromX, double fromY, double fromZ, double toX, double toY,
-                               double toZ, Color color) {
+    public void spawn(World worldObj, double fromX, double fromY, double fromZ, double toX, double toY,
+                      double toZ, Color color) {
         spawnSingleParticle(worldObj, 0.5D + toX, 0.5D + toY, 0.5D + toZ, 1.0F, color, 0.0D, 0.0D, 0.0D);
         intSpawnParticleTrail(worldObj, fromX, fromY, fromZ, toX + 0.5D, toY + 0.5D, toZ + 0.5D, color);
     }

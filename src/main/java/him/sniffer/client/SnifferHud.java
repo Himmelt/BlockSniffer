@@ -27,11 +27,11 @@ public class SnifferHud {
     public void draw() {
         Minecraft mc = FMLClientHandler.instance().getClient();
         ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
-        String name = proxy.sniffer.getTarget().getDisplayName();
+        String name = proxy.sniffer.getTarget().getDefaultName();
         String label = String.format("%s: ---", name);
         ScanResult result = proxy.sniffer.result;
-        if (result.found && result.getDistance() >= 1.0D) {
-            label = String.format("%s: %.2f", name, result.getDistance() - 1.0D);
+        if (result != null && result.getDistance() >= 1.0D) {
+            label = String.format("%s: %.2f", result.getItemStack().getDisplayName(), result.getDistance() - 1.0D);
         }
         int width = scaledresolution.getScaledWidth();
         int height = scaledresolution.getScaledHeight();
@@ -44,7 +44,11 @@ public class SnifferHud {
         int y = (int) (getHudY() * (height - iconHeight - lbHeight));
         mc.entityRenderer.setupOverlayRendering();
         drawRect(x - 2, y - 2, 20, 20, 1342177280);
-        itemRenderer.renderItem(proxy.sniffer.getTarget().getDelegate().getItemStack(), x, y);
+        if (result != null) {
+            itemRenderer.renderItem(result.getItemStack(), x, y);
+        } else {
+            itemRenderer.renderItem(proxy.sniffer.getTarget().getDelegate().getItemStack(), x, y);
+        }
         int maxX = width - lbWidth;
         int lbX = Math.max(0, Math.min(x, maxX));
         int lbY = y + iconHeight;

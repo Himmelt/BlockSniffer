@@ -57,7 +57,7 @@ group = "him.sniffer" // http://maven.apache.org/guides/mini/guide-naming-conven
 archivesBaseName = "sniffer"
 
 compileJava {
-    sourceCompatibility = targetCompatibility = "1.6"
+    sourceCompatibility = targetCompatibility = "1.8"
 }
 
 minecraft {

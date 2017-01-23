@@ -4,7 +4,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import him.sniffer.client.BlockSniffer;
-import him.sniffer.client.BlockSniffer.ScanResult;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,22 +20,17 @@ public class EventBusHandler {
         if (event.world instanceof WorldClient) {
             final BlockSniffer sniffer = proxy.sniffer;
             if (event.action == Action.RIGHT_CLICK_BLOCK && sniffer.isActive() &&
-                sniffer.last + sniffer.delay < System.currentTimeMillis()) {
+                sniffer.last + BlockSniffer.delay < System.currentTimeMillis()) {
                 final EntityPlayer player = event.entityPlayer;
                 sniffer.last = System.currentTimeMillis();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ScanResult result = sniffer.scanWorld(player);
-                        if (result.found) {
-                            sniffer.spawnParticles(
-                                    player.worldObj, player.posX, player.posY, player.posZ, result.x, result.y,
-                                    result.z, sniffer.getTarget().getColor()
-                            );
-                            sniffer.result = result;
-                        } else {
-                            sniffer.result = new ScanResult(null, false, 0, 0, 0);
-                        }
+                new Thread(() -> {
+                    sniffer.scanWorld(player);
+                    if (sniffer.result != null) {
+                        sniffer.particle.spawn(
+                                player.worldObj, player.posX, player.posY, player.posZ,
+                                sniffer.result.x, sniffer.result.y,
+                                sniffer.result.z, sniffer.getTarget().getColor()
+                        );
                     }
                 }).start();
             }

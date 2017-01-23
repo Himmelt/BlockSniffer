@@ -60,12 +60,12 @@ public class Target implements Serializable {
         return match;
     }
 
-    public String getDisplayName() {
-        String name = getDelegate().getBlock().getLocalizedName();
+    public String getDefaultName() {
+        String name = getDelegate().getItemStack().getDisplayName();
         if (name != null) {
             return name;
         } else {
-            name = getDelegate().getItemStack().getDisplayName();
+            name = getDelegate().getBlock().getLocalizedName();
             if (name != null) {
                 return name;
             }

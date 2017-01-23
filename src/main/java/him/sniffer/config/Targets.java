@@ -23,7 +23,7 @@ public class Targets {
         targets.add(new Target("iron_ore", Color.PINK));
     }
 
-    public Iterator<Target> getIterator() {
+    public Iterator<Target> iterator() {
         return targets.iterator();
     }
 }
