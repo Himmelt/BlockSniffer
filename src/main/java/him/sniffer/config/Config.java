@@ -44,6 +44,7 @@ public class Config {
     public void save() {
         config.save();
         saveTargets();
+        logger.info("config saved!");
     }
 
     private void bind() {

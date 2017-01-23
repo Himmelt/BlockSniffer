@@ -47,6 +47,10 @@ public class BlockSniffer {
         result = new ScanResult(null, false, 0, 0, 0);
     }
 
+    public void removeTarget() {
+
+    }
+
     public void switchTarget() {
         if (iterator == null) {
             iterator = targets.getIterator();

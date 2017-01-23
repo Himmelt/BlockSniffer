@@ -43,7 +43,7 @@ public class EventBusHandler {
         }
     }
 
-    @SubscribeEvent
+    //@SubscribeEvent
     public void onPlayerJoinWorld(EntityJoinWorldEvent event) {
         if (event.entity instanceof EntityPlayerSP && event.world instanceof WorldClient) {
             proxy.config.reload();
