@@ -19,8 +19,9 @@ public class Targets {
         comment = "targets";
         version = "1.7.10";
         targets = new HashSet<Target>();
-        targets.add(new Target("coal_ore", "#000000"));
+        targets.add(new Target("coal_ore", "#0qwer00"));
         targets.add(new Target("iron_ore", Color.PINK));
+
     }
 
     public Iterator<Target> iterator() {

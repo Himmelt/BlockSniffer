@@ -16,18 +16,18 @@ public class SnifferHud {
 
     private final HudRenderer itemRenderer = new HudRenderer();
 
-    public double getHudX() {
+    private static double getHudX() {
         return proxy.config.hudX.get();
     }
 
-    public double getHudY() {
+    private static double getHudY() {
         return proxy.config.hudY.get();
     }
 
     public void draw() {
         Minecraft mc = FMLClientHandler.instance().getClient();
         ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
-        String name = proxy.sniffer.getTarget().getDefaultName();
+        String name = proxy.sniffer.getTarget().getName();
         String label = String.format("%s: ---", name);
         ScanResult result = proxy.sniffer.result;
         if (result != null && result.getDistance() >= 1.0D) {

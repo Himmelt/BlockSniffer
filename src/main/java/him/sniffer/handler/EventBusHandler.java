@@ -11,6 +11,8 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
+import java.awt.Color;
+
 import static him.sniffer.Sniffer.*;
 
 @SideOnly(Side.CLIENT)
@@ -26,10 +28,13 @@ public class EventBusHandler {
                 new Thread(() -> {
                     sniffer.scanWorld(player);
                     if (sniffer.result != null) {
+                        Color color = sniffer.getTarget().getColor();
+                        if (color == null) {
+                            color = sniffer.result.getMapColor().darker();
+                        }
                         sniffer.particle.spawn(
                                 player.worldObj, player.posX, player.posY, player.posZ,
-                                sniffer.result.x, sniffer.result.y,
-                                sniffer.result.z, sniffer.getTarget().getColor()
+                                sniffer.result.x, sniffer.result.y, sniffer.result.z, color
                         );
                     }
                 }).start();

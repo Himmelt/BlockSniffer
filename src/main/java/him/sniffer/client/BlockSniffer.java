@@ -140,5 +140,9 @@ public class BlockSniffer {
             double lz = player.posZ - z;
             return Math.sqrt(lx * lx + ly * ly + lz * lz);
         }
+
+        public Color getMapColor() {
+            return new Color(block.getMapColor(meta).colorValue);
+        }
     }
 }
