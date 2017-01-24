@@ -19,12 +19,12 @@ public class Config {
     public final PropertyD hudY = new PropertyD(ModInfo.MODID, "hudY", 0.05D);
 
     private final Configuration config;
-    private final File targetJson;
+    private final File targetJsonFile;
     private static final Gson GSON = new GsonBuilder().create();
 
     public Config(File configDir) {
         config = new Configuration(new File(configDir, ModInfo.MODID + ".cfg"), ModInfo.VERSION);
-        targetJson = new File(new File(configDir, ModInfo.MODID), "target.json");
+        targetJsonFile = new File(new File(configDir, ModInfo.MODID), "target.json");
         reload();
         loadComment(false);
         save();
@@ -34,6 +34,7 @@ public class Config {
         config.load();
         bind();
         loadTargets();
+        logger.info("config reloaded!");
     }
 
     public void loadComment(boolean server) {
@@ -54,12 +55,14 @@ public class Config {
 
     private void loadTargets() {
         try {
-            if (!targetJson.exists() || !targetJson.isFile()) {
-                targetJson.delete();
-                targetJson.createNewFile();
-                proxy.sniffer.targets = new Targets();
+            if (!targetJsonFile.exists() || !targetJsonFile.isFile()) {
+                targetJsonFile.delete();
+                targetJsonFile.createNewFile();
+                proxy.sniffer.targetJson = new TargetJson();
+                proxy.sniffer.targetJson.checkout();
             } else {
-                proxy.sniffer.targets = GSON.fromJson(FileUtils.readFileToString(targetJson), Targets.class);
+                proxy.sniffer.targetJson = GSON.fromJson(FileUtils.readFileToString(targetJsonFile), TargetJson.class);
+                proxy.sniffer.targetJson.checkout();
             }
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -70,7 +73,7 @@ public class Config {
 
     private void saveTargets() {
         try {
-            FileUtils.writeStringToFile(targetJson, GSON.toJson(proxy.sniffer.targets));
+            FileUtils.writeStringToFile(targetJsonFile, GSON.toJson(proxy.sniffer.targetJson));
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

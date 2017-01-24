@@ -19,16 +19,14 @@ public class FMLEventHandler {
     @SubscribeEvent
     public void onKeyInput(KeyInputEvent event) {
         GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-        if (screen == null) {
-            if (proxy.keySwitch.isPressed()) {
-                proxy.sniffer.switchTarget();
-            }
+        if (!proxy.sniffer.forbid && screen == null && proxy.keySwitch.isPressed()) {
+            proxy.sniffer.switchTarget();
         }
     }
 
     @SubscribeEvent
     public void onTickEnd(TickEvent event) {
-        if (event.side == Side.CLIENT) {
+        if (!proxy.sniffer.forbid && event.side == Side.CLIENT) {
             if (event.type == Type.RENDER && event.phase == Phase.END) {
                 GuiScreen guiscreen = Minecraft.getMinecraft().currentScreen;
                 if (guiscreen == null && proxy.sniffer.isActive() &&
@@ -41,12 +39,16 @@ public class FMLEventHandler {
 
     @SubscribeEvent
     public void onClientConnect(ClientConnectedToServerEvent event) {
-        proxy.config.reload();
+        if (!proxy.sniffer.forbid) {
+            proxy.config.reload();
+        }
     }
 
     @SubscribeEvent
     public void onClientDisconnect(ClientDisconnectionFromServerEvent event) {
-        proxy.config.save();
+        if (!proxy.sniffer.forbid) {
+            proxy.config.save();
+        }
     }
 
 }

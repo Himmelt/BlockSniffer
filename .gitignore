@@ -1,5 +1,9 @@
-./gradle
-/build
+.gradle
+build
+gradle
+out
+replace
+run
 gradlew
 gradlew.bat
 *.iml

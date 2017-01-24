@@ -26,4 +26,5 @@ public abstract class CommonProxy {
 
     public abstract void addChatMessage(String message);
 
+    public abstract void checkout(boolean checkout);
 }

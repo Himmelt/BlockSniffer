@@ -3,10 +3,11 @@ package him.sniffer.client;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import him.sniffer.config.Target;
-import him.sniffer.config.Targets;
+import him.sniffer.config.TargetJson;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -27,11 +28,12 @@ public class BlockSniffer {
 
 
     public long last;
-    public Targets targets;
+    public TargetJson targetJson;
     public static final long delay = 500;
     public final SnifferHud Hud = new SnifferHud();
     public final ParticleEffect particle = new ParticleEffect();
     public ScanResult result;
+    public boolean forbid;
 
     public void spawnParticles(World worldObj, double fromX, double fromY, double fromZ, double toX, double toY,
                                double toZ, Color color) {
@@ -55,16 +57,20 @@ public class BlockSniffer {
 
     public void switchTarget() {
         if (iterator == null) {
-            iterator = targets.iterator();
+            iterator = targetJson.iterator();
         }
         if (iterator.hasNext()) {
-            if (!active) {
-                proxy.addChatMessage(I18n.format("sniffer.chat.avtive"));
-            }
-            active = true;
             result = null;
-            target = iterator.next();
             last = System.currentTimeMillis();
+            if (!active) {
+                active = true;
+                if (target == null) {
+                    target = iterator.next();
+                }
+                proxy.addChatMessage(I18n.format("sniffer.chat.avtive"));
+            } else {
+                target = iterator.next();
+            }
         } else {
             reset();
             proxy.addChatMessage(I18n.format("sniffer.chat.inactive"));
@@ -98,6 +104,9 @@ public class BlockSniffer {
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {
                     Block block = chunk.getBlock(x, y, z);
+                    if (block.equals(Blocks.air)) {
+                        continue;
+                    }
                     int meta = chunk.getBlockMetadata(x, y, z);
                     if (target.match(block, meta)) {
                         int blockX = chunk.xPosition * 16 + x;
@@ -112,6 +121,15 @@ public class BlockSniffer {
 
     public boolean isActive() {
         return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+        proxy.addChatMessage(I18n.format("sniffer.chat.inactive"));
+    }
+
+    public void addTarget(Target target) {
+        targetJson.addTarget(target);
     }
 
     public static class ScanResult {

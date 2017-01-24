@@ -31,4 +31,9 @@ public class ServerProxy extends CommonProxy {
     public void addChatMessage(String message) {
 
     }
+
+    @Override
+    public void checkout(boolean checkout) {
+
+    }
 }
