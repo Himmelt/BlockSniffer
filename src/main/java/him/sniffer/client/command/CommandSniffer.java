@@ -156,9 +156,14 @@ public class CommandSniffer implements ICommand {
                             if (dh < 0 || dh > 255) {
                                 dh = 64;
                             }
-                            target.depth[0] = dl;
-                            target.depth[1] = dh;
-                            proxy.addChatMessage(I18n.format("sf.target.d.set", dl, dh));
+                            if (dl > dh) {
+                                target.depth[0] = dh;
+                                target.depth[1] = dl;
+                            } else {
+                                target.depth[0] = dl;
+                                target.depth[1] = dh;
+                            }
+                            proxy.addChatMessage(I18n.format("sf.target.d.set", target.depth[0], target.depth[1]));
                         } else {
                             proxy.addChatMessage(I18n.format("sf.invalid.num"));
                         }
@@ -175,7 +180,7 @@ public class CommandSniffer implements ICommand {
                         if ("map".equals(value)) {
                             target.colorValue = value;
                             target.setColor(null);
-                            proxy.addChatMessage(I18n.format("sf.target.c.setmap"));
+                            proxy.addChatMessage(I18n.format("sf.target.c.map"));
                         } else {
                             Color color = ColorHelper.getColor(value);
                             if (color != null) {
