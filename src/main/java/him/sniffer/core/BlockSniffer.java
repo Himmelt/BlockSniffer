@@ -1,14 +1,13 @@
-package him.sniffer.client;
+package him.sniffer.core;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import him.sniffer.config.Target;
-import him.sniffer.config.TargetJson;
+import him.sniffer.client.gui.ParticleEffect;
+import him.sniffer.client.gui.SnifferHud;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.EmptyChunk;
@@ -25,7 +24,6 @@ public class BlockSniffer {
     private Target target;
     private boolean active;
     private Iterator<Target> iterator;
-
 
     public long last;
     public TargetJson targetJson;
@@ -111,7 +109,7 @@ public class BlockSniffer {
                     if (target.match(block, meta)) {
                         int blockX = chunk.xPosition * 16 + x;
                         int blockZ = chunk.zPosition * 16 + z;
-                        result = new ScanResult(player, block, meta, blockX, y, blockZ);
+                        result = new ScanResult(player, block, target, meta, blockX, y, blockZ);
                         return;
                     }
                 }
@@ -123,8 +121,8 @@ public class BlockSniffer {
         return active;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public void inActive() {
+        active = false;
         proxy.addChatMessage(I18n.format("sniffer.chat.inactive"));
     }
 
@@ -132,35 +130,4 @@ public class BlockSniffer {
         targetJson.addTarget(target);
     }
 
-    public static class ScanResult {
-
-        private final int meta;
-        private final Block block;
-        private final EntityPlayer player;
-        public final int x, y, z;
-
-        public ScanResult(EntityPlayer player, Block block, int meta, int x, int y, int z) {
-            this.player = player;
-            this.block = block;
-            this.meta = meta;
-            this.x = x;
-            this.y = y;
-            this.z = z;
-        }
-
-        public ItemStack getItemStack() {
-            return new ItemStack(block, 1, meta);
-        }
-
-        public double getDistance() {
-            double lx = player.posX - x;
-            double ly = player.posY - y;
-            double lz = player.posZ - z;
-            return Math.sqrt(lx * lx + ly * ly + lz * lz);
-        }
-
-        public Color getMapColor() {
-            return new Color(block.getMapColor(meta).colorValue);
-        }
-    }
 }

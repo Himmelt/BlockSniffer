@@ -55,7 +55,7 @@ public class ClientProxy extends CommonProxy {
     public void checkout(boolean checkout) {
         if (!checkout) {
             sniffer.forbid = true;
-            proxy.addChatMessage(I18n.format("sniffer.nocheck"));
+            proxy.addChatMessage(I18n.format("sniffer.forbid"));
             logger.error("!!! Has not been checkouted !!!");
             if (DEBUG) {
                 logger.catching(new Exception());

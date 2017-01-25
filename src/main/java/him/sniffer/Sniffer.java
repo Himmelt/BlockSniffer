@@ -19,7 +19,7 @@ public class Sniffer {
     @SidedProxy(clientSide = ModInfo.CLIENT_PROXY_CLASS, serverSide = ModInfo.SERVER_PROXY_CLASS)
     public static CommonProxy proxy;
     public static final boolean DEBUG = true;
-    public static final Logger logger = LogManager.getLogger("Sniffer");
+    public static final Logger logger = LogManager.getLogger(ModInfo.NAME);
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {

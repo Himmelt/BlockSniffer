@@ -1,4 +1,4 @@
-package him.sniffer.config;
+package him.sniffer.core;
 
 import com.google.gson.annotations.SerializedName;
 import net.minecraft.init.Blocks;
@@ -6,7 +6,6 @@ import net.minecraft.init.Blocks;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 import static him.sniffer.Sniffer.*;
 
@@ -19,7 +18,7 @@ public class TargetJson implements Serializable {
     @SerializedName("version")
     private final String version;
     @SerializedName("targets")
-    private Set<Target> targets;
+    private final HashSet<Target> targets;
 
     private transient boolean checkout;
     private static final long serialVersionUID = -569722550359231209L;
@@ -39,7 +38,6 @@ public class TargetJson implements Serializable {
      * 每次创建或新增都要检查!!!
      */
     public void checkout() {
-        targets = new HashSet<>(targets);//保证targets为HashSet对象
         targets.removeIf(target -> !target.checkout());//检查探测目标,不符合则删除
         checkout = true;
     }
@@ -64,4 +62,19 @@ public class TargetJson implements Serializable {
         targets.add(target);
         checkout();
     }
+
+    @Override
+    public int hashCode() {
+        return targets.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof TargetJson) {
+            TargetJson json = (TargetJson) obj;
+            return targets.equals(json.targets);
+        }
+        return false;
+    }
+
 }

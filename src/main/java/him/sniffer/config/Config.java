@@ -2,8 +2,9 @@ package him.sniffer.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import him.sniffer.config.property.PropertyD;
+import him.sniffer.config.property.IProperty.PropertyD;
 import him.sniffer.constant.ModInfo;
+import him.sniffer.core.TargetJson;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.commons.io.FileUtils;
@@ -65,7 +66,7 @@ public class Config {
                 proxy.sniffer.targetJson.checkout();
             }
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            logger.catching(e);
         } finally {
             proxy.sniffer.reset();
         }
@@ -75,7 +76,7 @@ public class Config {
         try {
             FileUtils.writeStringToFile(targetJsonFile, GSON.toJson(proxy.sniffer.targetJson));
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            logger.catching(e);
         }
     }
 }

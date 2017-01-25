@@ -1,7 +1,7 @@
 package him.sniffer.proxy;
 
-import him.sniffer.client.BlockSniffer;
 import him.sniffer.config.Config;
+import him.sniffer.core.BlockSniffer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
@@ -26,5 +26,10 @@ public abstract class CommonProxy {
 
     public abstract void addChatMessage(String message);
 
+    /**
+     * 安全检查,可以在生产环境中移除该检查.
+     *
+     * @param checkout 是否完成检查
+     */
     public abstract void checkout(boolean checkout);
 }

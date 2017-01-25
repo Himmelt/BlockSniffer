@@ -1,4 +1,4 @@
-package him.sniffer.client;
+package him.sniffer.client.gui;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;

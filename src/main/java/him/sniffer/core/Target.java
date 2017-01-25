@@ -1,4 +1,4 @@
-package him.sniffer.config;
+package him.sniffer.core;
 
 import com.google.gson.annotations.SerializedName;
 import net.minecraft.block.Block;
@@ -7,7 +7,6 @@ import net.minecraft.client.resources.I18n;
 import java.awt.Color;
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import static him.sniffer.Sniffer.*;
@@ -18,7 +17,7 @@ import static him.sniffer.Sniffer.*;
 public class Target implements Serializable {
 
     @SerializedName("subs")
-    private Set<SubTarget> subs;
+    private final HashSet<SubTarget> subs;
     @SerializedName("color")
     private String colorValue;
     /**
@@ -79,6 +78,20 @@ public class Target implements Serializable {
         this(Block.blockRegistry.getNameForObject(block), meta);
     }
 
+    @Override
+    public int hashCode() {
+        return subs.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Target) {
+            Target target = (Target) obj;
+            return target.subs.equals(obj);
+        }
+        return false;
+    }
+
     /**
      * 初始化各成员, 检查对象合法性与安全性, 移除非法对象.
      * 每次创建或新增都要检查!!!
@@ -86,7 +99,6 @@ public class Target implements Serializable {
      * @return 是否符合要求 boolean
      */
     public boolean checkout() {
-        subs = new HashSet<>(subs);//保证subs为HashSet对象
         subs.removeIf(subTarget -> !subTarget.checkout());//检查子目标,不符合则删除
         if (subs.size() >= 1) {
             // 设置代理
@@ -99,7 +111,8 @@ public class Target implements Serializable {
                     } else if ("map".equals(colorValue)) {
                         color = null;
                     } else {
-                        color = Color.getColor(colorValue);
+                        javafx.scene.paint.Color web = javafx.scene.paint.Color.web(colorValue);
+                        color = new Color(web.hashCode() >> 8 | 0xff000000).brighter();
                     }
                 } else {
                     color = null;
@@ -127,6 +140,7 @@ public class Target implements Serializable {
                 vRange = 16;
             }
             checkout = true;
+            return true;
         }
         return false;
     }

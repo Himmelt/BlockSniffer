@@ -2,8 +2,8 @@ package him.sniffer.client.command;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import him.sniffer.config.Target;
 import him.sniffer.constant.ModInfo;
+import him.sniffer.core.Target;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -74,7 +74,7 @@ public class CommandSniffer implements ICommand {
                     proxy.addChatMessage(I18n.format("sniffer.chat.reset"));
                     break;
                 case "off":
-                    proxy.sniffer.setActive(false);
+                    proxy.sniffer.inActive();
                     break;
                 case "target":
                     processTarget(cmds);

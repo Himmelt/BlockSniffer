@@ -1,4 +1,4 @@
-package him.sniffer.config;
+package him.sniffer.core;
 
 import com.google.gson.annotations.SerializedName;
 import net.minecraft.block.Block;
@@ -14,7 +14,7 @@ import static him.sniffer.Sniffer.*;
  */
 public class SubTarget implements Serializable {
     @SerializedName("name")
-    private final String name;
+    private String name;
     @SerializedName("meta")
     private final Integer meta;
 
@@ -43,6 +43,7 @@ public class SubTarget implements Serializable {
         if (name != null && !name.isEmpty()) {
             block = Block.getBlockFromName(name);
             if (block != null && !block.equals(Blocks.air)) {
+                name = Block.blockRegistry.getNameForObject(block);
                 itemStack = new ItemStack(block);
                 if (meta != null && meta >= 0 && meta <= 15) {
                     itemStack.setItemDamage(meta);
@@ -81,5 +82,25 @@ public class SubTarget implements Serializable {
      */
     public Integer getMeta() {
         return meta;
+    }
+
+    @Override
+    public int hashCode() {
+        if (name != null && !name.isEmpty()) {
+            block = Block.getBlockFromName(name);
+            if (block != null && !block.equals(Blocks.air)) {
+                return block.hashCode() + (meta == null? -1 : meta.hashCode());
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof SubTarget) {
+            SubTarget sub = (SubTarget) obj;
+            return meta == null? name.equals(sub.name) : name.equals(sub.name) && meta.equals(sub.meta);
+        }
+        return false;
     }
 }
