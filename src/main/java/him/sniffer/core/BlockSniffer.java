@@ -128,6 +128,7 @@ public class BlockSniffer {
 
     public void addTarget(Target target) {
         targetJson.addTarget(target);
+
     }
 
 }

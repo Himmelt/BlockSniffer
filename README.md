@@ -16,6 +16,13 @@ sf target d/depth 0 64
 sf target c/color #abcdef/red/white/map
 sf target rm/remove
 sf sub l/list
-sf sub add hold/look/name [meta]
+
+sf sub add hold/look          忽略meta
+sf sub add hold/look meta     当前meta
+sf sub add hold/look meta <meta>  指定meta
+sf sub add <name>
+sf sub add <name> meta
+sf sub add <name> meta <meta>
+
 sf sub remove/rm [name]
 ```

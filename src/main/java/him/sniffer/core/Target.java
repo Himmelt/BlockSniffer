@@ -209,4 +209,8 @@ public class Target implements Serializable {
         return delegate;
     }
 
+    public void addSubTarget(SubTarget sub) {
+        subs.add(sub);
+        checkout();
+    }
 }

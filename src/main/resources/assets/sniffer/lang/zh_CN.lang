@@ -19,6 +19,10 @@ sniffer.cmd.err=[方块探测] 指令执行条件不符合,该命令只能由玩
 
 sniffer.unknowBlock=未知方块
 
-sniffer.sub.needtarget=[方块探测] 该指令需要探测器处于开启状态,并有一个探测目标.
-
 sniffer.forbid=[方块探测] 检查到严重错误,已禁用探测器!请联系作者:@Himmelt
+
+sf.sub.add.ok=[方块探测] 已成功添加子目标到当前探测目标.
+sf.sub.add.not=[方块探测] 没有探测目标或探测器已关闭.
+sf.sub.add.holdair=[方块探测] 请检查手持物是否为有效方块.
+sf.sub.add.lookair=[方块探测] 请检查光标处是否为有效方块.
+sf.sub.add.notname=[方块探测] 你输入的不是有效方块的名称.

@@ -3,7 +3,7 @@ package him.sniffer.client.command;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import him.sniffer.constant.ModInfo;
-import him.sniffer.core.Target;
+import him.sniffer.core.SubTarget;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -111,10 +111,10 @@ public class CommandSniffer implements ICommand {
                 processSubRemove(cmds);
                 break;
             default:
-                showSubHelp();
+                showSubHelp("");
             }
         } else {
-            showSubHelp();
+            showSubHelp("");
         }
     }
 
@@ -122,61 +122,65 @@ public class CommandSniffer implements ICommand {
 
     }
 
-    private void processSubAdd(EntityPlayer player, List<String> cmds) {
+    private static void processSubAdd(EntityPlayer player, List<String> cmds) {
         if (cmds.size() >= 1) {
             if (proxy.sniffer.isActive() && proxy.sniffer.getTarget() != null) {
-
                 Block block = null;
                 Integer meta = null;
-
-                /* 预处理 block,meta,name */
                 switch (cmds.get(0)) {
-                case "hold": {
+                case "hold":
                     ItemStack itemStack = player.getHeldItem();
+                    if (itemStack == null || itemStack.getItem() == null) {
+                        proxy.addChatMessage(I18n.format("sf.sub.add.holdair"));
+                        return;
+                    }
                     block = Block.getBlockFromItem(itemStack.getItem());
                     meta = itemStack.getItemDamage();
-                    if (Blocks.air.equals(block)) {
-                        proxy.addChatMessage(I18n.format("sniffer.cmd.holdair"));
+                    if (block == null || block.equals(Blocks.air)) {
+                        proxy.addChatMessage(I18n.format("sf.sub.add.holdair"));
                         return;
                     }
                     break;
-                }
-                case "look": {
+                case "look":
                     MovingObjectPosition focused = Minecraft.getMinecraft().objectMouseOver;
-                    if (focused.typeOfHit == MovingObjectType.BLOCK) {
+                    if (focused != null && focused.typeOfHit == MovingObjectType.BLOCK) {
                         block = player.worldObj.getBlock(focused.blockX, focused.blockY, focused.blockZ);
                         meta = player.worldObj.getBlockMetadata(focused.blockX, focused.blockY, focused.blockZ);
-                        if (Blocks.air.equals(block)) {
-                            proxy.addChatMessage(I18n.format("sniffer.cmd.lookair"));
-                            return;
-                        }
-                    } else {
-                        proxy.addChatMessage(I18n.format("sniffer.cmd.lookair"));
+                    }
+                    if (block == null || block.equals(Blocks.air)) {
+                        proxy.addChatMessage(I18n.format("sf.sub.add.lookair"));
+                        return;
+                    }
+                    break;
+                default:
+                    block = (Block) Block.blockRegistry.getObject(cmds.get(0));
+                    meta = 0;
+                    if (block == null || block.equals(Blocks.air)) {
+                        proxy.addChatMessage(I18n.format("sf.sub.add.notname"));
                         return;
                     }
                     break;
                 }
-                case "name": {
-                    break;
-                }
-                }
-
-                if (cmds.size() >= 2 && "meta".equals(cmds.get(1))) {
-                    if (cmds.size() >= 3 && PATTERN_NUM.matcher(cmds.get(2)).matches()) {
-                        meta = Integer.valueOf(cmds.get(2));
-                        if (meta < 0 || meta > 15) {
-                            meta = 0;
-                        }
+                if (cmds.size() == 1) {
+                    meta = null;
+                } else if (cmds.size() == 2 && "meta".equals(cmds.get(1))) {
+                    //
+                } else if (cmds.size() == 3 && "meta".equals(cmds.get(1)) &&
+                           PATTERN_NUM.matcher(cmds.get(2)).matches()) {
+                    meta = Integer.valueOf(cmds.get(2));
+                    if (meta < 0 || meta > 15) {
+                        meta = 0;
                     }
                 } else {
-                    meta = null;
+                    showSubHelp("add");
                 }
-                proxy.sniffer.addTarget(new Target(block, meta));
+                proxy.sniffer.getTarget().addSubTarget(new SubTarget(block, meta));
+                proxy.addChatMessage(I18n.format("sf.sub.add.ok"));
             } else {
-                proxy.addChatMessage(I18n.format("sniffer.sub.needtarget"));
+                proxy.addChatMessage(I18n.format("sf.sub.add.not"));
             }
         } else {
-            showSubHelp();
+            showSubHelp("add");
         }
     }
 
@@ -196,8 +200,15 @@ public class CommandSniffer implements ICommand {
         proxy.addChatMessage(I18n.format("sniffer.chat.version", ModInfo.VERSION));
     }
 
-    private void showSubHelp() {
+    private static void showSubHelp(String cmd) {
+        switch (cmd) {
+        case "add":
+            break;
+        case "remove":
+            break;
+        default:
 
+        }
     }
 
     private void showTargetHelp() {

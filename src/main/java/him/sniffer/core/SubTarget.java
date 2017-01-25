@@ -34,6 +34,11 @@ public class SubTarget implements Serializable {
         this.meta = meta;
     }
 
+    public SubTarget(Block block, Integer meta) {
+        name = Block.blockRegistry.getNameForObject(block);
+        this.meta = meta;
+    }
+
     /**
      * 初始化各成员,检查对象合法性与安全性,移除非法对象.
      *
