@@ -8,11 +8,9 @@ import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.EmptyChunk;
 
-import java.awt.Color;
 import java.util.Iterator;
 
 import static him.sniffer.Sniffer.*;
@@ -33,11 +31,6 @@ public class BlockSniffer {
     public ScanResult result;
     public boolean forbid;
 
-    public void spawnParticles(World worldObj, double fromX, double fromY, double fromZ, double toX, double toY,
-                               double toZ, Color color) {
-        particle.spawn(worldObj, fromX, fromY, fromZ, toX, toY, toZ, color);
-    }
-
     public Target getTarget() {
         return target;
     }
@@ -56,6 +49,9 @@ public class BlockSniffer {
                 target = iterator.next();
             } else {
                 reset();
+                if (targetJson.size() < 1) {
+                    proxy.addChatMessage(I18n.format("sf.target.cla.ok"));
+                }
             }
             return true;
         }
@@ -63,24 +59,28 @@ public class BlockSniffer {
     }
 
     public void switchTarget() {
-        if (iterator == null) {
-            iterator = targetJson.iterator();
-        }
-        if (iterator.hasNext()) {
-            result = null;
-            last = System.currentTimeMillis();
-            if (!active) {
-                active = true;
-                if (target == null) {
+        if (targetJson.size() >= 1) {
+            if (iterator == null) {
+                iterator = targetJson.iterator();
+            }
+            if (iterator.hasNext()) {
+                result = null;
+                last = System.currentTimeMillis();
+                if (!active) {
+                    active = true;
+                    if (target == null) {
+                        target = iterator.next();
+                    }
+                    proxy.addChatMessage(I18n.format("sf.avtive"));
+                } else {
                     target = iterator.next();
                 }
-                proxy.addChatMessage(I18n.format("sf.avtive"));
             } else {
-                target = iterator.next();
+                reset();
+                proxy.addChatMessage(I18n.format("sf.inactive"));
             }
         } else {
-            reset();
-            proxy.addChatMessage(I18n.format("sf.inactive"));
+            proxy.addChatMessage(I18n.format("sf.empty"));
         }
     }
 

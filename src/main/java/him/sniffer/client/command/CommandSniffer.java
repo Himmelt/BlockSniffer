@@ -82,139 +82,180 @@ public class CommandSniffer implements ICommand {
             String cmd = cmds.get(0);
             cmds.remove(0);
             Target target = proxy.sniffer.getTarget();
-            switch (cmd) {
-            case "i":
-            case "info":
-                showTargetInfo();
-                break;
-            case "m":
-            case "mode":
-                if (cmds.isEmpty()) {
-                    int m = target.mode;
-                    String mode = I18n.format(m == 0? "sf.mode.0" : "sf.mode.1");
-                    proxy.addChatMessage(I18n.format("sf.target.m.get", mode));
-                } else {
-                    if ("1".equals(cmds.get(0))) {
-                        target.mode = 1;
-                        proxy.addChatMessage(I18n.format("sf.target.m.set", I18n.format("sf.mode.1")));
+            if (proxy.sniffer.isActive() && target != null) {
+                switch (cmd) {
+                case "i":
+                case "info":
+                    proxy.addChatMessage(I18n.format(
+                            "sf.target.info", target.mode, target.colorValue, target.depth[0], target.depth[1],
+                            target.hRange, target.vRange));
+                    break;
+                case "m":
+                case "mode":
+                    if (cmds.isEmpty()) {
+                        int m = target.mode;
+                        String mode = I18n.format(m == 0? "sf.mode.0" : "sf.mode.1");
+                        proxy.addChatMessage(I18n.format("sf.target.m.get", mode));
                     } else {
-                        target.mode = 0;
-                        proxy.addChatMessage(I18n.format("sf.target.m.set", I18n.format("sf.mode.0")));
-                    }
-                }
-                break;
-            case "h":
-            case "hrange":
-                if (cmds.isEmpty()) {
-                    proxy.addChatMessage(I18n.format("sf.target.h.get", target.hRange));
-                } else {
-                    if (PATTERN_NUM.matcher(cmds.get(0)).matches()) {
-                        int h = Integer.valueOf(cmds.get(0));
-                        if (h < 0 || h > 15) {
-                            h = 1;
+                        if ("1".equals(cmds.get(0))) {
+                            target.mode = 1;
+                            proxy.addChatMessage(I18n.format("sf.target.m.set", I18n.format("sf.mode.1")));
+                        } else {
+                            target.mode = 0;
+                            proxy.addChatMessage(I18n.format("sf.target.m.set", I18n.format("sf.mode.0")));
                         }
-                        target.hRange = h;
-                        proxy.addChatMessage(I18n.format("sf.target.h.set", h));
+                    }
+                    break;
+                case "h":
+                case "hrange":
+                    if (cmds.isEmpty()) {
+                        proxy.addChatMessage(I18n.format("sf.target.h.get", target.hRange));
+                    } else {
+                        if (PATTERN_NUM.matcher(cmds.get(0)).matches()) {
+                            int h = Integer.valueOf(cmds.get(0));
+                            if (h < 0 || h > 15) {
+                                h = 1;
+                            }
+                            target.hRange = h;
+                            proxy.addChatMessage(I18n.format("sf.target.h.set", h));
+                        } else {
+                            proxy.addChatMessage(I18n.format("sf.invalid.num"));
+                        }
+                    }
+                    break;
+                case "v":
+                case "vrange":
+                    if (cmds.isEmpty()) {
+                        proxy.addChatMessage(I18n.format("sf.target.v.get", target.vRange));
+                    } else {
+                        if (PATTERN_NUM.matcher(cmds.get(0)).matches()) {
+                            int v = Integer.valueOf(cmds.get(0));
+                            if (v < 0 || v > 255) {
+                                v = 16;
+                            }
+                            target.vRange = v;
+                            proxy.addChatMessage(I18n.format("sf.target.v.set", v));
+                        } else {
+                            proxy.addChatMessage(I18n.format("sf.invalid.num"));
+                        }
+                    }
+                    break;
+                case "d":
+                case "depth":
+                    if (cmds.isEmpty()) {
+                        proxy.addChatMessage(I18n.format("sf.target.d.get", target.depth[0], target.depth[1]));
+                    } else if (cmds.size() >= 2) {
+                        if (PATTERN_NUM.matcher(cmds.get(0)).matches() &&
+                            PATTERN_NUM.matcher(cmds.get(1)).matches()) {
+                            int dl = Integer.valueOf(cmds.get(0));
+                            int dh = Integer.valueOf(cmds.get(1));
+                            if (dl < 0 || dl > 255) {
+                                dl = 0;
+                            }
+                            if (dh < 0 || dh > 255) {
+                                dh = 64;
+                            }
+                            target.depth[0] = dl;
+                            target.depth[1] = dh;
+                            proxy.addChatMessage(I18n.format("sf.target.d.set", dl, dh));
+                        } else {
+                            proxy.addChatMessage(I18n.format("sf.invalid.num"));
+                        }
                     } else {
                         proxy.addChatMessage(I18n.format("sf.invalid.num"));
                     }
-                }
-                break;
-            case "v":
-            case "vrange":
-                if (cmds.isEmpty()) {
-                    proxy.addChatMessage(I18n.format("sf.target.v.get", target.vRange));
-                } else {
-                    if (PATTERN_NUM.matcher(cmds.get(0)).matches()) {
-                        int v = Integer.valueOf(cmds.get(0));
-                        if (v < 0 || v > 255) {
-                            v = 16;
-                        }
-                        target.vRange = v;
-                        proxy.addChatMessage(I18n.format("sf.target.v.set", v));
+                    break;
+                case "c":
+                case "color":
+                    if (cmds.isEmpty()) {
+                        proxy.addChatMessage(I18n.format("sf.target.c.get", target.colorValue));
                     } else {
-                        proxy.addChatMessage(I18n.format("sf.invalid.num"));
-                    }
-                }
-                break;
-            case "d":
-            case "depth":
-                if (cmds.isEmpty()) {
-                    proxy.addChatMessage(I18n.format("sf.target.d.get", target.depth[0], target.depth[1]));
-                } else if (cmds.size() >= 2) {
-                    if (PATTERN_NUM.matcher(cmds.get(0)).matches() &&
-                        PATTERN_NUM.matcher(cmds.get(1)).matches()) {
-                        int dl = Integer.valueOf(cmds.get(0));
-                        int dh = Integer.valueOf(cmds.get(1));
-                        if (dl < 0 || dl > 255) {
-                            dl = 0;
-                        }
-                        if (dh < 0 || dh > 255) {
-                            dh = 64;
-                        }
-                        target.depth[0] = dl;
-                        target.depth[1] = dh;
-                        proxy.addChatMessage(I18n.format("sf.target.d.set", dl, dh));
-                    } else {
-                        proxy.addChatMessage(I18n.format("sf.invalid.num"));
-                    }
-                } else {
-                    proxy.addChatMessage(I18n.format("sf.invalid.num"));
-                }
-                break;
-            case "c":
-            case "color":
-                if (cmds.isEmpty()) {
-                    proxy.addChatMessage(I18n.format("sf.target.c.get", target.colorValue));
-                } else {
-                    String value = cmds.get(0);
-                    if (PATTERN_COLOR.matcher(value).matches()) {
-                        Color color = Color.decode(value);
-                        target.colorValue = value;
-                        target.setColor(color);
-                        proxy.addChatMessage(I18n.format("sf.target.c.set", value));
-                    } else if ("map".equals(value)) {
-                        target.colorValue = value;
-                        target.setColor(null);
-                        proxy.addChatMessage(I18n.format("sf.target.c.setmap"));
-                    } else {
-                        try {
-                            javafx.scene.paint.Color web = javafx.scene.paint.Color.web(value);
+                        String value = cmds.get(0);
+                        if (PATTERN_COLOR.matcher(value).matches()) {
+                            Color color = Color.decode(value);
                             target.colorValue = value;
-                            target.setColor(new Color(web.hashCode() >> 8 | 0xff000000).brighter());
+                            target.setColor(color);
                             proxy.addChatMessage(I18n.format("sf.target.c.set", value));
-                        } catch (Exception ignored) {
-                            proxy.addChatMessage(I18n.format("sf.invalid.color"));
+                        } else if ("map".equals(value)) {
+                            target.colorValue = value;
+                            target.setColor(null);
+                            proxy.addChatMessage(I18n.format("sf.target.c.setmap"));
+                        } else {
+                            try {
+                                javafx.scene.paint.Color web = javafx.scene.paint.Color.web(value);
+                                target.colorValue = value;
+                                target.setColor(new Color(web.hashCode() >> 8 | 0xff000000).brighter());
+                                proxy.addChatMessage(I18n.format("sf.target.c.set", value));
+                            } catch (Exception ignored) {
+                                proxy.addChatMessage(I18n.format("sf.invalid.color"));
+                            }
                         }
                     }
-                }
-                break;
-            case "rm":
-            case "remove":
-                if (proxy.sniffer.removeTarget()) {
-                    proxy.addChatMessage(I18n.format("sf.target.rm.ok"));
-                } else {
-                    proxy.addChatMessage(I18n.format("sf.target.rm.fail"));
-                }
-                break;
-            case "cla":
-            case "clear":
-                if (cmds.isEmpty()) {
-                    proxy.addChatMessage(I18n.format("sf.target.cla.hint"));
-                } else {
-                    if ("confirm".equals(cmds.get(0))) {
-                        proxy.sniffer.ClearTarget();
-                        proxy.addChatMessage(I18n.format("sf.target.cla.ok"));
+                    break;
+                case "rm":
+                case "remove":
+                    if (proxy.sniffer.removeTarget()) {
+                        proxy.addChatMessage(I18n.format("sf.target.rm.ok"));
                     } else {
-                        showTargetHelp("clear");
+                        proxy.addChatMessage(I18n.format("sf.target.rm.fail"));
                     }
+                    break;
+                case "cla":
+                case "clear":
+                    if (cmds.isEmpty()) {
+                        proxy.addChatMessage(I18n.format("sf.target.cla.hint"));
+                    } else {
+                        if ("confirm".equals(cmds.get(0))) {
+                            proxy.sniffer.ClearTarget();
+                            proxy.addChatMessage(I18n.format("sf.target.cla.ok"));
+                        } else {
+                            showTargetHelp("clear");
+                        }
+                    }
+                    break;
+                case "add":
+                    processTargetAdd(player, cmds);
+                    break;
+                default:
+                    showTargetHelp("");
                 }
-                break;
-            case "add":
-                processTargetAdd(player, cmds);
-                break;
-            default:
-                showTargetHelp("");
+            } else {
+                switch (cmd) {
+                case "i":
+                case "info":
+                case "m":
+                case "mode":
+                case "h":
+                case "hrange":
+                case "v":
+                case "vrange":
+                case "d":
+                case "depth":
+                case "c":
+                case "color":
+                case "rm":
+                case "remove":
+                    proxy.addChatMessage(I18n.format("sf.target.not"));
+                    break;
+                case "cla":
+                case "clear":
+                    if (cmds.isEmpty()) {
+                        proxy.addChatMessage(I18n.format("sf.target.cla.hint"));
+                    } else {
+                        if ("confirm".equals(cmds.get(0))) {
+                            proxy.sniffer.ClearTarget();
+                            proxy.addChatMessage(I18n.format("sf.target.cla.ok"));
+                        } else {
+                            showTargetHelp("clear");
+                        }
+                    }
+                    break;
+                case "add":
+                    processTargetAdd(player, cmds);
+                    break;
+                default:
+                    showTargetHelp("");
+                }
             }
         } else {
             showTargetHelp("");
@@ -222,11 +263,60 @@ public class CommandSniffer implements ICommand {
     }
 
     private static void processTargetAdd(EntityPlayer player, List<String> cmds) {
-
-    }
-
-    private static void showTargetInfo() {
-
+        if (cmds.size() >= 1) {
+            Block block = null;
+            Integer meta = null;
+            switch (cmds.get(0)) {
+            case "hold":
+                ItemStack itemStack = player.getHeldItem();
+                if (itemStack == null || itemStack.getItem() == null) {
+                    proxy.addChatMessage(I18n.format("sf.sub.add.holdair"));
+                    return;
+                }
+                block = Block.getBlockFromItem(itemStack.getItem());
+                meta = itemStack.getItemDamage();
+                if (block == null || block.equals(Blocks.air)) {
+                    proxy.addChatMessage(I18n.format("sf.sub.add.holdair"));
+                    return;
+                }
+                break;
+            case "look":
+                MovingObjectPosition focused = Minecraft.getMinecraft().objectMouseOver;
+                if (focused != null && focused.typeOfHit == MovingObjectType.BLOCK) {
+                    block = player.worldObj.getBlock(focused.blockX, focused.blockY, focused.blockZ);
+                    meta = player.worldObj.getBlockMetadata(focused.blockX, focused.blockY, focused.blockZ);
+                }
+                if (block == null || block.equals(Blocks.air)) {
+                    proxy.addChatMessage(I18n.format("sf.sub.add.lookair"));
+                    return;
+                }
+                break;
+            default:
+                block = (Block) Block.blockRegistry.getObject(cmds.get(0));
+                meta = 0;
+                if (block == null || block.equals(Blocks.air)) {
+                    proxy.addChatMessage(I18n.format("sf.sub.add.notname"));
+                    return;
+                }
+                break;
+            }
+            if (cmds.size() == 1) {
+                meta = null;
+            } else if (cmds.size() == 2 && "meta".equals(cmds.get(1))) {
+                //
+            } else if (cmds.size() == 3 && "meta".equals(cmds.get(1)) && PATTERN_NUM.matcher(cmds.get(2)).matches()) {
+                meta = Integer.valueOf(cmds.get(2));
+                if (meta < 0 || meta > 15) {
+                    meta = 0;
+                }
+            } else {
+                showTargetHelp("add");
+            }
+            proxy.sniffer.addTarget(new Target(block, meta));
+            proxy.addChatMessage(I18n.format("sf.target.add.ok"));
+        } else {
+            showTargetHelp("add");
+        }
     }
 
     private static void processSub(EntityPlayer player, List<String> cmds) {
@@ -330,7 +420,16 @@ public class CommandSniffer implements ICommand {
     }
 
     private static void showTargetHelp(String cmd) {
-
+        switch (cmd) {
+        case "add":
+            proxy.addChatMessage("target add help");
+            break;
+        case "clear":
+            proxy.addChatMessage("target clear help");
+            break;
+        default:
+            proxy.addChatMessage("target help");
+        }
     }
 
     private static void showSubHelp(String cmd) {

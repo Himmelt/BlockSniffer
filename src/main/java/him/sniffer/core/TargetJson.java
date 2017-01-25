@@ -77,4 +77,7 @@ public class TargetJson implements Serializable {
         return false;
     }
 
+    public int size() {
+        return targets.size();
+    }
 }
