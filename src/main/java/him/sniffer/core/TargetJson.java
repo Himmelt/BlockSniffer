@@ -1,7 +1,6 @@
 package him.sniffer.core;
 
 import com.google.gson.annotations.SerializedName;
-import net.minecraft.init.Blocks;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -30,7 +29,6 @@ public class TargetJson implements Serializable {
         comment = "targets";
         version = "1.7.10";
         targets = new HashSet<Target>();
-        targets.add(new Target(Blocks.diamond_block, null));
     }
 
     /**

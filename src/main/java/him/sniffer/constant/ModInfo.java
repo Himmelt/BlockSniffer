@@ -11,7 +11,6 @@ public final class ModInfo {
     public static final String SERVER_PROXY_CLASS = "him.sniffer.proxy.ServerProxy";
     public static final Pattern PATTERN_NUM = Pattern.compile("[0-9]{1,3}");
     public static final Pattern PATTERN_NAME = Pattern.compile("^tile.*name$");
-    public static final Pattern PATTERN_COLOR = Pattern.compile("#[0-9a-fA-F]{1,6}");
 
     public static final int[][] RANGE = {
             { 0, 0 }, { -1, 0 }, { 0, -1 }, { 0, 1 }, { 1, 0 }, { -1, -1 }, { -1, 1 }, { 1, -1 }, { 1, 1 }, { -2, 0 },

@@ -1,7 +1,7 @@
 package him.sniffer.core;
 
 import com.google.gson.annotations.SerializedName;
-import him.sniffer.constant.ModInfo;
+import him.sniffer.constant.ColorHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 
@@ -103,22 +103,8 @@ public class Target implements Serializable {
             // 设置代理
             delegate = subs.iterator().next();
             // 检查颜色
-            try {
-                if (colorValue != null && !colorValue.isEmpty()) {
-                    if (ModInfo.PATTERN_COLOR.matcher(colorValue).matches()) {
-                        color = Color.decode(colorValue);
-                    } else if ("map".equals(colorValue)) {
-                        color = null;
-                    } else {
-                        javafx.scene.paint.Color web = javafx.scene.paint.Color.web(colorValue);
-                        color = new Color(web.hashCode() >> 8 | 0xff000000).brighter();
-                    }
-                } else {
-                    color = null;
-                    colorValue = "map";
-                }
-            } catch (Exception ignored) {
-                color = null;
+            color = ColorHelper.getColor(colorValue);
+            if (color == null) {
                 colorValue = "map";
             }
             // 检查模式

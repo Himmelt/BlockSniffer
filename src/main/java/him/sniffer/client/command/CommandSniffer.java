@@ -2,6 +2,7 @@ package him.sniffer.client.command;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import him.sniffer.constant.ColorHelper;
 import him.sniffer.core.SubTarget;
 import him.sniffer.core.Target;
 import net.minecraft.block.Block;
@@ -171,22 +172,17 @@ public class CommandSniffer implements ICommand {
                         proxy.addChatMessage(I18n.format("sf.target.c.get", target.colorValue));
                     } else {
                         String value = cmds.get(0);
-                        if (PATTERN_COLOR.matcher(value).matches()) {
-                            Color color = Color.decode(value);
-                            target.colorValue = value;
-                            target.setColor(color);
-                            proxy.addChatMessage(I18n.format("sf.target.c.set", value));
-                        } else if ("map".equals(value)) {
+                        if ("map".equals(value)) {
                             target.colorValue = value;
                             target.setColor(null);
                             proxy.addChatMessage(I18n.format("sf.target.c.setmap"));
                         } else {
-                            try {
-                                javafx.scene.paint.Color web = javafx.scene.paint.Color.web(value);
+                            Color color = ColorHelper.getColor(value);
+                            if (color != null) {
                                 target.colorValue = value;
-                                target.setColor(new Color(web.hashCode() >> 8 | 0xff000000).brighter());
+                                target.setColor(color);
                                 proxy.addChatMessage(I18n.format("sf.target.c.set", value));
-                            } catch (Exception ignored) {
+                            } else {
                                 proxy.addChatMessage(I18n.format("sf.invalid.color"));
                             }
                         }
