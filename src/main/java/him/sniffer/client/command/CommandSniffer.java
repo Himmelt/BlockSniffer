@@ -2,8 +2,8 @@ package him.sniffer.client.command;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import him.sniffer.constant.ModInfo;
 import him.sniffer.core.SubTarget;
+import him.sniffer.core.Target;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -17,33 +17,16 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import static him.sniffer.Sniffer.*;
+import static him.sniffer.constant.ModInfo.*;
 
 @SideOnly(Side.CLIENT)
 public class CommandSniffer implements ICommand {
-    private static final Pattern PATTERN_NUM = Pattern.compile("[0-9]{1,2}");
-
-    @Override
-    public String getCommandName() {
-        return ModInfo.MODID;
-    }
-
-    @Override
-    public String getCommandUsage(ICommandSender sender) {
-        return null;
-    }
-
-    @Override
-    public List<String> getCommandAliases() {
-        List<String> alias = new ArrayList<String>();
-        alias.add("sf");
-        return alias;
-    }
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
@@ -58,26 +41,26 @@ public class CommandSniffer implements ICommand {
                     break;
                 case "v":
                 case "version":
-                    showVersion();
+                    proxy.addChatMessage(I18n.format("sf.version", VERSION));
                     break;
                 case "s":
                 case "save":
                     proxy.config.save();
-                    proxy.addChatMessage(I18n.format("sniffer.cfg.save"));
+                    proxy.addChatMessage(I18n.format("sf.save"));
                     break;
                 case "reload":
                     proxy.config.reload();
-                    proxy.addChatMessage(I18n.format("sniffer.cfg.reload"));
+                    proxy.addChatMessage(I18n.format("sf.reload"));
                     break;
                 case "reset":
                     proxy.sniffer.reset();
-                    proxy.addChatMessage(I18n.format("sniffer.chat.reset"));
+                    proxy.addChatMessage(I18n.format("sf.reset"));
                     break;
                 case "off":
                     proxy.sniffer.inActive();
                     break;
                 case "target":
-                    processTarget(cmds);
+                    processTarget((EntityPlayer) sender, cmds);
                     break;
                 case "sub":
                     processSub((EntityPlayer) sender, cmds);
@@ -89,12 +72,164 @@ public class CommandSniffer implements ICommand {
                 showHelp();
             }
         } else {
-            logger.info(I18n.format("sniffer.cmd.err"));
-            sender.addChatMessage(new ChatComponentText(I18n.format("sniffer.cmd.err")));
+            logger.info(I18n.format("sf.cmd.error"));
+            sender.addChatMessage(new ChatComponentText(I18n.format("sf.cmd.error")));
         }
     }
 
-    private void processSub(EntityPlayer player, List<String> cmds) {
+    private static void processTarget(EntityPlayer player, List<String> cmds) {
+        if (cmds.size() >= 1) {
+            String cmd = cmds.get(0);
+            cmds.remove(0);
+            Target target = proxy.sniffer.getTarget();
+            switch (cmd) {
+            case "i":
+            case "info":
+                showTargetInfo();
+                break;
+            case "m":
+            case "mode":
+                if (cmds.isEmpty()) {
+                    int m = target.mode;
+                    String mode = I18n.format(m == 0? "sf.mode.0" : "sf.mode.1");
+                    proxy.addChatMessage(I18n.format("sf.target.m.get", mode));
+                } else {
+                    if ("1".equals(cmds.get(0))) {
+                        target.mode = 1;
+                        proxy.addChatMessage(I18n.format("sf.target.m.set", I18n.format("sf.mode.1")));
+                    } else {
+                        target.mode = 0;
+                        proxy.addChatMessage(I18n.format("sf.target.m.set", I18n.format("sf.mode.0")));
+                    }
+                }
+                break;
+            case "h":
+            case "hrange":
+                if (cmds.isEmpty()) {
+                    proxy.addChatMessage(I18n.format("sf.target.h.get", target.hRange));
+                } else {
+                    if (PATTERN_NUM.matcher(cmds.get(0)).matches()) {
+                        int h = Integer.valueOf(cmds.get(0));
+                        if (h < 0 || h > 15) {
+                            h = 1;
+                        }
+                        target.hRange = h;
+                        proxy.addChatMessage(I18n.format("sf.target.h.set", h));
+                    } else {
+                        proxy.addChatMessage(I18n.format("sf.invalid.num"));
+                    }
+                }
+                break;
+            case "v":
+            case "vrange":
+                if (cmds.isEmpty()) {
+                    proxy.addChatMessage(I18n.format("sf.target.v.get", target.vRange));
+                } else {
+                    if (PATTERN_NUM.matcher(cmds.get(0)).matches()) {
+                        int v = Integer.valueOf(cmds.get(0));
+                        if (v < 0 || v > 255) {
+                            v = 16;
+                        }
+                        target.vRange = v;
+                        proxy.addChatMessage(I18n.format("sf.target.v.set", v));
+                    } else {
+                        proxy.addChatMessage(I18n.format("sf.invalid.num"));
+                    }
+                }
+                break;
+            case "d":
+            case "depth":
+                if (cmds.isEmpty()) {
+                    proxy.addChatMessage(I18n.format("sf.target.d.get", target.depth[0], target.depth[1]));
+                } else if (cmds.size() >= 2) {
+                    if (PATTERN_NUM.matcher(cmds.get(0)).matches() &&
+                        PATTERN_NUM.matcher(cmds.get(1)).matches()) {
+                        int dl = Integer.valueOf(cmds.get(0));
+                        int dh = Integer.valueOf(cmds.get(1));
+                        if (dl < 0 || dl > 255) {
+                            dl = 0;
+                        }
+                        if (dh < 0 || dh > 255) {
+                            dh = 64;
+                        }
+                        target.depth[0] = dl;
+                        target.depth[1] = dh;
+                        proxy.addChatMessage(I18n.format("sf.target.d.set", dl, dh));
+                    } else {
+                        proxy.addChatMessage(I18n.format("sf.invalid.num"));
+                    }
+                } else {
+                    proxy.addChatMessage(I18n.format("sf.invalid.num"));
+                }
+                break;
+            case "c":
+            case "color":
+                if (cmds.isEmpty()) {
+                    proxy.addChatMessage(I18n.format("sf.target.c.get", target.colorValue));
+                } else {
+                    String value = cmds.get(0);
+                    if (PATTERN_COLOR.matcher(value).matches()) {
+                        Color color = Color.decode(value);
+                        target.colorValue = value;
+                        target.setColor(color);
+                        proxy.addChatMessage(I18n.format("sf.target.c.set", value));
+                    } else if ("map".equals(value)) {
+                        target.colorValue = value;
+                        target.setColor(null);
+                        proxy.addChatMessage(I18n.format("sf.target.c.setmap"));
+                    } else {
+                        try {
+                            javafx.scene.paint.Color web = javafx.scene.paint.Color.web(value);
+                            target.colorValue = value;
+                            target.setColor(new Color(web.hashCode() >> 8 | 0xff000000).brighter());
+                            proxy.addChatMessage(I18n.format("sf.target.c.set", value));
+                        } catch (Exception ignored) {
+                            proxy.addChatMessage(I18n.format("sf.invalid.color"));
+                        }
+                    }
+                }
+                break;
+            case "rm":
+            case "remove":
+                if (proxy.sniffer.removeTarget()) {
+                    proxy.addChatMessage(I18n.format("sf.target.rm.ok"));
+                } else {
+                    proxy.addChatMessage(I18n.format("sf.target.rm.fail"));
+                }
+                break;
+            case "cla":
+            case "clear":
+                if (cmds.isEmpty()) {
+                    proxy.addChatMessage(I18n.format("sf.target.cla.hint"));
+                } else {
+                    if ("confirm".equals(cmds.get(0))) {
+                        proxy.sniffer.ClearTarget();
+                        proxy.addChatMessage(I18n.format("sf.target.cla.ok"));
+                    } else {
+                        showTargetHelp("clear");
+                    }
+                }
+                break;
+            case "add":
+                processTargetAdd(player, cmds);
+                break;
+            default:
+                showTargetHelp("");
+            }
+        } else {
+            showTargetHelp("");
+        }
+    }
+
+    private static void processTargetAdd(EntityPlayer player, List<String> cmds) {
+
+    }
+
+    private static void showTargetInfo() {
+
+    }
+
+    private static void processSub(EntityPlayer player, List<String> cmds) {
         if (cmds.size() >= 1) {
             String cmd = cmds.get(0);
             cmds.remove(0);
@@ -116,10 +251,6 @@ public class CommandSniffer implements ICommand {
         } else {
             showSubHelp("");
         }
-    }
-
-    private void processSubRemove(List<String> cmds) {
-
     }
 
     private static void processSubAdd(EntityPlayer player, List<String> cmds) {
@@ -184,20 +315,22 @@ public class CommandSniffer implements ICommand {
         }
     }
 
-    private void showSubList() {
+    private static void processSubRemove(List<String> cmds) {
 
     }
 
-    private void processTarget(List<String> cmds) {
-        if (cmds.size() >= 1) {
-
-        } else {
-            showTargetHelp();
-        }
+    private static void showHelp() {
+        proxy.addChatMessage(I18n.format("sf.help.0"));
+        proxy.addChatMessage(I18n.format("sf.help.1"));
+        proxy.addChatMessage(I18n.format("sf.help.2"));
+        proxy.addChatMessage(I18n.format("sf.help.3"));
+        proxy.addChatMessage(I18n.format("sf.help.4"));
+        proxy.addChatMessage(I18n.format("sf.help.5"));
+        proxy.addChatMessage(I18n.format("sf.help.0"));
     }
 
-    private static void showVersion() {
-        proxy.addChatMessage(I18n.format("sniffer.chat.version", ModInfo.VERSION));
+    private static void showTargetHelp(String cmd) {
+
     }
 
     private static void showSubHelp(String cmd) {
@@ -211,18 +344,25 @@ public class CommandSniffer implements ICommand {
         }
     }
 
-    private void showTargetHelp() {
+    private static void showSubList() {
 
     }
 
-    private static void showHelp() {
-        proxy.addChatMessage(I18n.format("sniffer.help.0"));
-        proxy.addChatMessage(I18n.format("sniffer.help.1"));
-        proxy.addChatMessage(I18n.format("sniffer.help.2"));
-        proxy.addChatMessage(I18n.format("sniffer.help.3"));
-        proxy.addChatMessage(I18n.format("sniffer.help.4"));
-        proxy.addChatMessage(I18n.format("sniffer.help.5"));
-        proxy.addChatMessage(I18n.format("sniffer.help.0"));
+    @Override
+    public String getCommandName() {
+        return MODID;
+    }
+
+    @Override
+    public String getCommandUsage(ICommandSender sender) {
+        return null;
+    }
+
+    @Override
+    public List<String> getCommandAliases() {
+        List<String> alias = new ArrayList<String>();
+        alias.add("sf");
+        return alias;
     }
 
     @Override
@@ -242,7 +382,7 @@ public class CommandSniffer implements ICommand {
 
     @Override
     public int compareTo(Object command) {
-        return compareTo((ICommand) command);
+        return getCommandName().compareTo(((ICommand) command).getCommandName());
     }
 
     @Override
@@ -255,7 +395,4 @@ public class CommandSniffer implements ICommand {
         return obj instanceof CommandSniffer;
     }
 
-    public int compareTo(ICommand command) {
-        return getCommandName().compareTo(command.getCommandName());
-    }
 }

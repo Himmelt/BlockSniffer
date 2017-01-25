@@ -49,8 +49,17 @@ public class BlockSniffer {
         result = null;
     }
 
-    public void removeTarget() {
-
+    public boolean removeTarget() {
+        if (target != null && iterator != null) {
+            iterator.remove();
+            if (iterator.hasNext()) {
+                target = iterator.next();
+            } else {
+                reset();
+            }
+            return true;
+        }
+        return false;
     }
 
     public void switchTarget() {
@@ -65,13 +74,13 @@ public class BlockSniffer {
                 if (target == null) {
                     target = iterator.next();
                 }
-                proxy.addChatMessage(I18n.format("sniffer.chat.avtive"));
+                proxy.addChatMessage(I18n.format("sf.avtive"));
             } else {
                 target = iterator.next();
             }
         } else {
             reset();
-            proxy.addChatMessage(I18n.format("sniffer.chat.inactive"));
+            proxy.addChatMessage(I18n.format("sf.inactive"));
         }
     }
 
@@ -123,12 +132,16 @@ public class BlockSniffer {
 
     public void inActive() {
         active = false;
-        proxy.addChatMessage(I18n.format("sniffer.chat.inactive"));
+        proxy.addChatMessage(I18n.format("sf.inactive"));
     }
 
     public void addTarget(Target target) {
         targetJson.addTarget(target);
-
     }
 
+    public void ClearTarget() {
+        reset();
+        targetJson = new TargetJson();
+        targetJson.checkout();
+    }
 }

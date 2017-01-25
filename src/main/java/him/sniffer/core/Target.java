@@ -1,15 +1,16 @@
 package him.sniffer.core;
 
 import com.google.gson.annotations.SerializedName;
+import him.sniffer.constant.ModInfo;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 
 import java.awt.Color;
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.regex.Pattern;
 
 import static him.sniffer.Sniffer.*;
+import static him.sniffer.constant.ModInfo.*;
 
 /**
  * 探测目标.
@@ -19,7 +20,7 @@ public class Target implements Serializable {
     @SerializedName("subs")
     private final HashSet<SubTarget> subs;
     @SerializedName("color")
-    private String colorValue;
+    public String colorValue;
     /**
      * 工作模式:
      * 0 -- [depth_0 , depth_1]
@@ -48,8 +49,6 @@ public class Target implements Serializable {
     private transient SubTarget delegate;
 
     private static final transient long serialVersionUID = 5468612871816526011L;
-    private static final transient Pattern PATTERN_NAME = Pattern.compile("^tile.*name$");
-    private static final transient Pattern PATTERN_COLOR = Pattern.compile("#[0-9a-fA-F]{1,6}");
 
     /**
      * 探测目标构造函数.
@@ -106,7 +105,7 @@ public class Target implements Serializable {
             // 检查颜色
             try {
                 if (colorValue != null && !colorValue.isEmpty()) {
-                    if (PATTERN_COLOR.matcher(colorValue).matches()) {
+                    if (ModInfo.PATTERN_COLOR.matcher(colorValue).matches()) {
                         color = Color.decode(colorValue);
                     } else if ("map".equals(colorValue)) {
                         color = null;
@@ -212,5 +211,9 @@ public class Target implements Serializable {
     public void addSubTarget(SubTarget sub) {
         subs.add(sub);
         checkout();
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 }

@@ -1,5 +1,7 @@
 package him.sniffer.constant;
 
+import java.util.regex.Pattern;
+
 public final class ModInfo {
     public static final String NAME = "Sniffer";
     public static final String MODID = "sniffer";
@@ -7,6 +9,9 @@ public final class ModInfo {
     public static final String ACMCVERSION = "[1.7.10]";
     public static final String CLIENT_PROXY_CLASS = "him.sniffer.proxy.ClientProxy";
     public static final String SERVER_PROXY_CLASS = "him.sniffer.proxy.ServerProxy";
+    public static final Pattern PATTERN_NUM = Pattern.compile("[0-9]{1,3}");
+    public static final Pattern PATTERN_NAME = Pattern.compile("^tile.*name$");
+    public static final Pattern PATTERN_COLOR = Pattern.compile("#[0-9a-fA-F]{1,6}");
 
     public static final int[][] RANGE = {
             { 0, 0 }, { -1, 0 }, { 0, -1 }, { 0, 1 }, { 1, 0 }, { -1, -1 }, { -1, 1 }, { 1, -1 }, { 1, 1 }, { -2, 0 },

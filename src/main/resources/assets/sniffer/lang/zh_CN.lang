@@ -1,28 +1,32 @@
 sniffer.switch=启用/禁用方块探测
-sniffer.chat.avtive=[方块探测] 探测器已开启,愉♂悦地挖矿吧! 23333333333
-sniffer.chat.inactive=[方块探测] 探测器已关闭!
-sniffer.chat.reset=[方块探测] 探测器已复位!
-sniffer.chat.version=[方块探测] 探测器版本为: %s
+
 sniffer.cfg.hudX=模拟显示(头显)的x坐标,有效值[0.0(左),1.0(右)].
 sniffer.cfg.hudY=模拟显示(头显)的y坐标,有效值[0.0(上),1.0(下)].
 sniffer.cfg.save=[方块探测] 配置已保存.
 sniffer.cfg.reload=[方块探测] 配置已重新加载.
 
-sniffer.help.0=[方块探测]-------------------------------------------
-sniffer.help.1=[方块探测] /sniffer help   --- [帮助]
-sniffer.help.2=[方块探测] /sniffer sub    --- [设置子目标]需要开启探测
-sniffer.help.3=[方块探测] /sniffer target --- [设置目标]
-sniffer.help.4=[方块探测] /sniffer reload --- [重载配置]
-sniffer.help.5=[方块探测] /sniffer save   --- [保存配置]
+sf.help.0=[方块探测]===========================================
+sf.help.1=[方块探测] /sniffer help   --- [帮助]
+sf.help.2=[方块探测] /sniffer sub    --- [设置子目标]需要开启探测
+sf.help.3=[方块探测] /sniffer target --- [设置目标]
+sf.help.4=[方块探测] /sniffer reload --- [重载配置]
+sf.help.5=[方块探测] /sniffer save   --- [保存配置]
 
-sniffer.cmd.err=[方块探测] 指令执行条件不符合,该命令只能由玩家在游戏世界内执行.
 
 sniffer.unknowBlock=未知方块
 
 sniffer.forbid=[方块探测] 检查到严重错误,已禁用探测器!请联系作者:@Himmelt
+
+sf.avtive=[方块探测] 探测器已开启,愉♂悦地挖矿吧! 23333333333
+sf.inactive=[方块探测] 探测器已关闭!
+sf.reset=[方块探测] 探测器已复位!
+sf.cmd.error=[方块探测] 不符合指令执行条件,该命令只能由玩家在游戏世界内执行.
+
 
 sf.sub.add.ok=[方块探测] 已成功添加子目标到当前探测目标.
 sf.sub.add.not=[方块探测] 没有探测目标或探测器已关闭.
 sf.sub.add.holdair=[方块探测] 请检查手持物是否为有效方块.
 sf.sub.add.lookair=[方块探测] 请检查光标处是否为有效方块.
 sf.sub.add.notname=[方块探测] 你输入的不是有效方块的名称.
+
+sf.version=[方块探测] 探测器版本为: %s
