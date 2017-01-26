@@ -4,7 +4,7 @@ sf.chat.head=[方块探测]
 sf.key.switch=启用/禁用方块探测
 sniffer.cfg.hudX=模拟显示(头显)的x坐标,有效值[0.0(左),1.0(右)].
 sniffer.cfg.hudY=模拟显示(头显)的y坐标,有效值[0.0(上),1.0(下)].
-sniffer.unknowBlock=未知方块
+sf.unknow.block=未知方块
 sf.forbid=检查到严重错误,已禁用探测器!请联系作者:@Himmelt
 
 sf.version=探测器版本为: %s
@@ -40,7 +40,7 @@ sf.help.target.add.0=用法: /sf target add <name>|hold|look [meta] [<meta>]
 sf.help.target.add.1=示例: /sf target add stone       添加名为stone的方块,无视元数据
 sf.help.target.add.2=示例: /sf target add hold meta   添加手中的方块,使用当前元数据
 sf.help.target.add.3=示例: /sf target add look meta 3 添加光标所在方块,使用指定元数据
-sf.help.target.cla=使用confirm以确认 /sf target cla/clear confirm
+sf.help.target.cla=使用 confirm 以确认 /sf target cla/clear confirm
 
 sf.add.holdair=请检查手持物是否为有效方块.
 sf.add.lookair=请检查光标处是否为有效方块.
@@ -62,7 +62,7 @@ sf.target.rm.ok=已成功移除当前探测目标.
 sf.target.rm.fail=目标移除失败!
 sf.target.cla.hint=你确定要移除所有探测目标吗?(确认指令/sf target cla/clear confirm)
 sf.target.cla.ok=已清除所有探测目标,将自动关闭探测器!
-sf.target.not=探测目标不存在,请开启探测器并保证当前有一个探测目标.
+sf.target.not=探测器未激活,或当前没有探测目标.
 
 sf.target.add.ok=已成功添加探测目标 %s.
 
@@ -74,7 +74,6 @@ sf.sub.rm.fail=移除失败,可能没有该uid对应的子目标,请先用/sf su
 sf.sub.rm.t=当前子目标已被全部移除,将尝试删除当前探测目标.
 
 sf.sub.add.ok=已成功添加子目标 %s.
-sf.sub.add.not=没有探测目标或探测器已关闭.
 
 sf.cmd.error=不符合指令执行条件,该命令只能由玩家在游戏世界内执行.
 

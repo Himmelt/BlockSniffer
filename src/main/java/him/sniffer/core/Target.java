@@ -172,7 +172,7 @@ public class Target implements Serializable {
         if (name != null && !PATTERN_NAME.matcher(name).matches()) {
             return name;
         }
-        return I18n.format("sniffer.unknowBlock");
+        return I18n.format("sf.unknow.block");
     }
 
     /**

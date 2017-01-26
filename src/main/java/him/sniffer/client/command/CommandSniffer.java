@@ -66,7 +66,11 @@ public class CommandSniffer implements ICommand {
                     processTarget((EntityPlayer) sender, cmds);
                     break;
                 case "sub":
-                    processSub((EntityPlayer) sender, cmds);
+                    if (proxy.sniffer.isActive() && proxy.sniffer.target != null) {
+                        processSub((EntityPlayer) sender, cmds);
+                    } else {
+                        proxy.addChatMessage("sf.target.not");
+                    }
                     break;
                 default:
                     showHelp();
@@ -314,14 +318,31 @@ public class CommandSniffer implements ICommand {
                 if (meta < 0 || meta > 15) {
                     meta = 0;
                 }
-            } else {
-                showTargetHelp("add");
             }
             proxy.sniffer.addTarget(new Target(block, meta));
-            proxy.addChatMessage("sf.target.add.ok");
+            proxy.addChatMessage("sf.target.add.ok", getBlockName(block, meta));
         } else {
             showTargetHelp("add");
         }
+    }
+
+    private static String getBlockName(Block block, Integer meta) {
+        if (block == null) {
+            return I18n.format("sf.unknow.block");
+        }
+        ItemStack itemStack = new ItemStack(block);
+        if (meta != null) {
+            itemStack.setItemDamage(meta);
+        }
+        String name = itemStack.getDisplayName();
+        if (name != null && !name.isEmpty()) {
+            return name;
+        }
+        name = block.getLocalizedName();
+        if (name != null && !name.isEmpty() && !PATTERN_NAME.matcher(name).matches()) {
+            return name;
+        }
+        return I18n.format("sf.unknow.block");
     }
 
     private static void processSub(EntityPlayer player, List<String> cmds) {
@@ -341,11 +362,13 @@ public class CommandSniffer implements ICommand {
                 if (cmds.size() >= 1) {
                     if (PATTERN_NUM.matcher(cmds.get(0)).matches()) {
                         int uid = Integer.valueOf(cmds.get(0));
+                        SubTarget sub = proxy.sniffer.target.getSublist().get(uid);
+                        Block block = sub.getBlock();
+                        Integer meta = sub.getMeta();
                         int result = proxy.sniffer.target.removeSubTarget(uid);
                         if (result == -1) {
                             proxy.addChatMessage("sf.sub.rm.fail");
-                        }
-                        if (result == 0) {
+                        } else if (result == 0) {
                             proxy.addChatMessage("sf.sub.rm.t");
                             int size = proxy.sniffer.removeTarget();
                             if (size == -1) {
@@ -357,7 +380,7 @@ public class CommandSniffer implements ICommand {
                                 proxy.addChatMessage("sf.target.rm.ok");
                             }
                         } else {
-                            proxy.addChatMessage("sf.sub.rm.ok");
+                            proxy.addChatMessage("sf.sub.rm.ok", getBlockName(block, meta));
                         }
                     } else {
                         proxy.addChatMessage("sf.invalid.num");
@@ -376,61 +399,53 @@ public class CommandSniffer implements ICommand {
 
     private static void processSubAdd(EntityPlayer player, List<String> cmds) {
         if (cmds.size() >= 1) {
-            if (proxy.sniffer.isActive() && proxy.sniffer.target != null) {
-                Block block = null;
-                Integer meta = null;
-                switch (cmds.get(0)) {
-                case "hold":
-                    ItemStack itemStack = player.getHeldItem();
-                    if (itemStack == null || itemStack.getItem() == null) {
-                        proxy.addChatMessage("sf.add.holdair");
-                        return;
-                    }
-                    block = Block.getBlockFromItem(itemStack.getItem());
-                    meta = itemStack.getItemDamage();
-                    if (block == null || block.equals(Blocks.air)) {
-                        proxy.addChatMessage("sf.add.holdair");
-                        return;
-                    }
-                    break;
-                case "look":
-                    MovingObjectPosition focused = Minecraft.getMinecraft().objectMouseOver;
-                    if (focused != null && focused.typeOfHit == MovingObjectType.BLOCK) {
-                        block = player.worldObj.getBlock(focused.blockX, focused.blockY, focused.blockZ);
-                        meta = player.worldObj.getBlockMetadata(focused.blockX, focused.blockY, focused.blockZ);
-                    }
-                    if (block == null || block.equals(Blocks.air)) {
-                        proxy.addChatMessage("sf.add.lookair");
-                        return;
-                    }
-                    break;
-                default:
-                    block = (Block) Block.blockRegistry.getObject(cmds.get(0));
-                    meta = 0;
-                    if (block == null || block.equals(Blocks.air)) {
-                        proxy.addChatMessage("sf.add.notname");
-                        return;
-                    }
-                    break;
+            Block block = null;
+            Integer meta = null;
+            switch (cmds.get(0)) {
+            case "hold":
+                ItemStack itemStack = player.getHeldItem();
+                if (itemStack == null || itemStack.getItem() == null) {
+                    proxy.addChatMessage("sf.add.holdair");
+                    return;
                 }
-                if (cmds.size() == 1) {
-                    meta = null;
-                } else if (cmds.size() == 2 && "meta".equals(cmds.get(1))) {
-                    //
-                } else if (cmds.size() == 3 && "meta".equals(cmds.get(1)) &&
-                           PATTERN_NUM.matcher(cmds.get(2)).matches()) {
-                    meta = Integer.valueOf(cmds.get(2));
-                    if (meta < 0 || meta > 15) {
-                        meta = 0;
-                    }
-                } else {
-                    showSubHelp("add");
+                block = Block.getBlockFromItem(itemStack.getItem());
+                meta = itemStack.getItemDamage();
+                if (block == null || block.equals(Blocks.air)) {
+                    proxy.addChatMessage("sf.add.holdair");
+                    return;
                 }
-                proxy.sniffer.target.addSubTarget(new SubTarget(block, meta));
-                proxy.addChatMessage("sf.sub.add.ok");
-            } else {
-                proxy.addChatMessage("sf.sub.add.not");
+                break;
+            case "look":
+                MovingObjectPosition focused = Minecraft.getMinecraft().objectMouseOver;
+                if (focused != null && focused.typeOfHit == MovingObjectType.BLOCK) {
+                    block = player.worldObj.getBlock(focused.blockX, focused.blockY, focused.blockZ);
+                    meta = player.worldObj.getBlockMetadata(focused.blockX, focused.blockY, focused.blockZ);
+                }
+                if (block == null || block.equals(Blocks.air)) {
+                    proxy.addChatMessage("sf.add.lookair");
+                    return;
+                }
+                break;
+            default:
+                block = (Block) Block.blockRegistry.getObject(cmds.get(0));
+                meta = 0;
+                if (block == null || block.equals(Blocks.air)) {
+                    proxy.addChatMessage("sf.add.notname");
+                    return;
+                }
             }
+            if (cmds.size() == 1) {
+                meta = null;
+            } else if (cmds.size() == 2 && "meta".equals(cmds.get(1))) {
+                //
+            } else if (cmds.size() == 3 && "meta".equals(cmds.get(1)) && PATTERN_NUM.matcher(cmds.get(2)).matches()) {
+                meta = Integer.valueOf(cmds.get(2));
+                if (meta < 0 || meta > 15) {
+                    meta = 0;
+                }
+            }
+            proxy.sniffer.target.addSubTarget(new SubTarget(block, meta));
+            proxy.addChatMessage("sf.sub.add.ok", getBlockName(block, meta));
         } else {
             showSubHelp("add");
         }
