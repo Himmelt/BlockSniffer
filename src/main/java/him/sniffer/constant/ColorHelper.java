@@ -9,6 +9,21 @@ public final class ColorHelper {
     private static final Pattern PATTERN_COLOR = Pattern.compile("#[0-9a-fA-F]{1,6}");
     private static final HashMap<String, Color> colorMap = new HashMap<>();
 
+    public static final Color MCCOLOR1 = new Color(0, 0, 170);
+    public static final Color MCCOLOR2 = new Color(0, 170, 0);
+    public static final Color MCCOLOR3 = new Color(0, 170, 170);
+    public static final Color MCCOLOR4 = new Color(170, 0, 0);
+    public static final Color MCCOLOR5 = new Color(170, 0, 170);
+    public static final Color MCCOLOR6 = new Color(255, 170, 0);
+    public static final Color MCCOLOR7 = new Color(170, 170, 170);
+    public static final Color MCCOLOR8 = new Color(85, 85, 85);
+    public static final Color MCCOLOR9 = new Color(85, 85, 255);
+    public static final Color MCCOLORA = new Color(85, 255, 85);
+    public static final Color MCCOLORB = new Color(85, 255, 255);
+    public static final Color MCCOLORC = new Color(255, 85, 85);
+    public static final Color MCCOLORD = new Color(255, 85, 255);
+    public static final Color MCCOLORE = new Color(255, 255, 85);
+
     public static final Color ALICEBLUE = new Color(240, 248, 255);
     public static final Color ANTIQUEWHITE = new Color(250, 235, 215);
     public static final Color AQUA = new Color(0, 255, 255);
@@ -152,6 +167,23 @@ public final class ColorHelper {
     public static final Color YELLOWGREEN = new Color(154, 205, 50);
 
     static {
+        colorMap.put("&0", BLACK);
+        colorMap.put("&1", MCCOLOR1);
+        colorMap.put("&2", MCCOLOR2);
+        colorMap.put("&3", MCCOLOR3);
+        colorMap.put("&4", MCCOLOR4);
+        colorMap.put("&5", MCCOLOR5);
+        colorMap.put("&6", MCCOLOR6);
+        colorMap.put("&7", MCCOLOR7);
+        colorMap.put("&8", MCCOLOR8);
+        colorMap.put("&9", MCCOLOR9);
+        colorMap.put("&a", MCCOLORA);
+        colorMap.put("&b", MCCOLORB);
+        colorMap.put("&c", MCCOLORC);
+        colorMap.put("&d", MCCOLORD);
+        colorMap.put("&e", MCCOLORE);
+        colorMap.put("&f", WHITE);
+
         colorMap.put("aliceblue", ALICEBLUE);
         colorMap.put("antiquewhite", ANTIQUEWHITE);
         colorMap.put("aqua", AQUA);

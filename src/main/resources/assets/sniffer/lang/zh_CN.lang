@@ -16,12 +16,13 @@ sf.inactive=探测器已关闭!
 sf.empty=探测目标为空,请先添加探测目标!
 
 sf.help.0===================================================================
-sf.help.1=/sniffer help   --- 帮助
-sf.help.2=/sniffer <cmd>  --- 子命令帮助
-sf.help.3=/sniffer sub    --- 设置子目标
-sf.help.4=/sniffer target --- 设置目标
-sf.help.5=/sniffer reload --- 重载配置
-sf.help.6=/sniffer save   --- 保存配置
+sf.help.1=Mod主页 https://coding.net/u/Himmelt/p/Sniffer/git
+sf.help.2=/sniffer help   --- 帮助
+sf.help.3=/sniffer <cmd>  --- 子命令帮助
+sf.help.4=/sniffer sub    --- 设置子目标
+sf.help.5=/sniffer target --- 设置目标
+sf.help.6=/sniffer reload --- 重载配置
+sf.help.7=/sniffer save   --- 保存配置
 
 sf.help.target.0=/sf target rm/remove          --- 移除当前探测目标
 sf.help.target.1=/sf target cla/clear          --- 移除所有探测目标
@@ -66,9 +67,9 @@ sf.target.not=探测器未激活,或当前没有探测目标.
 
 sf.target.add.ok=已成功添加探测目标 %s.
 
-sf.sub.list=当前探测目标包含以下子目标:%s
+sf.sub.list=当前探测目标包含以下子目标:
 
-sf.sub.rm.list=可使用 /sf sub rm <uid> 移除以下子目标:%s
+sf.sub.rm.list=可使用 /sf sub rm <uid> 移除以下子目标:
 sf.sub.rm.ok=已成功移除子目标 %s.
 sf.sub.rm.fail=移除失败,可能没有该uid对应的子目标,请先用/sf sub l/list 查看当前子目标.
 sf.sub.rm.t=当前子目标已被全部移除,将尝试删除当前探测目标.

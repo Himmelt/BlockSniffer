@@ -9,7 +9,6 @@ public final class ModInfo {
     public static final String ACMCVERSION = "[1.7.10]";
     public static final String CLIENT_PROXY_CLASS = "him.sniffer.proxy.ClientProxy";
     public static final String SERVER_PROXY_CLASS = "him.sniffer.proxy.ServerProxy";
-    public static final String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
     public static final Pattern PATTERN_NUM = Pattern.compile("[0-9]{1,3}");
     public static final Pattern PATTERN_NAME = Pattern.compile("^tile.*name$");
     public static final int[][] RANGE = {

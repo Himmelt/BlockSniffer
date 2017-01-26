@@ -459,6 +459,7 @@ public class CommandSniffer implements ICommand {
         proxy.addChatMessage("sf.help.4");
         proxy.addChatMessage("sf.help.5");
         proxy.addChatMessage("sf.help.6");
+        proxy.addChatMessage("sf.help.7");
         proxy.addChatMessage("sf.help.0");
     }
 
@@ -504,13 +505,14 @@ public class CommandSniffer implements ICommand {
         }
     }
 
-    private static void showSubList(int i) {
+    private static void showSubList(int way) {
         StringBuilder list = new StringBuilder();
         Map<Integer, SubTarget> map = proxy.sniffer.target.getSublist();
         for (Entry<Integer, SubTarget> entry : map.entrySet()) {
             list.append(entry.getKey()).append(" -> ").append(entry.getValue().getItemStack().getDisplayName()).append(';');
         }
-        proxy.addChatMessage(i == 0? "sf.sub.list" : "sf.sub.rm.list", LINE_SEPARATOR + list);
+        proxy.addChatMessage(way == 0? "sf.sub.list" : "sf.sub.rm.list");
+        proxy.addChatMessage(list.toString());
     }
 
     @Override
