@@ -1,53 +1,85 @@
-sniffer.switch=启用/禁用方块探测
+# 中文简体语言文件 zh_CN.lang
+
+sf.chat.head=[方块探测]
+sf.key.switch=启用/禁用方块探测
 sniffer.cfg.hudX=模拟显示(头显)的x坐标,有效值[0.0(左),1.0(右)].
 sniffer.cfg.hudY=模拟显示(头显)的y坐标,有效值[0.0(上),1.0(下)].
 sniffer.unknowBlock=未知方块
-sniffer.forbid=[方块探测] 检查到严重错误,已禁用探测器!请联系作者:@Himmelt
+sf.forbid=检查到严重错误,已禁用探测器!请联系作者:@Himmelt
 
-sf.help.0=[方块探测]===========================================
-sf.help.1=[方块探测] /sniffer help   --- [帮助]
-sf.help.2=[方块探测] /sniffer sub    --- [设置子目标]需要开启探测
-sf.help.3=[方块探测] /sniffer target --- [设置目标]
-sf.help.4=[方块探测] /sniffer reload --- [重载配置]
-sf.help.5=[方块探测] /sniffer save   --- [保存配置]
+sf.version=探测器版本为: %s
+sf.save=配置已保存.
+sf.reload=配置已重新加载.
+sf.reset=探测器已复位!
+sf.avtive=探测器已开启,愉♂悦地挖矿吧! 23333333333
+sf.inactive=探测器已关闭!
+sf.empty=探测目标为空,请先添加探测目标!
 
-sf.version=[方块探测] 探测器版本为: %s.
-sf.save=[方块探测] 配置已保存.
-sf.reload=[方块探测] 配置已重新加载.
-sf.reset=[方块探测] 探测器已复位!
-sf.avtive=[方块探测] 探测器已开启,愉♂悦地挖矿吧! 23333333333
-sf.inactive=[方块探测] 探测器已关闭!
-sf.empty=[方块探测] 探测目标为空,请先添加探测目标!
+sf.help.0===================================================================
+sf.help.1=/sniffer help   --- 帮助
+sf.help.2=/sniffer <cmd>  --- 子命令帮助
+sf.help.3=/sniffer sub    --- 设置子目标
+sf.help.4=/sniffer target --- 设置目标
+sf.help.5=/sniffer reload --- 重载配置
+sf.help.6=/sniffer save   --- 保存配置
 
-sf.target.info=[方块探测] 当前: 模式[%d] 颜色[%s] 深度[%d - %d] 水平[%d 区块] 垂直[%d 方块].
-sf.target.m.get=[方块探测] 当前探测模式: %s.
-sf.target.m.set=[方块探测] 当前探测模式设置为: %s.
-sf.target.h.get=[方块探测] 当前水平探测半径: %d 区块.
-sf.target.h.set=[方块探测] 当前水平探测半径设置为: %d 区块.
-sf.target.v.get=[方块探测] 当前垂直探测半径: %d 方块.
-sf.target.v.set=[方块探测] 当前垂直探测半径设置为: %d 方块.
-sf.target.d.get=[方块探测] 当前探测深度: %d 层 - %d 层.
-sf.target.d.set=[方块探测] 当前探测深度设置为: %d 层 - %d 层.
-sf.target.c.get=[方块探测] 当前粒子颜色: %s.
-sf.target.c.set=[方块探测] 当前粒子颜色设置为: %s.
-sf.target.c.map=[方块探测] 当前粒子颜色将使用目标方块的地图色(MapColor).
-sf.target.rm.ok=[方块探测] 已成功移除当前探测目标.
-sf.target.rm.fail=[方块探测] 目标移除失败,探测目标可能不存在!
-sf.target.cla.hint=[方块探测] 你确定要移除所有探测目标吗?(确认指令/sf target cla/clear confirm)
-sf.target.cla.ok=[方块探测] 已清除所有探测目标,将自动关闭探测器!
-sf.target.not=[方块探测] 探测目标不存在,请开启探测器并保证当前有一个探测目标.
-sf.target.add.ok=[方块探测] 已成功添加探测目标.
+sf.help.target.0=/sf target rm/remove          --- 移除当前探测目标
+sf.help.target.1=/sf target cla/clear          --- 移除所有探测目标
+sf.help.target.2=/sf target rm/remove          --- 移除当前探测目标
+sf.help.target.3=/sf target add                --- 添加新的探测目标
+sf.help.target.4=以下指令需要在探测器开启并有一个目标处于激活状态时方可使用.
+sf.help.target.5=/sf target i/info             --- 获取当前探测目标信息
+sf.help.target.6=/sf target m/mode   [mode]    --- 获取/设置探测模式
+sf.help.target.7=/sf target h/hrange [hrange]  --- 获取/设置水平探测半径(区块)
+sf.help.target.8=/sf target v/vrange [vrange]  --- 获取/设置垂直探测半径(方块)
+sf.help.target.9=/sf target d/depth  [d0] [d1] --- 获取/设置探测深度
+sf.help.target.10=/sf target c/color  [color]   --- 获取/设置粒子颜色
+sf.help.target.11=/sf target d/depth  [d0] [d1] --- 获取/设置探测深度
 
-sf.sub.add.ok=[方块探测] 已成功添加子目标到当前探测目标.
-sf.sub.add.not=[方块探测] 没有探测目标或探测器已关闭.
-sf.sub.add.holdair=[方块探测] 请检查手持物是否为有效方块.
-sf.sub.add.lookair=[方块探测] 请检查光标处是否为有效方块.
-sf.sub.add.notname=[方块探测] 你输入的不是有效方块的名称.
+sf.help.target.add.0=用法: /sf target add <name>|hold|look [meta] [<meta>]
+sf.help.target.add.1=示例: /sf target add stone       添加名为stone的方块,无视元数据
+sf.help.target.add.2=示例: /sf target add hold meta   添加手中的方块,使用当前元数据
+sf.help.target.add.3=示例: /sf target add look meta 3 添加光标所在方块,使用指定元数据
+sf.help.target.cla=使用confirm以确认 /sf target cla/clear confirm
 
-sf.cmd.error=[方块探测] 不符合指令执行条件,该命令只能由玩家在游戏世界内执行.
+sf.add.holdair=请检查手持物是否为有效方块.
+sf.add.lookair=请检查光标处是否为有效方块.
+sf.add.notname=你输入的不是有效方块的名称.
+
+sf.target.info=当前: 模式[%d] 颜色[%s] 深度[%d - %d] 水平[%d 区块] 垂直[%d 方块]
+sf.target.m.get=当前探测模式: %s
+sf.target.m.set=当前探测模式设置为: %s
+sf.target.h.get=当前水平探测半径: %d 区块
+sf.target.h.set=当前水平探测半径设置为: %d 区块
+sf.target.v.get=当前垂直探测半径: %d 方块
+sf.target.v.set=当前垂直探测半径设置为: %d 方块
+sf.target.d.get=当前探测深度: %d 层 - %d 层
+sf.target.d.set=当前探测深度设置为: %d 层 - %d 层
+sf.target.c.get=当前粒子颜色: %s
+sf.target.c.set=当前粒子颜色设置为: %s
+sf.target.c.map=当前粒子颜色将使用目标方块的地图色(MapColor)
+sf.target.rm.ok=已成功移除当前探测目标.
+sf.target.rm.fail=目标移除失败!
+sf.target.cla.hint=你确定要移除所有探测目标吗?(确认指令/sf target cla/clear confirm)
+sf.target.cla.ok=已清除所有探测目标,将自动关闭探测器!
+sf.target.not=探测目标不存在,请开启探测器并保证当前有一个探测目标.
+
+sf.target.add.ok=已成功添加探测目标 %s.
+
+sf.sub.list=当前探测目标包含以下子目标:%s
+
+sf.sub.rm.list=可使用 /sf sub rm <uid> 移除以下子目标:%s
+sf.sub.rm.ok=已成功移除子目标 %s.
+sf.sub.rm.fail=移除失败,可能没有该uid对应的子目标,请先用/sf sub l/list 查看当前子目标.
+sf.sub.rm.t=当前子目标已被全部移除,将尝试删除当前探测目标.
+
+sf.sub.add.ok=已成功添加子目标 %s.
+sf.sub.add.not=没有探测目标或探测器已关闭.
+
+sf.cmd.error=不符合指令执行条件,该命令只能由玩家在游戏世界内执行.
 
 sf.mode.0=固定深度探测
 sf.mode.1=相对深度探测
 
-sf.invalid.num=[方块探测] 你输入的不是有效的数字.
-sf.invalid.color[方块探测] 你输入的不是有效的颜色.
+sf.invalid.num=数字输入无效!
+sf.invalid.color=颜色输入无效!

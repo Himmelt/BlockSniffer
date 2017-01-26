@@ -27,7 +27,7 @@ public class SnifferHud {
     public void draw() {
         Minecraft mc = FMLClientHandler.instance().getClient();
         ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
-        String name = proxy.sniffer.getTarget().getName();
+        String name = proxy.sniffer.target.getName();
         String label = String.format("%s: ---", name);
         ScanResult result = proxy.sniffer.result;
         if (result != null && result.getDistance() >= 1.0D) {
@@ -47,7 +47,7 @@ public class SnifferHud {
         if (result != null) {
             itemRenderer.renderItem(result.getItemStack(), x, y);
         } else {
-            itemRenderer.renderItem(proxy.sniffer.getTarget().getDelegate().getItemStack(), x, y);
+            itemRenderer.renderItem(proxy.sniffer.target.getDelegate().getItemStack(), x, y);
         }
         int maxX = width - lbWidth;
         int lbX = Math.max(0, Math.min(x, maxX));

@@ -30,9 +30,7 @@ public class HudRenderer {
         itemRenderer.zLevel = 100.0F;
 
         try {
-            itemRenderer
-                    .renderItemAndEffectIntoGUI(minecraft.fontRenderer, minecraft.renderEngine, itemStack, 0,
-                                                0);
+            itemRenderer.renderItemAndEffectIntoGUI(minecraft.fontRenderer, minecraft.renderEngine, itemStack, 0, 0);
         } catch (RuntimeException e) {
             logger.catching(e);
         } finally {

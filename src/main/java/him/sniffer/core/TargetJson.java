@@ -78,4 +78,8 @@ public class TargetJson implements Serializable {
     public int size() {
         return targets.size();
     }
+
+    public boolean contains(Target target) {
+        return targets.contains(target);
+    }
 }

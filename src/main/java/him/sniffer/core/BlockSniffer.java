@@ -5,12 +5,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 import him.sniffer.client.gui.ParticleEffect;
 import him.sniffer.client.gui.SnifferHud;
 import net.minecraft.block.Block;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.EmptyChunk;
 
+import java.awt.Color;
 import java.util.Iterator;
 
 import static him.sniffer.Sniffer.*;
@@ -19,43 +20,23 @@ import static him.sniffer.constant.ModInfo.*;
 @SideOnly(Side.CLIENT)
 public class BlockSniffer {
 
-    private Target target;
     private boolean active;
     private Iterator<Target> iterator;
+    private final ParticleEffect particle = new ParticleEffect();
 
     public long last;
-    public TargetJson targetJson;
-    public static final long delay = 500;
-    public final SnifferHud Hud = new SnifferHud();
-    public final ParticleEffect particle = new ParticleEffect();
-    public ScanResult result;
+    public Target target;
     public boolean forbid;
-
-    public Target getTarget() {
-        return target;
-    }
+    public long delay = 500;
+    public ScanResult result;
+    public TargetJson targetJson;
+    public final SnifferHud Hud = new SnifferHud();
 
     public void reset() {
         active = false;
         iterator = null;
         target = null;
         result = null;
-    }
-
-    public boolean removeTarget() {
-        if (target != null && iterator != null) {
-            iterator.remove();
-            if (iterator.hasNext()) {
-                target = iterator.next();
-            } else {
-                reset();
-                if (targetJson.size() < 1) {
-                    proxy.addChatMessage(I18n.format("sf.target.cla.ok"));
-                }
-            }
-            return true;
-        }
-        return false;
     }
 
     public void switchTarget() {
@@ -71,16 +52,16 @@ public class BlockSniffer {
                     if (target == null) {
                         target = iterator.next();
                     }
-                    proxy.addChatMessage(I18n.format("sf.avtive"));
+                    proxy.addChatMessage("sf.avtive");
                 } else {
                     target = iterator.next();
                 }
             } else {
                 reset();
-                proxy.addChatMessage(I18n.format("sf.inactive"));
+                proxy.addChatMessage("sf.inactive");
             }
         } else {
-            proxy.addChatMessage(I18n.format("sf.empty"));
+            proxy.addChatMessage("sf.empty");
         }
     }
 
@@ -91,8 +72,7 @@ public class BlockSniffer {
             int chunkZ = player.chunkCoordZ;
             int hRange = target.hRange;
             int length = RANGE.length;
-            for (int i = 0; i < length && RANGE[i][0] >= -hRange && RANGE[i][0] <= hRange &&
-                            RANGE[i][1] >= -hRange && RANGE[i][1] <= hRange; i++) {
+            for (int i = 0; i < length && RANGE[i][0] >= -hRange && RANGE[i][0] <= hRange && RANGE[i][1] >= -hRange && RANGE[i][1] <= hRange; i++) {
                 Chunk chunk = player.worldObj.getChunkFromChunkCoords(chunkX + RANGE[i][0], chunkZ + RANGE[i][1]);
                 if (!(chunk instanceof EmptyChunk)) {
                     scanChunk(chunk, player);
@@ -102,6 +82,48 @@ public class BlockSniffer {
                 }
             }
         }
+    }
+
+    public void addTarget(Target target) {
+        targetJson.addTarget(target);
+    }
+
+    public void ClearTarget() {
+        reset();
+        targetJson = new TargetJson();
+        targetJson.checkout();
+    }
+
+    public void inActive() {
+        active = false;
+        proxy.addChatMessage("sf.inactive");
+    }
+
+    public void spawn(World w, double x1, double y1, double z1, double x2, double y2, double z2, Color c) {
+        particle.spawn(w, x1, y1, z1, x2, y2, z2, c);
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public int removeTarget() {
+        if (target != null && iterator != null) {
+            iterator.remove();
+            if (iterator.hasNext()) {
+                result = null;
+                last = System.currentTimeMillis();
+                target = iterator.next();
+            } else {
+                reset();
+            }
+            targetJson.checkout();
+            if (!targetJson.contains(target)) {
+                reset();
+            }
+            return targetJson.size();
+        }
+        return -1;
     }
 
     private void scanChunk(Chunk chunk, EntityPlayer player) {
@@ -126,22 +148,4 @@ public class BlockSniffer {
         }
     }
 
-    public boolean isActive() {
-        return active;
-    }
-
-    public void inActive() {
-        active = false;
-        proxy.addChatMessage(I18n.format("sf.inactive"));
-    }
-
-    public void addTarget(Target target) {
-        targetJson.addTarget(target);
-    }
-
-    public void ClearTarget() {
-        reset();
-        targetJson = new TargetJson();
-        targetJson.checkout();
-    }
 }

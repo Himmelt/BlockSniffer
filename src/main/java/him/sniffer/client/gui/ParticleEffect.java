@@ -15,14 +15,12 @@ public class ParticleEffect {
     private final Minecraft minecraft = FMLClientHandler.instance().getClient();
     private final float[] colorComponents = new float[3];
 
-    public void spawn(World worldObj, double fromX, double fromY, double fromZ, double toX, double toY,
-                      double toZ, Color color) {
+    public void spawn(World worldObj, double fromX, double fromY, double fromZ, double toX, double toY, double toZ, Color color) {
         spawnSingleParticle(worldObj, 0.5D + toX, 0.5D + toY, 0.5D + toZ, 1.0F, color, 0.0D, 0.0D, 0.0D);
         intSpawnParticleTrail(worldObj, fromX, fromY, fromZ, toX + 0.5D, toY + 0.5D, toZ + 0.5D, color);
     }
 
-    private void intSpawnParticleTrail(World theWorld, double fromX, double fromY, double fromZ, double toX, double toY,
-                                       double toZ, Color color) {
+    private void intSpawnParticleTrail(World theWorld, double fromX, double fromY, double fromZ, double toX, double toY, double toZ, Color color) {
         double dx = toX - fromX;
         double dy = toY - fromY;
         double dz = toZ - fromZ;
@@ -46,8 +44,7 @@ public class ParticleEffect {
         }
     }
 
-    private void spawnSingleParticle(World theWorld, double x, double y, double z, float alpha, Color color, double vx,
-                                     double vy, double vz) {
+    private void spawnSingleParticle(World theWorld, double x, double y, double z, float alpha, Color color, double vx, double vy, double vz) {
         EntityAuraFX effect = new EntityAuraFX(theWorld, x, y, z, vx, vy, vz);
         effect.setParticleTextureIndex(147);
         color.getColorComponents(colorComponents);

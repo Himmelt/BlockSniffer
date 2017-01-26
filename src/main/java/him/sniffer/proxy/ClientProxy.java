@@ -44,10 +44,10 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public synchronized void addChatMessage(String message) {
-        Minecraft minecraft = FMLClientHandler.instance().getClient();
-        if (minecraft != null && minecraft.thePlayer != null) {
-            minecraft.thePlayer.addChatMessage(new ChatComponentText(message));
+    public synchronized void addChatMessage(String key, Object... objects) {
+        Minecraft mc = FMLClientHandler.instance().getClient();
+        if (mc != null && mc.thePlayer != null) {
+            mc.thePlayer.addChatMessage(new ChatComponentText(I18n.format("sf.chat.head") + ' ' + I18n.format(key, objects)));
         }
     }
 
@@ -55,7 +55,7 @@ public class ClientProxy extends CommonProxy {
     public void checkout(boolean checkout) {
         if (!checkout) {
             sniffer.forbid = true;
-            proxy.addChatMessage(I18n.format("sniffer.forbid"));
+            proxy.addChatMessage(I18n.format("sf.forbid"));
             logger.error("!!! Has not been checkouted !!!");
             if (DEBUG) {
                 logger.catching(new Exception());

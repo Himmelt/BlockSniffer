@@ -7,7 +7,9 @@ import net.minecraft.client.resources.I18n;
 
 import java.awt.Color;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import static him.sniffer.Sniffer.*;
 import static him.sniffer.constant.ModInfo.*;
@@ -47,7 +49,7 @@ public class Target implements Serializable {
     private transient Color color;
     private transient boolean checkout;
     private transient SubTarget delegate;
-
+    private transient HashMap<Integer, SubTarget> map;
     private static final transient long serialVersionUID = 5468612871816526011L;
 
     /**
@@ -197,6 +199,34 @@ public class Target implements Serializable {
     public void addSubTarget(SubTarget sub) {
         subs.add(sub);
         checkout();
+    }
+
+    public Map<Integer, SubTarget> getSublist() {
+        if (map == null) {
+            map = new HashMap<>();
+        }
+        map.clear();
+        int i = 0;
+        for (SubTarget sub : subs) {
+            map.put(i, sub);
+            i++;
+        }
+        return map;
+    }
+
+    public int removeSubTarget(int uid) {
+        Map<Integer, SubTarget> map = getSublist();
+        if (map.size() >= 1 && map.containsKey(uid)) {
+            subs.remove(map.get(uid));
+            map.remove(uid);
+            if (subs.size() >= 1) {
+                delegate = subs.iterator().next();
+            } else {
+                delegate = null;
+            }
+            return subs.size();
+        }
+        return -1;
     }
 
     public void setColor(Color color) {

@@ -26,5 +26,5 @@ sf sub add <name>/hold/look
 sf sub add <name>/hold/look meta
 sf sub add <name>/hold/look meta <meta>
 
-sf sub remove/rm [name]
+sf sub remove/rm [<name>] [<meta>]
 ```
