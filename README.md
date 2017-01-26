@@ -1,30 +1,77 @@
-#Sniffer
-----------
+# 方块探测 (Sniffer)
 
-```
-sf h/help
-sf v/version
-sf s/save
-sf reload
-sf reset
-sf off
+### 前 言
+1. 本Mod是 矿物追踪 (Scenter) 的改进增强版，主要功能也是探测方块。
+2. 本项目在代码结构和核心代码上与 Scenter 没有关系，至少我是完全重新写的算法，重复的话也不能赖我，我没有照抄。
+3. 本项目显示部分仍然参考了 Scenter 的代码，并进行了修改，这一部分的代码遵循原作者的协议，所有权利归原作者所有。
+4. 本项目除显示部分的 Senter 的代码外，都使用 MIT 协议，我也不知道是啥样的协议，反正随便折腾吧！
+5. 我对这协议那协议的都不懂，如果本项目的开源代码侵犯了谁的权利的话，可以直接联系我。
+6. 欢迎提建议和贡献代码！
 
-sf target i/info
-sf target m/mode [0|1]
-sf target h/hrange [0-15]
-sf target v/vrange [0-255]
-sf target d/depth [0-255] [0-255]
-sf target c/color [#abcdef|red|map]
-sf target rm/remove
-sf target cla/clear
-sf target add <name>/hold/look
-sf target add <name>/hold/look meta
-sf target add <name>/hold/look meta <meta>
+### 下载
+1. [1.7.10-1.0.0][1710100]
 
-sf sub l/list
-sf sub add <name>/hold/look
-sf sub add <name>/hold/look meta
-sf sub add <name>/hold/look meta <meta>
+### 特性
+1. 可通过指令热添加/删除探测目标，并设置工作模式和参数。
+2. 不必再查方块的注册名，可直接添加手持方块或光标所在的方块。
+3. 子线程探测，大范围探测时不会导致游戏进程卡顿。
+4. 高度自定义探测范围、探测模式，水平最大探测半径15区块。
+5. 支持多种颜色格式，十六进制(#abcdef)、Minecraft颜色(&5、&e)、Web标准色(blue、magenta)、地图色(MapColor)。
 
-sf sub remove/rm [<name>] [<meta>]
-```
+### 注意
+1. 当前Mod版本：MC 1.7.10 Forge 1.7.10-10.13.4.1614-1.7.10
+2. 编译环境为JDK 1.8 语言级别 8 ，所以java7及以下可能无法正常运行。如有需要可自行修改并编译源码。
+3. 集成开发环境为IDEA 2016 ，其他工具应该也一样，力荐IDEA。
+
+### 指令
+符号|意义
+|---|---|
+|`x/xx`|相同的指令|
+|`x│xx`|选择其中一个|
+|`xxx`|指令(没有`{}`修饰表示该字段是一个指令，需要照写)|
+|`<xxx>`|必填项|
+|`[xxx]`|选填项|
+|`{xxx}`|参数|
+|`x-y`|范围|
+|`[{x│y}]`|选填其中一个参数|
+|`<{x│y}>`|必填其中一个参数|
+|`[{x-y}]`|选填范围内参数|
+
+指令|功能
+|---|---|
+|`/sniffer`|总指令，简写`/sf`|
+|`/sf h/help`|查看帮助|
+|`/sf v/version`|查看版本|
+|`/sf s/save`|保存配置|
+|`/sf reload`|重载配置|
+|`/sf reset`|复位探测器|
+|`/sf off`|关闭探测器|
+|||
+|`/sf target i/info`|查看当前探测目标信息|
+|`/sf target m/mode [{0│1}]`|查看/设置探测模式|
+|`/sf target h/hrange [{0-15}]`|查看/设置水平探测半径(区块)|
+|`/sf target v/vrange [{0-255}]`|查看/设置垂直探测半径(方块)|
+|`/sf target d/depth [{0-255}] [{0-255}]`|查看/设置探测深度范围|
+|`/sf target c/color [{#abcdef}│{&e}│{blue}│map]`|查看/设置粒子颜色|
+|`/sf target rm/remove`|移除当前探测目标|
+|`/sf target cla/clear`|清除所有探测目标|
+|`/sf target add <{name}│hold│look> [meta] [{0-15}]`|添加探测目标|
+|`/sf target add {name}`|添加名为`name`的方块到新的探测目标，将无视元数据|
+|`/sf target add hold meta`|添加手持方块到新的探测目标，并使用当前元数据|
+|`/sf target add look meta {0-15}`|添加光标处方块到新的探测目标，并使用指定的元数据|
+|||
+|`/sf sub l/list`|显示当前目标包含的子目标|
+|`/sf sub add <{name}│hold│look> [meta] [{0-15}]`|添加子目标|
+|`/sf sub rm/remove <{uid}>`|移除当前目标下id为`uid`的子目标|
+
+### 默认值
+内容|默认值
+|---|---|
+|探测模式|`0`固定深度探测，使用`depth`|
+|水平探测半径|`1`区块|
+|垂直探测半径|`16`方块|
+|探测深度范围|`0`层-`64`层|
+|粒子颜色|使用`MapColor`|
+|默认探测目标|钻石原矿,元数据`0`|
+
+[1710100]: http://qwqwqwq "1710下载"
