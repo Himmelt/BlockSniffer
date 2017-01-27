@@ -45,6 +45,7 @@ public class SubTarget implements Serializable {
      * @return 是否符合要求 boolean
      */
     public boolean checkout() {
+        logger.info("subtarget checkout");
         if (name != null && !name.isEmpty()) {
             block = Block.getBlockFromName(name);
             if (block != null && !block.equals(Blocks.air)) {

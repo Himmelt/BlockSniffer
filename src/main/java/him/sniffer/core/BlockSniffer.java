@@ -109,17 +109,27 @@ public class BlockSniffer {
 
     public int removeTarget() {
         if (target != null && iterator != null) {
+            logger.info("before:" + target.hashCode());
             iterator.remove();
             if (iterator.hasNext()) {
+                logger.info("has next");
                 result = null;
                 last = System.currentTimeMillis();
                 target = iterator.next();
             } else {
+                logger.info("no next");
                 reset();
             }
+            logger.info("check out...active" + isActive());
             targetJson.checkout();
             if (!targetJson.contains(target)) {
+                logger.info("not contains");
                 reset();
+            }
+            logger.info("size after check:" + targetJson.size());
+            if (targetJson.size() >= 1) {
+                Target target = targetJson.iterator().next();
+                System.out.println(target.hashCode());
             }
             return targetJson.size();
         }

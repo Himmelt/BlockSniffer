@@ -1,6 +1,8 @@
 package him.sniffer.core;
 
 import com.google.gson.annotations.SerializedName;
+import him.sniffer.constant.ModInfo;
+import net.minecraft.init.Blocks;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -26,9 +28,10 @@ public class TargetJson implements Serializable {
      * 探测目标json配置的构造函数.
      */
     public TargetJson() {
-        comment = "targets";
-        version = "1.7.10";
+        comment = ModInfo.NAME;
+        version = ModInfo.VERSION;
         targets = new HashSet<Target>();
+        targets.add(new Target(Blocks.diamond_ore, 0));
     }
 
     /**
@@ -36,7 +39,28 @@ public class TargetJson implements Serializable {
      * 每次创建或新增都要检查!!!
      */
     public void checkout() {
-        targets.removeIf(target -> !target.checkout());//检查探测目标,不符合则删除
+        logger.info(targets.size());
+        //targets.removeIf(target -> !target.checkout());//检查探测目标,不符合则删除
+//        for (Target target : targets) {
+//            if (!target.checkout()) {
+//                logger.info("remove");
+//                if(targets.remove(target)){
+//                    logger.info("ok");
+//                }
+//                logger.info("remove size:"+targets.size());
+//            }
+//        }
+        Iterator<Target> iterator = targets.iterator();
+        while (iterator.hasNext()) {
+            Target t = iterator.next();
+            if (!t.checkout()) {
+                logger.info("remove");
+                iterator.remove();
+                logger.info("remove size:" + targets.size());
+            }
+        }
+        //?????
+        logger.info("after targets removeIf:" + targets.size());
         checkout = true;
     }
 

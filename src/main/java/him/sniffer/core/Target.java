@@ -93,6 +93,14 @@ public class Target implements Serializable {
         return false;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("subs:").append(subs.size()).append(";color:")
+               .append(colorValue).append(";mode:").append(mode).append(";delegate:").append(delegate);
+        return builder.toString();
+    }
+
     /**
      * 初始化各成员, 检查对象合法性与安全性, 移除非法对象.
      * 每次创建或新增都要检查!!!
@@ -100,6 +108,7 @@ public class Target implements Serializable {
      * @return 是否符合要求 boolean
      */
     public boolean checkout() {
+        logger.info("target checkout");
         subs.removeIf(subTarget -> !subTarget.checkout());//检查子目标,不符合则删除
         if (subs.size() >= 1) {
             // 设置代理
@@ -129,6 +138,7 @@ public class Target implements Serializable {
             checkout = true;
             return true;
         }
+        logger.info(subs.size() + "false");
         return false;
     }
 
