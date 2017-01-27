@@ -365,7 +365,7 @@ public class CommandSniffer implements ICommand {
                         SubTarget sub = proxy.sniffer.target.getSublist().get(uid);
                         Block block = sub.getBlock();
                         Integer meta = sub.getMeta();
-                        int result = proxy.sniffer.target.removeSubTarget(uid);
+                        int result = proxy.sniffer.target.removeBlock(uid);
                         if (result == -1) {
                             proxy.addChatMessage("sf.sub.rm.fail");
                         } else if (result == 0) {
@@ -444,7 +444,7 @@ public class CommandSniffer implements ICommand {
                     meta = 0;
                 }
             }
-            proxy.sniffer.target.addSubTarget(new SubTarget(block, meta));
+            proxy.sniffer.target.addBlock(new SubTarget(block, meta));
             proxy.addChatMessage("sf.sub.add.ok", getBlockName(block, meta));
         } else {
             showSubHelp("add");

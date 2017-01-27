@@ -23,7 +23,11 @@ public class TBlock {
         itemStack = new ItemStack(block, 1, meta == null? 0 : meta);
     }
 
-    public boolean vaild() {
+    public TBlock(String name, Integer meta) {
+        this((Block) Block.blockRegistry.getObject(name), meta);
+    }
+
+    public boolean invalid() {
         return block != null;
     }
 
@@ -47,11 +51,13 @@ public class TBlock {
 
     public static class Adapter extends TypeAdapter<TBlock> {
         @Override
-        public void write(JsonWriter out, TBlock value) throws IOException {
+        public void write(JsonWriter out, TBlock block) throws IOException {
             try {
-                out.beginObject();
-                out.name("block").value(value.toString());
-                out.endObject();
+                if (block == null || block.invalid()) {
+                    out.nullValue();
+                    return;
+                }
+                out.value(block.toString());
             } catch (Exception e) {
                 logger.catching(e);
             }
@@ -61,28 +67,26 @@ public class TBlock {
         public TBlock read(JsonReader in) throws IOException {
             TBlock block = null;
             try {
-                in.beginObject();
-                while (in.hasNext()) {
-                    if ("block".equals(in.nextName())) {
-                        String[] s = in.nextString().split("/");
-                        if (s.length >= 1) {
-                            Block blk = (Block) Block.blockRegistry.getObject(s[0]);
-                            if (blk != null) {
-                                Integer meta = null;
-                                if (s.length >= 2 && PATTERN_NUM.matcher(s[1]).matches()) {
-                                    meta = Integer.valueOf(s[1]);
-                                    if (meta < 0 || meta > 15) {
-                                        meta = 0;
-                                    }
-                                }
-                                block = new TBlock(blk, meta);
+                String[] s = in.nextString().split("/");
+                if (s.length >= 1) {
+                    Block blk = (Block) Block.blockRegistry.getObject(s[0]);
+                    if (blk != null) {
+                        Integer meta = null;
+                        if (s.length >= 2 && PATTERN_NUM.matcher(s[1]).matches()) {
+                            meta = Integer.valueOf(s[1]);
+                            if (meta < 0 || meta > 15) {
+                                meta = 0;
                             }
+                        }
+                        block = new TBlock(blk, meta);
+                        if (block.invalid()) {
+                            return null;
                         }
                     }
                 }
-                in.endObject();
             } catch (Exception e) {
                 logger.catching(e);
+                return null;
             }
             return block;
         }

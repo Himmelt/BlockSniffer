@@ -1,245 +1,230 @@
 package him.sniffer.core;
 
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import him.sniffer.constant.ColorHelper;
 import net.minecraft.block.Block;
-import net.minecraft.client.resources.I18n;
 
 import java.awt.Color;
-import java.io.Serializable;
-import java.util.HashMap;
+import java.io.IOException;
 import java.util.HashSet;
-import java.util.Map;
 
 import static him.sniffer.Sniffer.*;
-import static him.sniffer.constant.ModInfo.*;
 
-/**
- * 探测目标.
- */
-public class Target implements Serializable {
+public class Target {
 
-    @SerializedName("subs")
-    private final HashSet<SubTarget> subs;
-    @SerializedName("color")
-    public String colorValue;
-    /**
-     * 工作模式:
-     * 0 -- [depth_0 , depth_1]
-     * 1 -- [posY-vRange , posY+vRange]
-     */
-    @SerializedName("mode")
-    public int mode;
-    /**
-     * 探测范围[0-255].
-     */
-    @SerializedName("depth")
-    public int[] depth;
-    /**
-     * 水平探测范围(单位:区块).
-     */
-    @SerializedName("h_range")
-    public int hRange;
-    /**
-     * 垂直探测范围(单位:方块).
-     */
-    @SerializedName("v_range")
-    public int vRange;
+    private int mode;
+    private int depth0;
+    private int depth1;
+    private int hrange;
+    private int vrange;
+    private String color;
+    private final HashSet<TBlock> blocks;
 
-    private transient Color color;
-    private transient boolean checkout;
-    private transient SubTarget delegate;
-    private transient HashMap<Integer, SubTarget> map;
-    private static final transient long serialVersionUID = 5468612871816526011L;
-
-    /**
-     * 探测目标构造函数.
-     *
-     * @param name 子目标名称
-     * @param meta 子目标元数据
-     */
-    public Target(String name, Integer meta) {
-        subs = new HashSet<SubTarget>();
-        SubTarget sub = new SubTarget(name, meta);
-        subs.add(sub);
-        colorValue = "map";
+    public Target(HashSet<TBlock> blocks) {
+        this.blocks = blocks;
         mode = 0;
-        depth = new int[] { 0, 64 };
-        hRange = 1;
-        vRange = 16;
+        depth0 = 0;
+        depth1 = 64;
+        hrange = 1;
+        vrange = 16;
+        color = "map";
     }
 
-    /**
-     * 探测目标构造函数.
-     *
-     * @param block 子目标方块
-     * @param meta 子目标元数据
-     */
     public Target(Block block, Integer meta) {
         this(Block.blockRegistry.getNameForObject(block), meta);
     }
 
-    @Override
-    public int hashCode() {
-        return subs.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof Target) {
-            Target target = (Target) obj;
-            return target.subs.equals(obj);
+    public Target(String name, Integer meta) {
+        blocks = new HashSet<TBlock>();
+        TBlock block = new TBlock(name, meta);
+        if (!block.invalid()) {
+            blocks.add(block);
         }
-        return false;
+        mode = 0;
+        depth0 = 0;
+        depth1 = 64;
+        hrange = 1;
+        vrange = 16;
+        color = "map";
     }
 
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("subs:").append(subs.size()).append(";color:")
-               .append(colorValue).append(";mode:").append(mode).append(";delegate:").append(delegate);
-        return builder.toString();
+    public int getMode() {
+        return mode;
     }
 
-    /**
-     * 初始化各成员, 检查对象合法性与安全性, 移除非法对象.
-     * 每次创建或新增都要检查!!!
-     *
-     * @return 是否符合要求 boolean
-     */
-    public boolean checkout() {
-        logger.info("target checkout");
-        subs.removeIf(subTarget -> !subTarget.checkout());//检查子目标,不符合则删除
-        if (subs.size() >= 1) {
-            // 设置代理
-            delegate = subs.iterator().next();
-            // 检查颜色
-            color = ColorHelper.getColor(colorValue);
-            if (color == null) {
-                colorValue = "map";
-            }
-            // 检查模式
-            if (mode != 0) {
-                mode = 1;
-            }
-            // 检查探测深度
-            if (depth == null || depth.length != 2 || depth[0] < 0 || depth[1] < 0) {
-                depth = new int[] { 0, 64 };
-            } else if (depth[0] > depth[1]) {
-                int temp = depth[0];
-                depth[0] = depth[1];
-                depth[1] = temp;
-            }
-            // 检查水平垂直探测范围
-            if (hRange < 0 || hRange > 15 || vRange <= 0 || vRange >= 255) {
-                hRange = 1;
-                vRange = 16;
-            }
-            checkout = true;
-            return true;
+    public Target setMode(int mode) {
+        this.mode = mode == 0? 0 : 1;
+        return this;
+    }
+
+    public int getDepth0() {
+        return depth0;
+    }
+
+    public int getDepth1() {
+        return depth1;
+    }
+
+    private Target setDepth(int dl, int dh) {
+        dl = dl < 0? 0 : dl > 255? 255 : dl;
+        dh = dh < 0? 0 : dh > 255? 255 : dh;
+        if (dl < dh) {
+            depth0 = dl;
+            depth1 = dh;
+        } else {
+            depth0 = dh;
+            depth1 = dl;
         }
-        logger.info(subs.size() + "false");
-        return false;
+        return this;
     }
 
-    /**
-     * 方块匹配检查.
-     *
-     * @param block 目标方块
-     * @param meta 元数据
-     *
-     * @return 是否匹配 boolean
-     */
-    public boolean match(Block block, int meta) {
-        proxy.checkout(checkout);
+    public int getHrange() {
+        return hrange;
+    }
+
+    private Target setHrange(int hrange) {
+        this.hrange = hrange < 0? 0 : hrange > 15? 15 : hrange;
+        return this;
+    }
+
+    public int getVrange() {
+        return vrange;
+    }
+
+    private Target setVrange(int vrange) {
+        this.vrange = vrange < 0? 0 : vrange > 15? 15 : vrange;
+        return this;
+    }
+
+    public String getColorValue() {
+        return color;
+    }
+
+    public Color getColor() {
+        return ColorHelper.getColor(color);
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public boolean match(Block blk, int meta) {
         boolean match = false;
-        for (SubTarget sub : subs) {
-            if (sub.getMeta() == null) {
-                match = block.equals(sub.getBlock());
+        for (TBlock block : blocks) {
+            if (block.getMeta() == null) {
+                match = blk.equals(block.getBlock());
             } else {
-                match = block.equals(sub.getBlock()) && meta == sub.getMeta();
+                match = blk.equals(block.getBlock()) && meta == block.getMeta();
             }
             if (match) {
-                delegate = sub;
+                //delegate
                 break;
             }
         }
         return match;
     }
 
-    /**
-     * 获取展示名称.
-     *
-     * @return 展示名 name
-     */
-    public String getName() {
-        proxy.checkout(checkout);
-        String name = delegate.getBlock().getLocalizedName();
-        if (name != null && !PATTERN_NAME.matcher(name).matches()) {
-            return name;
-        }
-        name = delegate.getItemStack().getDisplayName();
-        if (name != null && !PATTERN_NAME.matcher(name).matches()) {
-            return name;
-        }
-        return I18n.format("sf.unknow.block");
+    public void addBlock(TBlock block) {
+        blocks.add(block);
     }
 
-    /**
-     * 获取粒子颜色.
-     * 如果颜色无效或使用MapColor,则返回null
-     *
-     * @return 颜色 color
-     */
-    public Color getColor() {
-        proxy.checkout(checkout);
-        return color;
+    public int removeBlock(int uid) {
+        return 0;
     }
 
-    /**
-     * 获取Target的代理(第一个子目标).
-     *
-     * @return 代理 delegate
-     */
-    public SubTarget getDelegate() {
-        proxy.checkout(checkout);
-        return delegate;
+    private HashSet<TBlock> getBlocks() {
+        return blocks;
     }
 
-    public void addSubTarget(SubTarget sub) {
-        subs.add(sub);
-        checkout();
+    private boolean invalid() {
+        blocks.removeIf(TBlock::invalid);
+        return blocks.size() >= 1;
     }
 
-    public Map<Integer, SubTarget> getSublist() {
-        if (map == null) {
-            map = new HashMap<>();
-        }
-        map.clear();
-        int i = 0;
-        for (SubTarget sub : subs) {
-            map.put(i, sub);
-            i++;
-        }
-        return map;
-    }
+    public static class Adapter extends TypeAdapter<Target> {
 
-    public int removeSubTarget(int uid) {
-        Map<Integer, SubTarget> map = getSublist();
-        if (map.size() >= 1 && map.containsKey(uid)) {
-            subs.remove(map.get(uid));
-            map.remove(uid);
-            if (subs.size() >= 1) {
-                delegate = subs.iterator().next();
-            } else {
-                delegate = null;
+        private static final TBlock.Adapter BLCOK_ADAPTER = new TBlock.Adapter();
+
+        @Override
+        public void write(JsonWriter out, Target target) throws IOException {
+            try {
+                if (target == null || target.invalid()) {
+                    out.nullValue();
+                    return;
+                }
+                out.beginObject();
+                out.name("blocks");
+                out.beginArray();
+                for (TBlock block : target.getBlocks()) {
+                    BLCOK_ADAPTER.write(out, block);
+                }
+                out.endArray();
+                out.name("mode").value(target.getMode());
+                out.name("depth0").value(target.getDepth0());
+                out.name("depth1").value(target.getDepth1());
+                out.name("hrange").value(target.getHrange());
+                out.name("vrange").value(target.getVrange());
+                out.name("color").value(target.getColorValue());
+                out.endObject();
+            } catch (Exception e) {
+                logger.catching(e);
             }
-            return subs.size();
         }
-        return -1;
+
+        @Override
+        public Target read(JsonReader in) throws IOException {
+            Target target;
+            try {
+                HashSet<TBlock> blocks = new HashSet<>();
+                int mode = 0, depth0 = 0, depth1 = 64, hrange = 1, vrange = 16;
+                String color = "map";
+                in.beginObject();
+                while (in.hasNext()) {
+                    switch (in.nextName()) {
+                    case "blocks":
+                        in.beginArray();
+                        while (in.hasNext()) {
+                            TBlock block = BLCOK_ADAPTER.read(in);
+                            if (block != null && !block.invalid()) {
+                                blocks.add(block);
+                            }
+                        }
+                        in.endArray();
+                        break;
+                    case "mode":
+                        mode = in.nextInt();
+                        break;
+                    case "depth0":
+                        depth0 = in.nextInt();
+                        break;
+                    case "depth1":
+                        depth1 = in.nextInt();
+                        break;
+                    case "hrange":
+                        hrange = in.nextInt();
+                        break;
+                    case "vrange":
+                        vrange = in.nextInt();
+                        break;
+                    case "color":
+                        color = in.nextString();
+                        break;
+                    }
+                }
+                target = new Target(blocks);
+                if (target.invalid()) {
+                    return null;
+                }
+                target.setMode(mode).setDepth(depth0, depth1).setHrange(hrange).setVrange(vrange).setColor(color);
+                in.endObject();
+            } catch (Exception e) {
+                logger.catching(e);
+                return null;
+            }
+            return target;
+        }
     }
 
-    public void setColor(Color color) {
-        this.color = color;
-    }
 }
