@@ -17,8 +17,6 @@ import net.minecraftforge.common.MinecraftForge;
 
 import java.io.File;
 
-import static him.sniffer.Sniffer.*;
-
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
 
@@ -45,21 +43,9 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public synchronized void addChatMessage(String key, Object... objects) {
-        Minecraft mc = FMLClientHandler.instance().getClient();
-        if (mc != null && mc.thePlayer != null) {
-            mc.thePlayer.addChatMessage(new ChatComponentText(I18n.format("sf.chat.head") + ' ' + I18n.format(key, objects)));
-        }
-    }
-
-    @Override
-    public void checkout(boolean checkout) {
-        if (!checkout) {
-            sniffer.forbid = true;
-            proxy.addChatMessage(I18n.format("sf.forbid"));
-            logger.error("!!! Has not been checkouted !!!");
-            if (DEBUG) {
-                logger.catching(new Exception());
-            }
+        Minecraft client = FMLClientHandler.instance().getClient();
+        if (client != null && client.thePlayer != null) {
+            client.thePlayer.addChatMessage(new ChatComponentText(I18n.format("sf.chat.head") + ' ' + I18n.format(key, objects)));
         }
     }
 }

@@ -1,34 +1,31 @@
 package him.sniffer;
 
-import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import him.sniffer.constant.ModInfo;
+import him.sniffer.constant.Mod;
 import him.sniffer.proxy.CommonProxy;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-@Mod(
-        modid = ModInfo.MODID,
-        name = ModInfo.NAME,
-        version = ModInfo.VERSION,
-        acceptedMinecraftVersions = ModInfo.ACMCVERSION
+@cpw.mods.fml.common.Mod(
+        modid = Mod.MODID,
+        name = Mod.NAME,
+        version = Mod.VERSION,
+        acceptedMinecraftVersions = Mod.ACMCVERSION
 )
 public class Sniffer {
-    @SidedProxy(clientSide = ModInfo.CLIENT_PROXY_CLASS, serverSide = ModInfo.SERVER_PROXY_CLASS)
-    public static CommonProxy proxy;
-    public static final boolean DEBUG = true;
-    public static final Logger logger = LogManager.getLogger(ModInfo.NAME);
 
-    @Mod.EventHandler
+    @SidedProxy(clientSide = Mod.CLIENT_PROXY_CLASS, serverSide = Mod.SERVER_PROXY_CLASS)
+    public static CommonProxy proxy;
+
+    @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         proxy.loadConfig(event.getModConfigurationDirectory());
         proxy.registKeyBinding();
         proxy.registCommand();
     }
 
-    @Mod.EventHandler
+    @EventHandler
     public void Init(FMLInitializationEvent event) {
         proxy.registEventHandler();
     }

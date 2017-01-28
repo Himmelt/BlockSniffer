@@ -1,6 +1,5 @@
 package him.sniffer.core;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
@@ -8,25 +7,19 @@ import java.awt.Color;
 
 public class ScanResult {
 
-    private final int meta;
-    private final Block block;
-    private final EntityPlayer player;
     private final Target target;
+    private final EntityPlayer player;
+    private final TBlock block;
 
     public final int x, y, z;
 
-    public ScanResult(EntityPlayer player, Block block, Target target, int meta, int x, int y, int z) {
+    public ScanResult(EntityPlayer player, Target target, int x, int y, int z) {
         this.player = player;
-        this.block = block;
         this.target = target;
-        this.meta = meta;
+        block = target.getDelegate();
         this.x = x;
         this.y = y;
         this.z = z;
-    }
-
-    public ItemStack getItemStack() {
-        return new ItemStack(block, 1, meta);
     }
 
     public double getDistance() {
@@ -36,7 +29,11 @@ public class ScanResult {
         return Math.sqrt(lx * lx + ly * ly + lz * lz);
     }
 
+    public ItemStack getItemStack() {
+        return block.getItemStack();
+    }
+
     public Color getColor() {
-        return target.getColor() != null? target.getColor() : new Color(block.getMapColor(meta).colorValue);
+        return target.getColor() != null? target.getColor() : new Color(block.getBlock().getMapColor(block.getMeta()).colorValue);
     }
 }

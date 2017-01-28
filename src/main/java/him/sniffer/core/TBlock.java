@@ -3,13 +3,12 @@ package him.sniffer.core;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import him.sniffer.constant.Constant;
+import him.sniffer.constant.Mod;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
 import java.io.IOException;
-
-import static him.sniffer.Sniffer.*;
-import static him.sniffer.constant.ModInfo.*;
 
 public class TBlock {
 
@@ -59,7 +58,7 @@ public class TBlock {
                 }
                 out.value(block.toString());
             } catch (Exception e) {
-                logger.catching(e);
+                Mod.logger.catching(e);
             }
         }
 
@@ -72,7 +71,7 @@ public class TBlock {
                     Block blk = (Block) Block.blockRegistry.getObject(s[0]);
                     if (blk != null) {
                         Integer meta = null;
-                        if (s.length >= 2 && PATTERN_NUM.matcher(s[1]).matches()) {
+                        if (s.length >= 2 && Constant.PATTERN_NUM.matcher(s[1]).matches()) {
                             meta = Integer.valueOf(s[1]);
                             if (meta < 0 || meta > 15) {
                                 meta = 0;
@@ -85,7 +84,7 @@ public class TBlock {
                     }
                 }
             } catch (Exception e) {
-                logger.catching(e);
+                Mod.logger.catching(e);
                 return null;
             }
             return block;

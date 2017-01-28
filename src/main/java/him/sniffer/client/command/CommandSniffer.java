@@ -3,6 +3,7 @@ package him.sniffer.client.command;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import him.sniffer.constant.ColorHelper;
+import him.sniffer.constant.Constant;
 import him.sniffer.core.SubTarget;
 import him.sniffer.core.Target;
 import net.minecraft.block.Block;
@@ -26,7 +27,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import static him.sniffer.Sniffer.*;
-import static him.sniffer.constant.ModInfo.*;
+import static him.sniffer.constant.Mod.*;
 
 @SideOnly(Side.CLIENT)
 public class CommandSniffer implements ICommand {
@@ -116,7 +117,7 @@ public class CommandSniffer implements ICommand {
                     if (cmds.isEmpty()) {
                         proxy.addChatMessage("sf.target.h.get", t.hRange);
                     } else {
-                        if (PATTERN_NUM.matcher(cmds.get(0)).matches()) {
+                        if (Constant.PATTERN_NUM.matcher(cmds.get(0)).matches()) {
                             int h = Integer.valueOf(cmds.get(0));
                             if (h < 0 || h > 15) {
                                 h = 1;
@@ -133,7 +134,7 @@ public class CommandSniffer implements ICommand {
                     if (cmds.isEmpty()) {
                         proxy.addChatMessage("sf.target.v.get", t.vRange);
                     } else {
-                        if (PATTERN_NUM.matcher(cmds.get(0)).matches()) {
+                        if (Constant.PATTERN_NUM.matcher(cmds.get(0)).matches()) {
                             int v = Integer.valueOf(cmds.get(0));
                             if (v < 0 || v > 255) {
                                 v = 16;
@@ -150,8 +151,8 @@ public class CommandSniffer implements ICommand {
                     if (cmds.isEmpty()) {
                         proxy.addChatMessage("sf.target.d.get", t.depth[0], t.depth[1]);
                     } else if (cmds.size() >= 2) {
-                        if (PATTERN_NUM.matcher(cmds.get(0)).matches() &&
-                            PATTERN_NUM.matcher(cmds.get(1)).matches()) {
+                        if (Constant.PATTERN_NUM.matcher(cmds.get(0)).matches() &&
+                            Constant.PATTERN_NUM.matcher(cmds.get(1)).matches()) {
                             int dl = Integer.valueOf(cmds.get(0));
                             int dh = Integer.valueOf(cmds.get(1));
                             if (dl < 0 || dl > 255) {
@@ -313,7 +314,7 @@ public class CommandSniffer implements ICommand {
                 meta = null;
             } else if (cmds.size() == 2 && "meta".equals(cmds.get(1))) {
                 //
-            } else if (cmds.size() == 3 && "meta".equals(cmds.get(1)) && PATTERN_NUM.matcher(cmds.get(2)).matches()) {
+            } else if (cmds.size() == 3 && "meta".equals(cmds.get(1)) && Constant.PATTERN_NUM.matcher(cmds.get(2)).matches()) {
                 meta = Integer.valueOf(cmds.get(2));
                 if (meta < 0 || meta > 15) {
                     meta = 0;
@@ -339,7 +340,7 @@ public class CommandSniffer implements ICommand {
             return name;
         }
         name = block.getLocalizedName();
-        if (name != null && !name.isEmpty() && !PATTERN_NAME.matcher(name).matches()) {
+        if (name != null && !name.isEmpty() && !Constant.PATTERN_NAME.matcher(name).matches()) {
             return name;
         }
         return I18n.format("sf.unknow.block");
@@ -360,7 +361,7 @@ public class CommandSniffer implements ICommand {
             case "rm":
             case "remove":
                 if (cmds.size() >= 1) {
-                    if (PATTERN_NUM.matcher(cmds.get(0)).matches()) {
+                    if (Constant.PATTERN_NUM.matcher(cmds.get(0)).matches()) {
                         int uid = Integer.valueOf(cmds.get(0));
                         SubTarget sub = proxy.sniffer.target.getSublist().get(uid);
                         Block block = sub.getBlock();
@@ -438,7 +439,7 @@ public class CommandSniffer implements ICommand {
                 meta = null;
             } else if (cmds.size() == 2 && "meta".equals(cmds.get(1))) {
                 //
-            } else if (cmds.size() == 3 && "meta".equals(cmds.get(1)) && PATTERN_NUM.matcher(cmds.get(2)).matches()) {
+            } else if (cmds.size() == 3 && "meta".equals(cmds.get(1)) && Constant.PATTERN_NUM.matcher(cmds.get(2)).matches()) {
                 meta = Integer.valueOf(cmds.get(2));
                 if (meta < 0 || meta > 15) {
                     meta = 0;

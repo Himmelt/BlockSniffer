@@ -1,36 +1,43 @@
 package him.sniffer.core;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import him.sniffer.client.gui.ParticleEffect;
 import him.sniffer.client.gui.SnifferHud;
+import him.sniffer.constant.Constant;
+import him.sniffer.constant.Mod;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.EmptyChunk;
+import org.apache.commons.io.FileUtils;
 
-import java.awt.Color;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import static him.sniffer.Sniffer.*;
-import static him.sniffer.constant.ModInfo.*;
 
 @SideOnly(Side.CLIENT)
 public class BlockSniffer {
 
     private boolean active;
     private Iterator<Target> iterator;
+    private final SnifferHud Hud = new SnifferHud();
+    private final HashSet<Target> targets = new HashSet<>();
     private final ParticleEffect particle = new ParticleEffect();
+    private static final Gson GSON = new GsonBuilder().create();
 
     public long last;
     public Target target;
     public boolean forbid;
     public long delay = 500;
     public ScanResult result;
-    public TargetJson targetJson;
-    public final SnifferHud Hud = new SnifferHud();
 
     public void reset() {
         active = false;
@@ -39,10 +46,41 @@ public class BlockSniffer {
         result = null;
     }
 
+    public void drawHUD() {
+        Hud.draw();
+    }
+
+    public void reload(File file) {
+        HashSet<Target> set = new HashSet<>();
+        try {
+            if (!file.exists() || !file.isFile()) {
+                file.delete();
+                file.createNewFile();
+                targets.clear();
+                targets.add(new Target(Blocks.diamond_ore, 0));
+            } else {
+                set = GSON.fromJson(FileUtils.readFileToString(file), new TypeToken<HashSet<Target>>() {
+                }.getType());
+                if (set != null && !set.isEmpty()) {
+                    set.removeIf(Target::invalid);
+                } else {
+                    set = new HashSet<Target>();
+                }
+            }
+        } catch (IOException e) {
+            Mod.logger.catching(e);
+            set = new HashSet<Target>();
+        } finally {
+            targets.clear();
+            targets.addAll(set);
+            reset();
+        }
+    }
+
     public void switchTarget() {
-        if (targetJson.size() >= 1) {
+        if (targets.size() >= 1) {
             if (iterator == null) {
-                iterator = targetJson.iterator();
+                iterator = targets.iterator();
             }
             if (iterator.hasNext()) {
                 result = null;
@@ -70,10 +108,10 @@ public class BlockSniffer {
         if (target != null && player != null) {
             int chunkX = player.chunkCoordX;
             int chunkZ = player.chunkCoordZ;
-            int hRange = target.hRange;
-            int length = RANGE.length;
-            for (int i = 0; i < length && RANGE[i][0] >= -hRange && RANGE[i][0] <= hRange && RANGE[i][1] >= -hRange && RANGE[i][1] <= hRange; i++) {
-                Chunk chunk = player.worldObj.getChunkFromChunkCoords(chunkX + RANGE[i][0], chunkZ + RANGE[i][1]);
+            int hRange = target.getHrange();
+            int length = Constant.RANGE.length;
+            for (int i = 0; i < length && Constant.RANGE[i][0] >= -hRange && Constant.RANGE[i][0] <= hRange && Constant.RANGE[i][1] >= -hRange && Constant.RANGE[i][1] <= hRange; i++) {
+                Chunk chunk = player.worldObj.getChunkFromChunkCoords(chunkX + Constant.RANGE[i][0], chunkZ + Constant.RANGE[i][1]);
                 if (!(chunk instanceof EmptyChunk)) {
                     scanChunk(chunk, player);
                     if (result != null) {
@@ -84,23 +122,9 @@ public class BlockSniffer {
         }
     }
 
-    public void addTarget(Target target) {
-        targetJson.addTarget(target);
-    }
-
-    public void ClearTarget() {
-        reset();
-        targetJson = new TargetJson();
-        targetJson.checkout();
-    }
-
     public void inActive() {
         active = false;
         proxy.addChatMessage("sf.inactive");
-    }
-
-    public void spawn(World w, double x1, double y1, double z1, double x2, double y2, double z2, Color c) {
-        particle.spawn(w, x1, y1, z1, x2, y2, z2, c);
     }
 
     public boolean isActive() {
@@ -109,37 +133,36 @@ public class BlockSniffer {
 
     public int removeTarget() {
         if (target != null && iterator != null) {
-            logger.info("before:" + target.hashCode());
+            Mod.logger.info("before:" + target.hashCode());
             iterator.remove();
             if (iterator.hasNext()) {
-                logger.info("has next");
+                Mod.logger.info("has next");
                 result = null;
                 last = System.currentTimeMillis();
                 target = iterator.next();
             } else {
-                logger.info("no next");
+                Mod.logger.info("no next");
                 reset();
             }
-            logger.info("check out...active" + isActive());
-            targetJson.checkout();
-            if (!targetJson.contains(target)) {
-                logger.info("not contains");
+            Mod.logger.info("check out...active" + isActive());
+            if (!targets.contains(target)) {
+                Mod.logger.info("not contains");
                 reset();
             }
-            logger.info("size after check:" + targetJson.size());
-            if (targetJson.size() >= 1) {
-                Target target = targetJson.iterator().next();
+            Mod.logger.info("size after check:" + targets.size());
+            if (targets.size() >= 1) {
+                Target target = targets.iterator().next();
                 System.out.println(target.hashCode());
             }
-            return targetJson.size();
+            return targets.size();
         }
         return -1;
     }
 
     private void scanChunk(Chunk chunk, EntityPlayer player) {
-        int y_l = target.mode == 0? target.depth[0] : (int) (player.posY - target.vRange);
-        int y_h = target.mode == 0? target.depth[1] : (int) (player.posY + target.vRange);
-        for (int y = y_h; y > 0 && y < 255 && y >= y_l; y--) {
+        int yl = target.getMode() == 0? target.getDepth0() : (int) (player.posY - target.getVrange());
+        int yh = target.getMode() == 0? target.getDepth1() : (int) (player.posY + target.getVrange());
+        for (int y = yh; y > 0 && y < 255 && y >= yl; y--) {
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {
                     Block block = chunk.getBlock(x, y, z);
@@ -150,7 +173,7 @@ public class BlockSniffer {
                     if (target.match(block, meta)) {
                         int blockX = chunk.xPosition * 16 + x;
                         int blockZ = chunk.zPosition * 16 + z;
-                        result = new ScanResult(player, block, target, meta, blockX, y, blockZ);
+                        result = new ScanResult(player, target, blockX, y, blockZ);
                         return;
                     }
                 }
@@ -158,4 +181,11 @@ public class BlockSniffer {
         }
     }
 
+    public void spawn(EntityPlayer player, ScanResult result) {
+        particle.spawn(player.worldObj, player.posX, player.posY, player.posZ, result.x, result.y, result.z, result.getColor());
+    }
+
+    public void save(File jsonFile) {
+
+    }
 }

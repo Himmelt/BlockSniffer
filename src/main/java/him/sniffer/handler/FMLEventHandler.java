@@ -9,6 +9,7 @@ import cpw.mods.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import him.sniffer.core.BlockSniffer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -26,12 +27,12 @@ public class FMLEventHandler {
 
     @SubscribeEvent
     public void onTickEnd(TickEvent event) {
-        if (!proxy.sniffer.forbid && event.side == Side.CLIENT) {
+        BlockSniffer sniffer = proxy.sniffer;
+        if (!sniffer.forbid && event.side == Side.CLIENT) {
             if (event.type == Type.RENDER && event.phase == Phase.END) {
                 GuiScreen guiscreen = Minecraft.getMinecraft().currentScreen;
-                if (guiscreen == null && proxy.sniffer.isActive() &&
-                    proxy.sniffer.last + 2000L > System.currentTimeMillis()) {
-                    proxy.sniffer.Hud.draw();
+                if (guiscreen == null && sniffer.isActive() && sniffer.last + 2000L > System.currentTimeMillis()) {
+                    sniffer.drawHUD();
                 }
             }
         }

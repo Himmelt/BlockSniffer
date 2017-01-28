@@ -4,6 +4,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import him.sniffer.core.ScanResult;
+import him.sniffer.core.Target;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
@@ -25,29 +26,29 @@ public class SnifferHud {
     }
 
     public void draw() {
-        Minecraft mc = FMLClientHandler.instance().getClient();
-        ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
-        String name = proxy.sniffer.target.getName();
-        String label = String.format("%s: ---", name);
+        Minecraft client = FMLClientHandler.instance().getClient();
+        Target target = proxy.sniffer.target;
         ScanResult result = proxy.sniffer.result;
+        ScaledResolution scale = new ScaledResolution(client, client.displayWidth, client.displayHeight);
+        String label = String.format("%s: ---", target.displayName());
         if (result != null && result.getDistance() >= 1.0D) {
             label = String.format("%s: %.2f", result.getItemStack().getDisplayName(), result.getDistance() - 1.0D);
         }
-        int width = scaledresolution.getScaledWidth();
-        int height = scaledresolution.getScaledHeight();
+        int width = scale.getScaledWidth();
+        int height = scale.getScaledHeight();
         byte iconHeight = 20;
         byte iconWidth = 20;
         byte lbHeight = 10;
-        FontRenderer fontrenderer = mc.fontRenderer;
+        FontRenderer fontrenderer = client.fontRenderer;
         int lbWidth = fontrenderer.getStringWidth(label + ' ');
         int x = (int) (getHudX() * (width - iconWidth));
         int y = (int) (getHudY() * (height - iconHeight - lbHeight));
-        mc.entityRenderer.setupOverlayRendering();
+        client.entityRenderer.setupOverlayRendering();
         drawRect(x - 2, y - 2, 20, 20, 1342177280);
         if (result != null) {
             itemRenderer.renderItem(result.getItemStack(), x, y);
         } else {
-            itemRenderer.renderItem(proxy.sniffer.target.getDelegate().getItemStack(), x, y);
+            itemRenderer.renderItem(target.getDelegate().getItemStack(), x, y);
         }
         int maxX = width - lbWidth;
         int lbX = Math.max(0, Math.min(x, maxX));

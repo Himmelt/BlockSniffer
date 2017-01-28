@@ -3,13 +3,12 @@ package him.sniffer.client.gui;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import him.sniffer.constant.Mod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
-
-import static him.sniffer.Sniffer.*;
 
 @SideOnly(Side.CLIENT)
 public class HudRenderer {
@@ -32,7 +31,7 @@ public class HudRenderer {
         try {
             itemRenderer.renderItemAndEffectIntoGUI(minecraft.fontRenderer, minecraft.renderEngine, itemStack, 0, 0);
         } catch (RuntimeException e) {
-            logger.catching(e);
+            Mod.logger.catching(e);
         } finally {
             itemRenderer.zLevel = 0.0F;
             GL11.glDisable('\u803a');
