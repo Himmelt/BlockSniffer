@@ -34,6 +34,7 @@ public class ScanResult {
     }
 
     public Color getColor() {
-        return target.getColor() != null? target.getColor() : new Color(block.getBlock().getMapColor(block.getMeta()).colorValue);
+        Color color = target.getColor();
+        return color != null? color : block.getMapColor();
     }
 }

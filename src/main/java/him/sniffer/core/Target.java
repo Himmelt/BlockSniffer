@@ -10,8 +10,10 @@ import net.minecraft.client.resources.I18n;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 
+import static him.sniffer.Sniffer.*;
 import static him.sniffer.constant.Constant.*;
 
 public class Target {
@@ -24,9 +26,11 @@ public class Target {
     private String color;
     private TBlock delegate;
     private final HashSet<TBlock> blocks;
+    private final HashMap<Integer, TBlock> map = new HashMap<>();
 
-    public Target(HashSet<TBlock> blocks) {
+    private Target(HashSet<TBlock> blocks) {
         this.blocks = blocks;
+        delegate = blocks.iterator().next();
         mode = 0;
         depth0 = 0;
         depth1 = 64;
@@ -35,22 +39,36 @@ public class Target {
         color = "map";
     }
 
-    public Target(Block block, Integer meta) {
-        this(Block.blockRegistry.getNameForObject(block), meta);
-    }
-
-    public Target(String name, Integer meta) {
+    public Target(TBlock blk) {
         blocks = new HashSet<TBlock>();
-        TBlock block = new TBlock(name, meta);
-        if (!block.invalid()) {
-            blocks.add(block);
-        }
+        blocks.add(blk);
+        delegate = blocks.iterator().next();
         mode = 0;
         depth0 = 0;
         depth1 = 64;
         hrange = 1;
         vrange = 16;
         color = "map";
+    }
+
+//    @Override
+//    public int hashCode() {
+//        return blocks.hashCode();
+//    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj instanceof Target) {
+            Target target = (Target) obj;
+            if (blocks == target.blocks) {
+                return true;
+            }
+            return blocks.containsAll(target.blocks) && target.blocks.containsAll(blocks);
+        }
+        return false;
     }
 
     public int getMode() {
@@ -70,7 +88,7 @@ public class Target {
         return depth1;
     }
 
-    private Target setDepth(int dl, int dh) {
+    public Target setDepth(int dl, int dh) {
         dl = dl < 0? 0 : dl > 255? 255 : dl;
         dh = dh < 0? 0 : dh > 255? 255 : dh;
         if (dl < dh) {
@@ -87,7 +105,7 @@ public class Target {
         return hrange;
     }
 
-    private Target setHrange(int hrange) {
+    public Target setHrange(int hrange) {
         this.hrange = hrange < 0? 0 : hrange > 15? 15 : hrange;
         return this;
     }
@@ -96,7 +114,7 @@ public class Target {
         return vrange;
     }
 
-    private Target setVrange(int vrange) {
+    public Target setVrange(int vrange) {
         this.vrange = vrange < 0? 0 : vrange > 15? 15 : vrange;
         return this;
     }
@@ -133,17 +151,39 @@ public class Target {
         blocks.add(block);
     }
 
-    public int removeBlock(int uid) {
-        return 0;
+    public void removeBlock(int uid) {
+        System.out.println("removeBlock");
+        getBlocks();
+        if (map.containsKey(uid)) {
+            TBlock block = map.get(uid);
+            blocks.remove(block);
+            map.remove(uid);
+            System.out.println("map:" + map.size() + "blks:" + blocks.size());
+            proxy.addChatMessage("sf.sub.rm.ok", block.getName());
+            if (blocks.size() >= 1) {
+                delegate = blocks.iterator().next();
+            } else {
+                proxy.addChatMessage("sf.sub.rm.t");
+                proxy.sniffer.removeTarget();
+            }
+        } else {
+            proxy.addChatMessage("sf.sub.rm.fail");
+        }
     }
 
-    private HashSet<TBlock> getBlocks() {
-        return blocks;
+    public HashMap<Integer, TBlock> getBlocks() {
+        map.clear();
+        int i = 0;
+        for (TBlock block : blocks) {
+            map.put(i, block);
+            i++;
+        }
+        return map;
     }
 
     public boolean invalid() {
         blocks.removeIf(TBlock::invalid);
-        return blocks.size() >= 1;
+        return blocks.isEmpty();
     }
 
     public TBlock getDelegate() {
@@ -176,7 +216,7 @@ public class Target {
                 out.beginObject();
                 out.name("blocks");
                 out.beginArray();
-                for (TBlock block : target.getBlocks()) {
+                for (TBlock block : target.blocks) {
                     BLCOK_ADAPTER.write(out, block);
                 }
                 out.endArray();
@@ -237,10 +277,11 @@ public class Target {
                     return null;
                 }
                 target.setMode(mode).setDepth(depth0, depth1).setHrange(hrange).setVrange(vrange).setColor(color);
+                target.delegate = target.blocks.iterator().next();
                 in.endObject();
             } catch (Exception e) {
                 Mod.logger.catching(e);
-                return null;
+                throw e;
             }
             return target;
         }

@@ -9,6 +9,7 @@ import him.sniffer.client.gui.ParticleEffect;
 import him.sniffer.client.gui.SnifferHud;
 import him.sniffer.constant.Constant;
 import him.sniffer.constant.Mod;
+import him.sniffer.core.TBlock.Adapter;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -18,8 +19,10 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 
 import static him.sniffer.Sniffer.*;
 
@@ -31,7 +34,10 @@ public class BlockSniffer {
     private final SnifferHud Hud = new SnifferHud();
     private final HashSet<Target> targets = new HashSet<>();
     private final ParticleEffect particle = new ParticleEffect();
-    private static final Gson GSON = new GsonBuilder().create();
+    private final HashMap<Integer, Target> map = new HashMap<>();
+    private static final Gson GSON = new GsonBuilder()
+            .registerTypeAdapter(Target.class, new Target.Adapter())
+            .registerTypeAdapter(TBlock.class, new Adapter()).create();
 
     public long last;
     public Target target;
@@ -51,27 +57,27 @@ public class BlockSniffer {
     }
 
     public void reload(File file) {
-        HashSet<Target> set = new HashSet<>();
+        HashSet<Target> set = null;
         try {
             if (!file.exists() || !file.isFile()) {
                 file.delete();
                 file.createNewFile();
-                targets.clear();
-                targets.add(new Target(Blocks.diamond_ore, 0));
             } else {
                 set = GSON.fromJson(FileUtils.readFileToString(file), new TypeToken<HashSet<Target>>() {
                 }.getType());
-                if (set != null && !set.isEmpty()) {
-                    set.removeIf(Target::invalid);
-                } else {
-                    set = new HashSet<Target>();
-                }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Mod.logger.catching(e);
-            set = new HashSet<Target>();
         } finally {
             targets.clear();
+            if (set == null) {
+                set = new HashSet<>();
+                set.add(new Target(new TBlock(Blocks.diamond_ore, 0)));
+            }
+            if (!set.isEmpty()) {
+                set.removeIf(Target::invalid);
+            }
+            Mod.logger.info(set.size());
             targets.addAll(set);
             reset();
         }
@@ -99,6 +105,7 @@ public class BlockSniffer {
                 proxy.addChatMessage("sf.inactive");
             }
         } else {
+            reset();
             proxy.addChatMessage("sf.empty");
         }
     }
@@ -131,32 +138,37 @@ public class BlockSniffer {
         return active;
     }
 
-    public int removeTarget() {
-        if (target != null && iterator != null) {
-            Mod.logger.info("before:" + target.hashCode());
-            iterator.remove();
-            if (iterator.hasNext()) {
-                Mod.logger.info("has next");
-                result = null;
-                last = System.currentTimeMillis();
-                target = iterator.next();
-            } else {
-                Mod.logger.info("no next");
-                reset();
-            }
-            Mod.logger.info("check out...active" + isActive());
-            if (!targets.contains(target)) {
-                Mod.logger.info("not contains");
-                reset();
-            }
-            Mod.logger.info("size after check:" + targets.size());
-            if (targets.size() >= 1) {
-                Target target = targets.iterator().next();
-                System.out.println(target.hashCode());
-            }
-            return targets.size();
+    public Map<Integer, Target> getTargets() {
+        map.clear();
+        int i = 0;
+        for (Target target : targets) {
+            map.put(i, target);
+            i++;
         }
-        return -1;
+        return map;
+    }
+
+    public void removeTarget() {
+        System.out.println("removeTarget");
+        if (iterator != null) {
+            iterator.remove();
+            System.out.println(targets.size());
+            if (targets.isEmpty()) {
+                clearTargets();
+            } else {
+                proxy.addChatMessage("sf.target.rm.ok");
+                if (iterator.hasNext()) {
+                    result = null;
+                    last = System.currentTimeMillis();
+                    target = iterator.next();
+                } else {
+                    reset();
+                    target = targets.iterator().next();
+                }
+            }
+        } else {
+            proxy.addChatMessage("sf.target.rm.fail");
+        }
     }
 
     private void scanChunk(Chunk chunk, EntityPlayer player) {
@@ -186,6 +198,20 @@ public class BlockSniffer {
     }
 
     public void save(File jsonFile) {
+        try {
+            FileUtils.writeStringToFile(jsonFile, GSON.toJson(targets));
+        } catch (IOException e) {
+            Mod.logger.catching(e);
+        }
+    }
 
+    public void clearTargets() {
+        targets.clear();
+        reset();
+        proxy.addChatMessage("sf.target.cla.ok");
+    }
+
+    public void addTarget(Target target) {
+        targets.add(target);
     }
 }

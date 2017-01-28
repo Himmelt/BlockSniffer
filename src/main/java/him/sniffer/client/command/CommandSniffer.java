@@ -4,7 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import him.sniffer.constant.ColorHelper;
 import him.sniffer.constant.Constant;
-import him.sniffer.core.SubTarget;
+import him.sniffer.core.TBlock;
 import him.sniffer.core.Target;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -89,25 +89,25 @@ public class CommandSniffer implements ICommand {
         if (cmds.size() >= 1) {
             String cmd = cmds.get(0);
             cmds.remove(0);
-            Target t = proxy.sniffer.target;
-            if (proxy.sniffer.isActive() && t != null) {
+            Target target = proxy.sniffer.target;
+            if (proxy.sniffer.isActive() && target != null) {
                 switch (cmd) {
                 case "i":
                 case "info":
-                    proxy.addChatMessage("sf.target.info", t.mode, t.colorValue, t.depth[0], t.depth[1], t.hRange, t.vRange);
+                    proxy.addChatMessage("sf.target.info", target.getMode(), target.getColorValue(), target.getDepth0(), target.getDepth1(), target.getHrange(), target.getVrange());
                     break;
                 case "m":
                 case "mode":
                     if (cmds.isEmpty()) {
-                        int m = t.mode;
+                        int m = target.getMode();
                         String mode = I18n.format(m == 0? "sf.mode.0" : "sf.mode.1");
                         proxy.addChatMessage("sf.target.m.get", mode);
                     } else {
                         if ("1".equals(cmds.get(0))) {
-                            t.mode = 1;
+                            target.setMode(1);
                             proxy.addChatMessage("sf.target.m.set", I18n.format("sf.mode.1"));
                         } else {
-                            t.mode = 0;
+                            target.setMode(0);
                             proxy.addChatMessage("sf.target.m.set", I18n.format("sf.mode.0"));
                         }
                     }
@@ -115,14 +115,11 @@ public class CommandSniffer implements ICommand {
                 case "h":
                 case "hrange":
                     if (cmds.isEmpty()) {
-                        proxy.addChatMessage("sf.target.h.get", t.hRange);
+                        proxy.addChatMessage("sf.target.h.get", target.getHrange());
                     } else {
                         if (Constant.PATTERN_NUM.matcher(cmds.get(0)).matches()) {
                             int h = Integer.valueOf(cmds.get(0));
-                            if (h < 0 || h > 15) {
-                                h = 1;
-                            }
-                            t.hRange = h;
+                            target.setHrange(h);
                             proxy.addChatMessage("sf.target.h.set", h);
                         } else {
                             proxy.addChatMessage("sf.invalid.num");
@@ -132,14 +129,11 @@ public class CommandSniffer implements ICommand {
                 case "v":
                 case "vrange":
                     if (cmds.isEmpty()) {
-                        proxy.addChatMessage("sf.target.v.get", t.vRange);
+                        proxy.addChatMessage("sf.target.v.get", target.getVrange());
                     } else {
                         if (Constant.PATTERN_NUM.matcher(cmds.get(0)).matches()) {
                             int v = Integer.valueOf(cmds.get(0));
-                            if (v < 0 || v > 255) {
-                                v = 16;
-                            }
-                            t.vRange = v;
+                            target.setVrange(v);
                             proxy.addChatMessage("sf.target.v.set", v);
                         } else {
                             proxy.addChatMessage("sf.invalid.num");
@@ -149,26 +143,13 @@ public class CommandSniffer implements ICommand {
                 case "d":
                 case "depth":
                     if (cmds.isEmpty()) {
-                        proxy.addChatMessage("sf.target.d.get", t.depth[0], t.depth[1]);
+                        proxy.addChatMessage("sf.target.d.get", target.getDepth0(), target.getDepth1());
                     } else if (cmds.size() >= 2) {
-                        if (Constant.PATTERN_NUM.matcher(cmds.get(0)).matches() &&
-                            Constant.PATTERN_NUM.matcher(cmds.get(1)).matches()) {
+                        if (Constant.PATTERN_NUM.matcher(cmds.get(0)).matches() && Constant.PATTERN_NUM.matcher(cmds.get(1)).matches()) {
                             int dl = Integer.valueOf(cmds.get(0));
                             int dh = Integer.valueOf(cmds.get(1));
-                            if (dl < 0 || dl > 255) {
-                                dl = 0;
-                            }
-                            if (dh < 0 || dh > 255) {
-                                dh = 64;
-                            }
-                            if (dl > dh) {
-                                t.depth[0] = dh;
-                                t.depth[1] = dl;
-                            } else {
-                                t.depth[0] = dl;
-                                t.depth[1] = dh;
-                            }
-                            proxy.addChatMessage("sf.target.d.set", t.depth[0], t.depth[1]);
+                            target.setDepth(dl, dh);
+                            proxy.addChatMessage("sf.target.d.set", target.getDepth0(), target.getDepth1());
                         } else {
                             proxy.addChatMessage("sf.invalid.num");
                         }
@@ -179,18 +160,16 @@ public class CommandSniffer implements ICommand {
                 case "c":
                 case "color":
                     if (cmds.isEmpty()) {
-                        proxy.addChatMessage("sf.target.c.get", t.colorValue);
+                        proxy.addChatMessage("sf.target.c.get", target.getColorValue());
                     } else {
                         String value = cmds.get(0);
                         if ("map".equals(value)) {
-                            t.colorValue = value;
-                            t.setColor(null);
+                            target.setColor(value);
                             proxy.addChatMessage("sf.target.c.map");
                         } else {
                             Color color = ColorHelper.getColor(value);
                             if (color != null) {
-                                t.colorValue = value;
-                                t.setColor(color);
+                                target.setColor(value);
                                 proxy.addChatMessage("sf.target.c.set", value);
                             } else {
                                 proxy.addChatMessage("sf.invalid.color");
@@ -200,15 +179,7 @@ public class CommandSniffer implements ICommand {
                     break;
                 case "rm":
                 case "remove":
-                    int result = proxy.sniffer.removeTarget();
-                    if (result == -1) {
-                        proxy.addChatMessage("sf.target.rm.fail");
-                    } else if (result == 0) {
-                        proxy.sniffer.ClearTarget();
-                        proxy.addChatMessage("sf.target.cla.ok");
-                    } else {
-                        proxy.addChatMessage("sf.target.rm.ok");
-                    }
+                    proxy.sniffer.removeTarget();
                     break;
                 case "cla":
                 case "clear":
@@ -216,7 +187,7 @@ public class CommandSniffer implements ICommand {
                         proxy.addChatMessage("sf.target.cla.hint");
                     } else {
                         if ("confirm".equals(cmds.get(0))) {
-                            proxy.sniffer.ClearTarget();
+                            proxy.sniffer.clearTargets();
                             proxy.addChatMessage("sf.target.cla.ok");
                         } else {
                             showTargetHelp("clear");
@@ -253,7 +224,7 @@ public class CommandSniffer implements ICommand {
                         proxy.addChatMessage("sf.target.cla.hint");
                     } else {
                         if ("confirm".equals(cmds.get(0))) {
-                            proxy.sniffer.ClearTarget();
+                            proxy.sniffer.clearTargets();
                             proxy.addChatMessage("sf.target.cla.ok");
                         } else {
                             showTargetHelp("clear");
@@ -312,38 +283,15 @@ public class CommandSniffer implements ICommand {
             }
             if (cmds.size() == 1) {
                 meta = null;
-            } else if (cmds.size() == 2 && "meta".equals(cmds.get(1))) {
-                //
             } else if (cmds.size() == 3 && "meta".equals(cmds.get(1)) && Constant.PATTERN_NUM.matcher(cmds.get(2)).matches()) {
                 meta = Integer.valueOf(cmds.get(2));
-                if (meta < 0 || meta > 15) {
-                    meta = 0;
-                }
             }
-            proxy.sniffer.addTarget(new Target(block, meta));
-            proxy.addChatMessage("sf.target.add.ok", getBlockName(block, meta));
+            TBlock blk = new TBlock(block, meta);
+            proxy.sniffer.addTarget(new Target(blk));
+            proxy.addChatMessage("sf.target.add.ok", blk.getName());
         } else {
             showTargetHelp("add");
         }
-    }
-
-    private static String getBlockName(Block block, Integer meta) {
-        if (block == null) {
-            return I18n.format("sf.unknow.block");
-        }
-        ItemStack itemStack = new ItemStack(block);
-        if (meta != null) {
-            itemStack.setItemDamage(meta);
-        }
-        String name = itemStack.getDisplayName();
-        if (name != null && !name.isEmpty()) {
-            return name;
-        }
-        name = block.getLocalizedName();
-        if (name != null && !name.isEmpty() && !Constant.PATTERN_NAME.matcher(name).matches()) {
-            return name;
-        }
-        return I18n.format("sf.unknow.block");
     }
 
     private static void processSub(EntityPlayer player, List<String> cmds) {
@@ -363,26 +311,7 @@ public class CommandSniffer implements ICommand {
                 if (cmds.size() >= 1) {
                     if (Constant.PATTERN_NUM.matcher(cmds.get(0)).matches()) {
                         int uid = Integer.valueOf(cmds.get(0));
-                        SubTarget sub = proxy.sniffer.target.getSublist().get(uid);
-                        Block block = sub.getBlock();
-                        Integer meta = sub.getMeta();
-                        int result = proxy.sniffer.target.removeBlock(uid);
-                        if (result == -1) {
-                            proxy.addChatMessage("sf.sub.rm.fail");
-                        } else if (result == 0) {
-                            proxy.addChatMessage("sf.sub.rm.t");
-                            int size = proxy.sniffer.removeTarget();
-                            if (size == -1) {
-                                proxy.addChatMessage("sf.target.rm.fail");
-                            } else if (size == 0) {
-                                proxy.sniffer.ClearTarget();
-                                proxy.addChatMessage("sf.target.cla.ok");
-                            } else {
-                                proxy.addChatMessage("sf.target.rm.ok");
-                            }
-                        } else {
-                            proxy.addChatMessage("sf.sub.rm.ok", getBlockName(block, meta));
-                        }
+                        proxy.sniffer.target.removeBlock(uid);
                     } else {
                         proxy.addChatMessage("sf.invalid.num");
                     }
@@ -437,16 +366,12 @@ public class CommandSniffer implements ICommand {
             }
             if (cmds.size() == 1) {
                 meta = null;
-            } else if (cmds.size() == 2 && "meta".equals(cmds.get(1))) {
-                //
             } else if (cmds.size() == 3 && "meta".equals(cmds.get(1)) && Constant.PATTERN_NUM.matcher(cmds.get(2)).matches()) {
                 meta = Integer.valueOf(cmds.get(2));
-                if (meta < 0 || meta > 15) {
-                    meta = 0;
-                }
             }
-            proxy.sniffer.target.addBlock(new SubTarget(block, meta));
-            proxy.addChatMessage("sf.sub.add.ok", getBlockName(block, meta));
+            TBlock blk = new TBlock(block, meta);
+            proxy.sniffer.target.addBlock(blk);
+            proxy.addChatMessage("sf.sub.add.ok", blk.getName());
         } else {
             showSubHelp("add");
         }
@@ -508,9 +433,9 @@ public class CommandSniffer implements ICommand {
 
     private static void showSubList(int way) {
         StringBuilder list = new StringBuilder();
-        Map<Integer, SubTarget> map = proxy.sniffer.target.getSublist();
-        for (Entry<Integer, SubTarget> entry : map.entrySet()) {
-            list.append(entry.getKey()).append(" -> ").append(entry.getValue().getItemStack().getDisplayName()).append(';');
+        Map<Integer, TBlock> map = proxy.sniffer.target.getBlocks();
+        for (Entry<Integer, TBlock> entry : map.entrySet()) {
+            list.append(entry.getKey()).append(" -> ").append(entry.getValue().getName()).append("; ");
         }
         proxy.addChatMessage(way == 0? "sf.sub.list" : "sf.sub.rm.list");
         proxy.addChatMessage(list.toString());
