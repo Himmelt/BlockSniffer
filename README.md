@@ -15,7 +15,7 @@
 ![方块探测][png]
 ![方块探测][gif]
 ### 下载
-1. [1.7.10-1.0.0][1710100]
+1. [1.7.10-1.0.0](/release/1.7.10/Sniffer-1.7.10-1614-1.0.0.jar "forge-1614")
 
 ### 特性
 0. 优化扫描规则，默认跳过空气方块，加快探测速度。
@@ -82,7 +82,5 @@
 |粒子颜色|使用`MapColor`|
 |默认探测目标|钻石原矿,元数据`0`|
 
-[logo]: http://7xij96.com1.z0.glb.clouddn.com/aaalogo.png-logo "LOGO"
 [png]: res/screenshot.png "截图"
 [gif]: res/sniffer.gif "探测"
-[1710100]: https://coding.net/u/Himmelt/p/Sniffer/git "1.7.10-1.0.0"
