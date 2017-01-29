@@ -118,9 +118,8 @@ public class CommandSniffer implements ICommand {
                         proxy.addChatMessage("sf.target.h.get", target.getHrange());
                     } else {
                         if (Constant.PATTERN_NUM.matcher(cmds.get(0)).matches()) {
-                            int h = Integer.valueOf(cmds.get(0));
-                            target.setHrange(h);
-                            proxy.addChatMessage("sf.target.h.set", h);
+                            target.setHrange(Integer.valueOf(cmds.get(0)));
+                            proxy.addChatMessage("sf.target.h.set", target.getHrange());
                         } else {
                             proxy.addChatMessage("sf.invalid.num");
                         }
@@ -132,9 +131,8 @@ public class CommandSniffer implements ICommand {
                         proxy.addChatMessage("sf.target.v.get", target.getVrange());
                     } else {
                         if (Constant.PATTERN_NUM.matcher(cmds.get(0)).matches()) {
-                            int v = Integer.valueOf(cmds.get(0));
-                            target.setVrange(v);
-                            proxy.addChatMessage("sf.target.v.set", v);
+                            target.setVrange(Integer.valueOf(cmds.get(0)));
+                            proxy.addChatMessage("sf.target.v.set", target.getVrange());
                         } else {
                             proxy.addChatMessage("sf.invalid.num");
                         }
@@ -146,9 +144,7 @@ public class CommandSniffer implements ICommand {
                         proxy.addChatMessage("sf.target.d.get", target.getDepth0(), target.getDepth1());
                     } else if (cmds.size() >= 2) {
                         if (Constant.PATTERN_NUM.matcher(cmds.get(0)).matches() && Constant.PATTERN_NUM.matcher(cmds.get(1)).matches()) {
-                            int dl = Integer.valueOf(cmds.get(0));
-                            int dh = Integer.valueOf(cmds.get(1));
-                            target.setDepth(dl, dh);
+                            target.setDepth(Integer.valueOf(cmds.get(0)), Integer.valueOf(cmds.get(1)));
                             proxy.addChatMessage("sf.target.d.set", target.getDepth0(), target.getDepth1());
                         } else {
                             proxy.addChatMessage("sf.invalid.num");
@@ -170,7 +166,7 @@ public class CommandSniffer implements ICommand {
                             Color color = ColorHelper.getColor(value);
                             if (color != null) {
                                 target.setColor(value);
-                                proxy.addChatMessage("sf.target.c.set", value);
+                                proxy.addChatMessage("sf.target.c.set", target.getColorValue());
                             } else {
                                 proxy.addChatMessage("sf.invalid.color");
                             }
