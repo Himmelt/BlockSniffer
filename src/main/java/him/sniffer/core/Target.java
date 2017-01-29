@@ -51,10 +51,10 @@ public class Target {
         color = "map";
     }
 
-//    @Override
-//    public int hashCode() {
-//        return blocks.hashCode();
-//    }
+    @Override
+    public int hashCode() {
+        return 0;//blocks.hashCode();
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -152,13 +152,11 @@ public class Target {
     }
 
     public void removeBlock(int uid) {
-        System.out.println("removeBlock");
         getBlocks();
         if (map.containsKey(uid)) {
             TBlock block = map.get(uid);
             blocks.remove(block);
             map.remove(uid);
-            System.out.println("map:" + map.size() + "blks:" + blocks.size());
             proxy.addChatMessage("sf.sub.rm.ok", block.getName());
             if (blocks.size() >= 1) {
                 delegate = blocks.iterator().next();

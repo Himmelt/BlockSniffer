@@ -19,10 +19,8 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 
 import static him.sniffer.Sniffer.*;
 
@@ -34,7 +32,6 @@ public class BlockSniffer {
     private final SnifferHud Hud = new SnifferHud();
     private final HashSet<Target> targets = new HashSet<>();
     private final ParticleEffect particle = new ParticleEffect();
-    private final HashMap<Integer, Target> map = new HashMap<>();
     private static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(Target.class, new Target.Adapter())
             .registerTypeAdapter(TBlock.class, new Adapter()).create();
@@ -60,8 +57,12 @@ public class BlockSniffer {
         HashSet<Target> set = null;
         try {
             if (!file.exists() || !file.isFile()) {
-                file.delete();
-                file.createNewFile();
+                if (file.delete()) {
+                    //
+                }
+                if (file.createNewFile()) {
+                    //
+                }
             } else {
                 set = GSON.fromJson(FileUtils.readFileToString(file), new TypeToken<HashSet<Target>>() {
                 }.getType());
@@ -77,7 +78,6 @@ public class BlockSniffer {
             if (!set.isEmpty()) {
                 set.removeIf(Target::invalid);
             }
-            Mod.logger.info(set.size());
             targets.addAll(set);
             reset();
         }
@@ -138,25 +138,13 @@ public class BlockSniffer {
         return active;
     }
 
-    public Map<Integer, Target> getTargets() {
-        map.clear();
-        int i = 0;
-        for (Target target : targets) {
-            map.put(i, target);
-            i++;
-        }
-        return map;
-    }
-
     public void removeTarget() {
-        System.out.println("removeTarget");
         if (iterator != null) {
             iterator.remove();
-            System.out.println(targets.size());
+            proxy.addChatMessage("sf.target.rm.ok", target.displayName());
             if (targets.isEmpty()) {
                 clearTargets();
             } else {
-                proxy.addChatMessage("sf.target.rm.ok");
                 if (iterator.hasNext()) {
                     result = null;
                     last = System.currentTimeMillis();
