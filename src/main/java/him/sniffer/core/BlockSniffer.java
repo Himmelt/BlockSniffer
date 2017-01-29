@@ -9,7 +9,6 @@ import him.sniffer.client.gui.ParticleEffect;
 import him.sniffer.client.gui.SnifferHud;
 import him.sniffer.constant.Constant;
 import him.sniffer.constant.Mod;
-import him.sniffer.core.TBlock.Adapter;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -34,7 +33,8 @@ public class BlockSniffer {
     private final ParticleEffect particle = new ParticleEffect();
     private static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(Target.class, new Target.Adapter())
-            .registerTypeAdapter(TBlock.class, new Adapter()).create();
+            .registerTypeAdapter(TBlock.class, new TBlock.Adapter())
+            .setPrettyPrinting().create();
 
     public long last;
     public Target target;
