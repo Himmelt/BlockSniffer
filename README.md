@@ -1,5 +1,7 @@
 # 方块探测 (Sniffer)
 
+<img src="res/logo.png" width = "256px" />
+
 ### 前 言
 1. 本Mod是 矿物追踪 (Scenter) 的改进增强版，主要功能也是探测方块。
 2. 本项目在代码结构和核心代码上与 Scenter 没有关系，至少我是完全重新写的算法，重复的话也不能赖我，我没有照抄。
@@ -8,6 +10,10 @@
 5. 我对这协议那协议的都不懂，如果本项目的开源代码侵犯了谁的权利的话，可以直接联系我。
 6. 欢迎提建议和贡献代码！
 
+### 截图
+
+![方块探测][png]
+![方块探测][gif]
 ### 下载
 1. [1.7.10-1.0.0][1710100]
 
@@ -76,4 +82,7 @@
 |粒子颜色|使用`MapColor`|
 |默认探测目标|钻石原矿,元数据`0`|
 
+[logo]: http://7xij96.com1.z0.glb.clouddn.com/aaalogo.png-logo "LOGO"
+[png]: res/screenshot.png "截图"
+[gif]: res/sniffer.gif "探测"
 [1710100]: https://coding.net/u/Himmelt/p/Sniffer/git "1.7.10-1.0.0"

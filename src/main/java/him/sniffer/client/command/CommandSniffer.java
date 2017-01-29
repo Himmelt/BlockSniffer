@@ -184,7 +184,6 @@ public class CommandSniffer implements ICommand {
                     } else {
                         if ("confirm".equals(cmds.get(0))) {
                             proxy.sniffer.clearTargets();
-                            proxy.addChatMessage("sf.target.cla.ok");
                         } else {
                             showTargetHelp("clear");
                         }
