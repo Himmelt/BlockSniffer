@@ -94,6 +94,7 @@ public class TBlock {
                 out.value(block.toString());
             } catch (Exception e) {
                 Mod.logger.catching(e);
+                throw e;
             }
         }
 
