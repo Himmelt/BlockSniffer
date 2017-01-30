@@ -27,7 +27,7 @@ public class SnifferHud {
 
     public void draw() {
         Minecraft client = FMLClientHandler.instance().getClient();
-        Target target = proxy.sniffer.target;
+        Target target = proxy.sniffer.getTarget();
         ScanResult result = proxy.sniffer.result;
         ScaledResolution scale = new ScaledResolution(client, client.displayWidth, client.displayHeight);
         String label = String.format("%s: ---", target.displayName());

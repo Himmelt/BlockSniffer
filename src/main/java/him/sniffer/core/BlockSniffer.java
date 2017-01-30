@@ -18,35 +18,47 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import static him.sniffer.Sniffer.*;
 
 @SideOnly(Side.CLIENT)
 public class BlockSniffer {
 
+    private int index;
+    private int count;
     private boolean active;
-    private Iterator<Target> iterator;
     private final SnifferHud Hud = new SnifferHud();
-    private final HashSet<Target> targets = new HashSet<>();
+    private final HashMap<Integer, Target> targets = new HashMap<>();
     private final ParticleEffect particle = new ParticleEffect();
-    private static final Gson GSON = new GsonBuilder()
-            .registerTypeAdapter(Target.class, new Target.Adapter())
-            .registerTypeAdapter(TBlock.class, new TBlock.Adapter())
-            .setPrettyPrinting().create();
+    private static final Gson GSON = new GsonBuilder().registerTypeAdapter(Target.class, new Target.Adapter()).registerTypeAdapter(TBlock.class, new TBlock.Adapter()).setPrettyPrinting().create();
 
     public long last;
-    public Target target;
-    public boolean forbid;
     public long delay = 500;
     public ScanResult result;
 
     public void reset() {
         active = false;
-        iterator = null;
-        target = null;
+        index = next(count);
         result = null;
+    }
+
+    public Target getTarget() {
+        return targets.get(index);
+    }
+
+    private int next(final int start) {
+        for (int index = start + 1; index != start; index++) {
+            if (targets.containsKey(index)) {
+                return index;
+            }
+            if (index >= count - 1) {
+                index = -1;
+            }
+        }
+        return -1;
     }
 
     public void drawHUD() {
@@ -54,7 +66,7 @@ public class BlockSniffer {
     }
 
     public void reload(File file) {
-        HashSet<Target> set = null;
+        List<Target> list = null;
         try {
             if (!file.exists() || !file.isFile()) {
                 if (file.delete()) {
@@ -64,59 +76,50 @@ public class BlockSniffer {
                     //
                 }
             } else {
-                set = GSON.fromJson(FileUtils.readFileToString(file), new TypeToken<HashSet<Target>>() {
+                list = GSON.fromJson(FileUtils.readFileToString(file), new TypeToken<ArrayList<Target>>() {
                 }.getType());
             }
         } catch (Exception e) {
             Mod.logger.catching(e);
         } finally {
             targets.clear();
-            if (set == null) {
-                set = new HashSet<>();
-                set.add(new Target(new TBlock(Blocks.diamond_ore, 0)));
+            if (list == null) {
+                list = new ArrayList<>();
+                list.add(new Target(new TBlock(Blocks.diamond_ore, 0)));
             }
-            if (!set.isEmpty()) {
-                set.removeIf(Target::invalid);
+            for (Target target : list) {
+                addTarget(target);
             }
-            targets.addAll(set);
             reset();
         }
     }
 
     public void switchTarget() {
-        if (targets.size() >= 1) {
-            if (iterator == null) {
-                iterator = targets.iterator();
-            }
-            if (iterator.hasNext()) {
-                result = null;
-                last = System.currentTimeMillis();
-                if (!active) {
-                    active = true;
-                    if (target == null) {
-                        target = iterator.next();
-                    }
-                    proxy.addChatMessage("sf.avtive");
-                } else {
-                    /// BUG 添加之后再切换，导致迭代错误
-                    target = iterator.next();
-                }
-            } else {
-                reset();
-                proxy.addChatMessage("sf.inactive");
-            }
-        } else {
+        int index = next(active? this.index : count);
+        if (index == -1) {
             reset();
             proxy.addChatMessage("sf.empty");
+        } else {
+            if (active && index == next(count)) {
+                reset();
+                proxy.addChatMessage("sf.inactive");
+            } else {
+                last = System.currentTimeMillis();
+                this.index = index;
+                if (!active) {
+                    active = true;
+                    proxy.addChatMessage("sf.avtive");
+                }
+            }
         }
     }
 
     public void scanWorld(EntityPlayer player) {
         result = null;
-        if (target != null && player != null) {
+        if (getTarget() != null && player != null) {
             int chunkX = player.chunkCoordX;
             int chunkZ = player.chunkCoordZ;
-            int hRange = target.getHrange();
+            int hRange = getTarget().getHrange();
             int length = Constant.RANGE.length;
             for (int i = 0; i < length && Constant.RANGE[i][0] >= -hRange && Constant.RANGE[i][0] <= hRange && Constant.RANGE[i][1] >= -hRange && Constant.RANGE[i][1] <= hRange; i++) {
                 Chunk chunk = player.worldObj.getChunkFromChunkCoords(chunkX + Constant.RANGE[i][0], chunkZ + Constant.RANGE[i][1]);
@@ -130,39 +133,25 @@ public class BlockSniffer {
         }
     }
 
-    public void inActive() {
-        active = false;
-        proxy.addChatMessage("sf.inactive");
-    }
-
     public boolean isActive() {
         return active;
     }
 
     public void removeTarget() {
-        if (iterator != null) {
-            iterator.remove();
-            proxy.addChatMessage("sf.target.rm.ok", target.displayName());
-            if (targets.isEmpty()) {
-                clearTargets();
-            } else {
-                if (iterator.hasNext()) {
-                    result = null;
-                    last = System.currentTimeMillis();
-                    target = iterator.next();
-                } else {
-                    reset();
-                    target = targets.iterator().next();
-                }
-            }
+        Target target = targets.get(index);
+        targets.remove(index);
+        proxy.addChatMessage("sf.target.rm.ok", target.displayName());
+        if (targets.isEmpty()) {
+            clearTargets();
         } else {
-            proxy.addChatMessage("sf.target.rm.fail");
+            switchTarget();
         }
     }
 
     private void scanChunk(Chunk chunk, EntityPlayer player) {
-        int yl = target.getMode() == 0? target.getDepth0() : (int) (player.posY - target.getVrange());
-        int yh = target.getMode() == 0? target.getDepth1() : (int) (player.posY + target.getVrange());
+        Target target = getTarget();
+        int yl = target.getMode() == 0? target.getDepthL() : (int) (player.posY - target.getVrange());
+        int yh = target.getMode() == 0? target.getDepthH() : (int) (player.posY + target.getVrange());
         for (int y = yh; y > 0 && y < 255 && y >= yl; y--) {
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {
@@ -200,7 +189,11 @@ public class BlockSniffer {
         proxy.addChatMessage("sf.target.cla.ok");
     }
 
-    public void addTarget(Target target) {
-        targets.add(target);
+    public boolean addTarget(Target target) {
+        if (!target.invalid() && !targets.containsValue(target)) {
+            targets.put(count++, target);
+            return true;
+        }
+        return false;
     }
 }

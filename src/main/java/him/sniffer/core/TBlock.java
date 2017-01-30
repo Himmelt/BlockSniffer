@@ -30,7 +30,7 @@ public class TBlock {
 
     @Override
     public int hashCode() {
-        return block.hashCode();// * 17 + (meta == null? -1 : meta);
+        return block.hashCode();
     }
 
     @Override

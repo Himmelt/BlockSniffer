@@ -16,7 +16,7 @@ public class EventBusHandler {
     @SubscribeEvent
     public void onPlayerRightClickBlock(PlayerInteractEvent event) {
         final BlockSniffer sniffer = proxy.sniffer;
-        if (!sniffer.forbid && event.world instanceof WorldClient) {
+        if (event.world instanceof WorldClient) {
             if (event.action == Action.RIGHT_CLICK_BLOCK && sniffer.isActive() && sniffer.last + sniffer.delay < System.currentTimeMillis()) {
                 final EntityPlayer player = event.entityPlayer;
                 sniffer.last = System.currentTimeMillis();

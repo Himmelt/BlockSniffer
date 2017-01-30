@@ -34,7 +34,7 @@ public class CommandSniffer implements ICommand {
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
-        if (!proxy.sniffer.forbid && sender instanceof EntityPlayer && sender.getEntityWorld() instanceof WorldClient) {
+        if (sender instanceof EntityPlayer && sender.getEntityWorld() instanceof WorldClient) {
             List<String> cmds = new ArrayList<>(Arrays.asList(args));
             if (cmds.size() >= 1) {
                 cmds.remove(0);
@@ -60,14 +60,11 @@ public class CommandSniffer implements ICommand {
                     proxy.sniffer.reset();
                     proxy.addChatMessage("sf.reset");
                     break;
-                case "off":
-                    proxy.sniffer.inActive();
-                    break;
                 case "target":
                     processTarget((EntityPlayer) sender, cmds);
                     break;
                 case "sub":
-                    if (proxy.sniffer.isActive() && proxy.sniffer.target != null) {
+                    if (proxy.sniffer.isActive() && proxy.sniffer.getTarget() != null) {
                         processSub((EntityPlayer) sender, cmds);
                     } else {
                         proxy.addChatMessage("sf.target.not");
@@ -89,12 +86,12 @@ public class CommandSniffer implements ICommand {
         if (cmds.size() >= 1) {
             String cmd = cmds.get(0);
             cmds.remove(0);
-            Target target = proxy.sniffer.target;
+            Target target = proxy.sniffer.getTarget();
             if (proxy.sniffer.isActive() && target != null) {
                 switch (cmd) {
                 case "i":
                 case "info":
-                    proxy.addChatMessage("sf.target.info", target.getMode(), target.getColorValue(), target.getDepth0(), target.getDepth1(), target.getHrange(), target.getVrange());
+                    proxy.addChatMessage("sf.target.info", target.getMode(), target.getColorValue(), target.getDepthL(), target.getDepthH(), target.getHrange(), target.getVrange());
                     break;
                 case "m":
                 case "mode":
@@ -141,11 +138,11 @@ public class CommandSniffer implements ICommand {
                 case "d":
                 case "depth":
                     if (cmds.isEmpty()) {
-                        proxy.addChatMessage("sf.target.d.get", target.getDepth0(), target.getDepth1());
+                        proxy.addChatMessage("sf.target.d.get", target.getDepthL(), target.getDepthH());
                     } else if (cmds.size() >= 2) {
                         if (Constant.PATTERN_NUM.matcher(cmds.get(0)).matches() && Constant.PATTERN_NUM.matcher(cmds.get(1)).matches()) {
                             target.setDepth(Integer.valueOf(cmds.get(0)), Integer.valueOf(cmds.get(1)));
-                            proxy.addChatMessage("sf.target.d.set", target.getDepth0(), target.getDepth1());
+                            proxy.addChatMessage("sf.target.d.set", target.getDepthL(), target.getDepthH());
                         } else {
                             proxy.addChatMessage("sf.invalid.num");
                         }
@@ -306,7 +303,7 @@ public class CommandSniffer implements ICommand {
                 if (cmds.size() >= 1) {
                     if (Constant.PATTERN_NUM.matcher(cmds.get(0)).matches()) {
                         int uid = Integer.valueOf(cmds.get(0));
-                        proxy.sniffer.target.removeBlock(uid);
+                        proxy.sniffer.getTarget().removeBlock(uid);
                     } else {
                         proxy.addChatMessage("sf.invalid.num");
                     }
@@ -365,7 +362,7 @@ public class CommandSniffer implements ICommand {
                 meta = Integer.valueOf(cmds.get(2));
             }
             TBlock blk = new TBlock(block, meta);
-            proxy.sniffer.target.addBlock(blk);
+            proxy.sniffer.getTarget().addBlock(blk);
             proxy.addChatMessage("sf.sub.add.ok", blk.getName());
         } else {
             showSubHelp("add");
@@ -428,7 +425,7 @@ public class CommandSniffer implements ICommand {
 
     private static void showSubList(int way) {
         StringBuilder list = new StringBuilder();
-        Map<Integer, TBlock> map = proxy.sniffer.target.getBlocks();
+        Map<Integer, TBlock> map = proxy.sniffer.getTarget().getBlocks();
         for (Entry<Integer, TBlock> entry : map.entrySet()) {
             list.append(entry.getKey()).append(" -> ").append(entry.getValue().getName()).append("; ");
         }

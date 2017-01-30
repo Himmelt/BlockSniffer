@@ -10,8 +10,10 @@ import net.minecraft.client.resources.I18n;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
+import java.util.Map.Entry;
 
 import static him.sniffer.Sniffer.*;
 import static him.sniffer.constant.Constant.*;
@@ -19,33 +21,34 @@ import static him.sniffer.constant.Constant.*;
 public class Target {
 
     private int mode;
-    private int depth0;
-    private int depth1;
+    private int depthL;
+    private int depthH;
     private int hrange;
     private int vrange;
+    private int index;
+    private int count;
     private String color;
-    private TBlock delegate;
-    private final HashSet<TBlock> blocks;
-    private final HashMap<Integer, TBlock> map = new HashMap<>();
+    private final HashMap<Integer, TBlock> blocks = new HashMap<>();
 
-    private Target(HashSet<TBlock> blocks) {
-        this.blocks = blocks;
-        delegate = blocks.iterator().next();
+    private Target(List<TBlock> blocks) {
+        this.blocks.clear();
+        for (TBlock block : blocks) {
+            addBlock(block);
+        }
         mode = 0;
-        depth0 = 0;
-        depth1 = 64;
+        depthL = 0;
+        depthH = 64;
         hrange = 1;
         vrange = 16;
         color = "map";
     }
 
-    public Target(TBlock blk) {
-        blocks = new HashSet<TBlock>();
-        blocks.add(blk);
-        delegate = blocks.iterator().next();
+    public Target(TBlock block) {
+        blocks.clear();
+        addBlock(block);
         mode = 0;
-        depth0 = 0;
-        depth1 = 64;
+        depthL = 0;
+        depthH = 64;
         hrange = 1;
         vrange = 16;
         color = "map";
@@ -53,7 +56,7 @@ public class Target {
 
     @Override
     public int hashCode() {
-        return 0;//blocks.hashCode();
+        return 0;
     }
 
     @Override
@@ -66,7 +69,7 @@ public class Target {
             if (blocks == target.blocks) {
                 return true;
             }
-            return blocks.containsAll(target.blocks) && target.blocks.containsAll(blocks);
+            return blocks.values().containsAll(target.blocks.values()) && target.blocks.values().containsAll(blocks.values());
         }
         return false;
     }
@@ -80,23 +83,23 @@ public class Target {
         return this;
     }
 
-    public int getDepth0() {
-        return depth0;
+    public int getDepthL() {
+        return depthL;
     }
 
-    public int getDepth1() {
-        return depth1;
+    public int getDepthH() {
+        return depthH;
     }
 
     public Target setDepth(int dl, int dh) {
         dl = dl < 0? 0 : dl > 255? 255 : dl;
         dh = dh < 0? 0 : dh > 255? 255 : dh;
         if (dl < dh) {
-            depth0 = dl;
-            depth1 = dh;
+            depthL = dl;
+            depthH = dh;
         } else {
-            depth0 = dh;
-            depth1 = dl;
+            depthL = dh;
+            depthH = dl;
         }
         return this;
     }
@@ -133,33 +136,39 @@ public class Target {
 
     public boolean match(Block blk, int meta) {
         boolean match = false;
-        for (TBlock block : blocks) {
+        TBlock block;
+        for (Entry<Integer, TBlock> entry : blocks.entrySet()) {
+            block = entry.getValue();
             if (block.getMeta() == null) {
                 match = blk.equals(block.getBlock());
             } else {
                 match = blk.equals(block.getBlock()) && meta == block.getMeta();
             }
             if (match) {
-                delegate = block;
+                index = entry.getKey();
                 break;
             }
         }
         return match;
     }
 
-    public void addBlock(TBlock block) {
-        blocks.add(block);
+    public boolean addBlock(TBlock block) {
+        if (!block.invalid() && !blocks.containsValue(block)) {
+            blocks.put(count++, block);
+            return true;
+        }
+        return false;
     }
 
     public void removeBlock(int uid) {
-        getBlocks();
-        if (map.containsKey(uid)) {
-            TBlock block = map.get(uid);
-            blocks.remove(block);
-            map.remove(uid);
+        if (blocks.containsKey(uid)) {
+            TBlock block = blocks.get(uid);
+            blocks.remove(uid);
             proxy.addChatMessage("sf.sub.rm.ok", block.getName());
             if (blocks.size() >= 1) {
-                delegate = blocks.iterator().next();
+                if (index == uid) {
+                    loop();
+                }
             } else {
                 proxy.addChatMessage("sf.sub.rm.t");
                 proxy.sniffer.removeTarget();
@@ -169,31 +178,33 @@ public class Target {
         }
     }
 
-    public HashMap<Integer, TBlock> getBlocks() {
-        map.clear();
-        int i = 0;
-        for (TBlock block : blocks) {
-            map.put(i, block);
-            i++;
+    private void loop() {
+        for (int i = 0; i < count; i++) {
+            if (blocks.containsKey(i)) {
+                index = i;
+                break;
+            }
         }
-        return map;
+    }
+
+    public HashMap<Integer, TBlock> getBlocks() {
+        return blocks;
     }
 
     public boolean invalid() {
-        blocks.removeIf(TBlock::invalid);
         return blocks.isEmpty();
     }
 
     public TBlock getDelegate() {
-        return delegate;
+        return blocks.get(index);
     }
 
     public String displayName() {
-        String name = delegate.getBlock().getLocalizedName();
+        String name = getDelegate().getBlock().getLocalizedName();
         if (name != null && !PATTERN_NAME.matcher(name).matches()) {
             return name;
         }
-        name = delegate.getItemStack().getDisplayName();
+        name = getDelegate().getItemStack().getDisplayName();
         if (name != null && !PATTERN_NAME.matcher(name).matches()) {
             return name;
         }
@@ -214,13 +225,13 @@ public class Target {
                 out.beginObject();
                 out.name("blocks");
                 out.beginArray();
-                for (TBlock block : target.blocks) {
+                for (TBlock block : target.blocks.values()) {
                     BLCOK_ADAPTER.write(out, block);
                 }
                 out.endArray();
                 out.name("mode").value(target.getMode());
-                out.name("depth0").value(target.getDepth0());
-                out.name("depth1").value(target.getDepth1());
+                out.name("depthL").value(target.getDepthL());
+                out.name("depthH").value(target.getDepthH());
                 out.name("hrange").value(target.getHrange());
                 out.name("vrange").value(target.getVrange());
                 out.name("color").value(target.getColorValue());
@@ -234,7 +245,7 @@ public class Target {
         public Target read(JsonReader in) throws IOException {
             Target target;
             try {
-                HashSet<TBlock> blocks = new HashSet<>();
+                List<TBlock> blocks = new ArrayList<>();
                 int mode = 0, depth0 = 0, depth1 = 64, hrange = 1, vrange = 16;
                 String color = "map";
                 in.beginObject();
@@ -243,20 +254,17 @@ public class Target {
                     case "blocks":
                         in.beginArray();
                         while (in.hasNext()) {
-                            TBlock block = BLCOK_ADAPTER.read(in);
-                            if (block != null && !block.invalid()) {
-                                blocks.add(block);
-                            }
+                            blocks.add(BLCOK_ADAPTER.read(in));
                         }
                         in.endArray();
                         break;
                     case "mode":
                         mode = in.nextInt();
                         break;
-                    case "depth0":
+                    case "depthL":
                         depth0 = in.nextInt();
                         break;
-                    case "depth1":
+                    case "depthH":
                         depth1 = in.nextInt();
                         break;
                     case "hrange":
@@ -275,7 +283,6 @@ public class Target {
                     return null;
                 }
                 target.setMode(mode).setDepth(depth0, depth1).setHrange(hrange).setVrange(vrange).setColor(color);
-                target.delegate = target.blocks.iterator().next();
                 in.endObject();
             } catch (Exception e) {
                 Mod.logger.catching(e);
