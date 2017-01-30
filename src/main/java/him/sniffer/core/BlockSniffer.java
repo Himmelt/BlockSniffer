@@ -49,16 +49,23 @@ public class BlockSniffer {
         return targets.get(index);
     }
 
-    private int next(final int start) {
-        for (int index = start + 1; index != start; index++) {
+    private int next(int start) {
+        start = start >= count - 1? 0 : start + 1;
+        int time = 0, index = start;
+        while (true) {
+            if (index == start) {
+                time++;
+                if (time >= 2) {
+                    return -1;
+                }
+            }
             if (targets.containsKey(index)) {
                 return index;
             }
             if (index >= count - 1) {
-                index = -1;
+                index = 0;
             }
         }
-        return -1;
     }
 
     public void drawHUD() {
@@ -76,13 +83,14 @@ public class BlockSniffer {
                     //
                 }
             } else {
-                list = GSON.fromJson(FileUtils.readFileToString(file), new TypeToken<ArrayList<Target>>() {
+                list = GSON.fromJson(FileUtils.readFileToString(file), new TypeToken<List<Target>>() {
                 }.getType());
             }
         } catch (Exception e) {
             Mod.logger.catching(e);
         } finally {
             targets.clear();
+            count = 0;
             if (list == null) {
                 list = new ArrayList<>();
                 list.add(new Target(new TBlock(Blocks.diamond_ore, 0)));
@@ -95,6 +103,7 @@ public class BlockSniffer {
     }
 
     public void switchTarget() {
+        System.out.println(active + "," + index + ',' + count);
         int index = next(active? this.index : count);
         if (index == -1) {
             reset();
@@ -177,7 +186,7 @@ public class BlockSniffer {
 
     public void save(File jsonFile) {
         try {
-            FileUtils.writeStringToFile(jsonFile, GSON.toJson(targets));
+            FileUtils.writeStringToFile(jsonFile, GSON.toJson(targets.values()));
         } catch (IOException e) {
             Mod.logger.catching(e);
         }
@@ -185,6 +194,7 @@ public class BlockSniffer {
 
     public void clearTargets() {
         targets.clear();
+        count = 0;
         reset();
         proxy.addChatMessage("sf.target.cla.ok");
     }
@@ -192,6 +202,7 @@ public class BlockSniffer {
     public boolean addTarget(Target target) {
         if (!target.invalid() && !targets.containsValue(target)) {
             targets.put(count++, target);
+            System.out.println(count + target.toString());
             return true;
         }
         return false;

@@ -21,6 +21,12 @@ import static him.sniffer.constant.Constant.*;
 public class Target {
 
     private int mode;
+
+    @Override
+    public String toString() {
+        return getDelegate().toString();
+    }
+
     private int depthL;
     private int depthH;
     private int hrange;
@@ -56,7 +62,7 @@ public class Target {
 
     @Override
     public int hashCode() {
-        return 0;
+        return blocks.hashCode();
     }
 
     @Override
