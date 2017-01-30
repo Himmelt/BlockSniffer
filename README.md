@@ -1,4 +1,4 @@
-# 方块探测 (Sniffer)
+# 方块探测 (Block Sniffer)
 
 <img src="res/logo.png" width = "256px" />
 

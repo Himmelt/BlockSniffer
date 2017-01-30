@@ -115,7 +115,7 @@ public class Target {
     }
 
     public Target setVrange(int vrange) {
-        this.vrange = vrange < 0? 0 : vrange > 15? 15 : vrange;
+        this.vrange = vrange < 0? 0 : vrange > 255? 255 : vrange;
         return this;
     }
 

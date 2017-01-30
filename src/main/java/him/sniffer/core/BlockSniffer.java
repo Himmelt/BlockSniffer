@@ -98,6 +98,7 @@ public class BlockSniffer {
                     }
                     proxy.addChatMessage("sf.avtive");
                 } else {
+                    /// BUG 添加之后再切换，导致迭代错误
                     target = iterator.next();
                 }
             } else {
