@@ -312,10 +312,10 @@ public class CommandSniffer implements ICommand {
                 }
                 break;
             default:
-                showSubHelp("");
+                showSubHelp();
             }
         } else {
-            showSubHelp("");
+            showSubHelp();
         }
     }
 
@@ -365,7 +365,7 @@ public class CommandSniffer implements ICommand {
             proxy.sniffer.getTarget().addBlock(blk);
             proxy.addChatMessage("sf.sub.add.ok", blk.getName());
         } else {
-            showSubHelp("add");
+            showSubHelp();
         }
     }
 
@@ -385,10 +385,10 @@ public class CommandSniffer implements ICommand {
         switch (cmd) {
         case "add":
             proxy.addChatMessage("sf.help.0");
-            proxy.addChatMessage("sf.help.target.add.0");
-            proxy.addChatMessage("sf.help.target.add.1");
-            proxy.addChatMessage("sf.help.target.add.2");
-            proxy.addChatMessage("sf.help.target.add.3");
+            proxy.addChatMessage("sf.help.add.0");
+            proxy.addChatMessage("sf.help.add.1");
+            proxy.addChatMessage("sf.help.add.2");
+            proxy.addChatMessage("sf.help.add.3");
             proxy.addChatMessage("sf.help.0");
             break;
         case "clear":
@@ -412,15 +412,13 @@ public class CommandSniffer implements ICommand {
         }
     }
 
-    private static void showSubHelp(String cmd) {
-        switch (cmd) {
-        case "add":
-            break;
-        case "remove":
-            break;
-        default:
-
-        }
+    private static void showSubHelp() {
+        proxy.addChatMessage("sf.help.0");
+        proxy.addChatMessage("sf.help.add.0");
+        proxy.addChatMessage("sf.help.add.1");
+        proxy.addChatMessage("sf.help.add.2");
+        proxy.addChatMessage("sf.help.add.3");
+        proxy.addChatMessage("sf.help.0");
     }
 
     private static void showSubList(int way) {

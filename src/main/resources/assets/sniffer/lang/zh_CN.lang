@@ -1,11 +1,11 @@
 # 中文简体语言文件 zh_CN.lang
 
 sf.chat.head=§b[方块探测]§r
+
 sf.key.switch=启用/禁用方块探测
+
 sf.cfg.hudX=模拟显示(头显)的x坐标,有效值[0.0(左) - 1.0(右)].
 sf.cfg.hudY=模拟显示(头显)的y坐标,有效值[0.0(上) - 1.0(下)].
-sf.unknow.block=未知方块
-sf.forbid=§c检查到严重错误,已禁用探测器!§r请联系作者:@Himmelt
 
 sf.version=探测器版本为: §a%s§r
 sf.save=配置已保存.
@@ -14,6 +14,7 @@ sf.reset=探测器已复位!
 sf.avtive=探测器已开启,愉♂悦地挖矿吧! 233333
 sf.inactive=探测器已关闭!
 sf.empty=探测目标为空,请先添加探测目标!
+sf.unknow.block=未知方块
 
 sf.help.0=§e==================================================================§r
 sf.help.1=主页 §1https://coding.net/u/Himmelt/p/Sniffer/git§r
@@ -36,12 +37,12 @@ sf.help.target.8=/sf target v/vrange [vrange]  --- 获取/设置垂直探测半�
 sf.help.target.9=/sf target d/depth  [d0] [d1] --- 获取/设置探测深度
 sf.help.target.10=/sf target c/color  [color]   --- 获取/设置粒子颜色
 sf.help.target.11=/sf target d/depth  [d0] [d1] --- 获取/设置探测深度
-
-sf.help.target.add.0=用法: /sf target add <name>|hold|look [meta] [<meta>]
-sf.help.target.add.1=示例: /sf target add stone       添加名为stone的方块,无视元数据
-sf.help.target.add.2=示例: /sf target add hold meta   添加手中的方块,使用当前元数据
-sf.help.target.add.3=示例: /sf target add look meta 3 添加光标所在方块,使用指定元数据
 sf.help.target.cla=使用 §econfirm§r 以确认 /sf target cla/clear confirm
+
+sf.help.add.0=用法: /sf target/sub add <name>|hold|look [meta] [<meta>]
+sf.help.add.1=示例: /sf target/sub add stone       添加名为stone的方块,无视元数据
+sf.help.add.2=示例: /sf target/sub add hold meta   添加手中的方块,使用当前元数据
+sf.help.add.3=示例: /sf target/sub add look meta 3 添加光标所在方块,使用指定元数据
 
 sf.add.holdair=请检查手持物是否为有效方块.
 sf.add.lookair=请检查光标处是否为有效方块.

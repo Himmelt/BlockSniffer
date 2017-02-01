@@ -1,8 +1,86 @@
-sniffer.switch=Enable/Disable Sniffer
-sniffer.chat.avtive=[Sniffer] Sniffer is avtived!
-sniffer.chat.inactive=[Sniffer] Sniffer is inactived!
+# English Language File en_US.lang
 
-sniffer.cfg.hudX=The x coordinate of the HUD (Head-Up Display). Valid is anything between 0.0 (left) and 1.0 (right).
-sniffer.cfg.hudY=The y coordinate of the HUD (Head-Up Display). Valid is anything between 0.0 (top) and 1.0 (bottom).
+sf.chat.head=§b[Sniffer]§r
 
-sniffer.cmd.usage1="/sniffer add sub [hold|look] [all|meta]"
+sf.key.switch=Enable/Disable Block Sniffer
+
+sf.cfg.hudX=HUD x [0.0(left) - 1.0(right)].
+sf.cfg.hudY=HUD y [0.0(top) - 1.0(bottom)].
+
+sf.version=version: §a%s§r
+sf.save=config saved!
+sf.reload=config reloaded!
+sf.reset=reset!
+sf.avtive=sniffer is on!
+sf.inactive=sniffer is off!
+sf.empty=targets are empty,please add a target at first!
+sf.unknow.block=unknow block
+
+sf.help.0=§e==================================================================§r
+sf.help.1=Website §1https://coding.net/u/Himmelt/p/Sniffer/git§r
+sf.help.2=/sniffer help
+sf.help.3=/sniffer <cmd>
+sf.help.4=/sniffer sub
+sf.help.5=/sniffer target
+sf.help.6=/sniffer reload
+sf.help.7=/sniffer save
+
+sf.help.target.0=/sf target rm/remove
+sf.help.target.1=/sf target cla/clear
+sf.help.target.2=/sf target rm/remove
+sf.help.target.3=/sf target add
+sf.help.target.4=§9§o以下指令需要在探测器开启并有一个目标处于激活状态时方可使用.§r
+sf.help.target.5=/sf target i/info
+sf.help.target.6=/sf target m/mode   [mode]    --- get/set mode
+sf.help.target.7=/sf target h/hrange [hrange]  --- get/set 水平探测半径(chunk)
+sf.help.target.8=/sf target v/vrange [vrange]  --- get/set 垂直探测半径(block)
+sf.help.target.9=/sf target d/depth  [d0] [d1] --- get/set 探测深度
+sf.help.target.10=/sf target c/color  [color]   --- get/set 粒子颜色
+sf.help.target.11=/sf target d/depth  [d0] [d1] --- get/set 探测深度
+sf.help.target.cla=use §econfirm§r to confirm. /sf target cla/clear confirm
+
+sf.help.add.0=用法: /sf target/sub add <name>|hold|look [meta] [<meta>]
+sf.help.add.1=示例: /sf target/sub add stone       add a block named stone,ignore metadata
+sf.help.add.2=示例: /sf target/sub add hold meta   add the held block,use its metadata
+sf.help.add.3=示例: /sf target/sub add look meta 3 add the mouse targeted block,use given metadata
+
+sf.add.holdair=请检查手持物是否为有效方块.
+sf.add.lookair=请检查光标处是否为有效方块.
+sf.add.notname=你输入的不是有效方块的名称.
+
+sf.target.info=当前: 模式[§a%d§r] 颜色[§a%s§r] 深度[§a%d§r - §a%d§r] 水平[§a%d§r 区块] 垂直[§a%d§r 方块]
+sf.target.m.get=当前探测模式: §a%s§r
+sf.target.m.set=当前探测模式设置为: §a%s§r
+sf.target.h.get=当前水平探测半径: §a%d§r 区块
+sf.target.h.set=当前水平探测半径设置为: §a%d§r 区块
+sf.target.v.get=当前垂直探测半径: §a%d§r 方块
+sf.target.v.set=当前垂直探测半径设置为: §a%d§r 方块
+sf.target.d.get=当前探测深度: §a%d§r 层 - §a%d§r 层
+sf.target.d.set=当前探测深度设置为: §a%d§r 层 - §a%d§r 层
+sf.target.c.get=当前粒子颜色: §a%s§r
+sf.target.c.set=当前粒子颜色设置为: §a%s§r
+sf.target.c.map=当前粒子颜色将使用目标方块的§a地图色§r(MapColor)
+sf.target.rm.ok=已成功移除当前探测目标 §6%s§r.
+sf.target.rm.fail=§c目标移除失败!§r
+sf.target.cla.hint=你确定要移除所有探测目标吗?(确认指令/sf target cla/clear confirm)
+sf.target.cla.ok=§e已清除所有探测目标,将自动关闭探测器!§r
+sf.target.not=探测器未激活,或当前没有探测目标.
+
+sf.target.add.ok=已成功添加探测目标 §a%s§r.
+
+sf.sub.list=当前探测目标包含以下子目标:
+
+sf.sub.rm.list=可使用 /sf sub rm <uid> 移除以下子目标:
+sf.sub.rm.ok=已成功移除子目标 §6%s§r.
+sf.sub.rm.fail=§c移除失败,可能没有该uid对应的子目标,请先用/sf sub l/list 查看当前子目标.§r
+sf.sub.rm.t=§e当前子目标已被全部移除,将尝试删除当前探测目标.§r
+
+sf.sub.add.ok=已成功添加子目标 §a%s§r.
+
+sf.cmd.error=不符合指令执行条件,该命令只能由玩家在游戏世界内执行.
+
+sf.mode.0=固定深度探测
+sf.mode.1=相对深度探测
+
+sf.invalid.num=§6数字输入无效!§r
+sf.invalid.color=§6颜色输入无效!§r
