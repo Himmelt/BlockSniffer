@@ -265,7 +265,7 @@ public class CommandSniffer implements ICommand {
                 }
                 break;
             default:
-                block = (Block) Block.blockRegistry.getObject(cmds.get(0));
+                block = Block.getBlockFromName(cmds.get(0));
                 meta = 0;
                 if (block == null || block.equals(Blocks.air)) {
                     proxy.addChatMessage("sf.add.notname");
@@ -349,7 +349,7 @@ public class CommandSniffer implements ICommand {
                 }
                 break;
             default:
-                block = (Block) Block.blockRegistry.getObject(cmds.get(0));
+                block = Block.getBlockFromName(cmds.get(0));
                 meta = 0;
                 if (block == null || block.equals(Blocks.air)) {
                     proxy.addChatMessage("sf.add.notname");

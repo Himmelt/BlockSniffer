@@ -62,13 +62,13 @@
 |`/sf target c/color [{#abcdef}│{&e}│{blue}│map]`|查看/设置粒子颜色|
 |`/sf target rm/remove`|移除当前探测目标|
 |`/sf target cla/clear`|清除所有探测目标|
-|`/sf target add <{name}│hold│look> [meta] [{0-15}]`|添加探测目标|
-|`/sf target add {name}`|添加名为`name`的方块到新的探测目标，将无视元数据|
+|`/sf target add <{name│id}│hold│look> [meta] [{0-15}]`|添加探测目标|
+|`/sf target add {name│id}`|添加名为`name`或id为`id`的方块到新的探测目标，将无视元数据|
 |`/sf target add hold meta`|添加手持方块到新的探测目标，并使用当前元数据|
 |`/sf target add look meta {0-15}`|添加光标处方块到新的探测目标，并使用指定的元数据|
 |||
 |`/sf sub l/list`|显示当前目标包含的子目标|
-|`/sf sub add <{name}│hold│look> [meta] [{0-15}]`|添加子目标|
+|`/sf sub add <{name│id}│hold│look> [meta] [{0-15}]`|添加子目标|
 |`/sf sub rm/remove <{uid}>`|移除当前目标下id为`uid`的子目标|
 
 ### 默认值

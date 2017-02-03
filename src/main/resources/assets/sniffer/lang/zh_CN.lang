@@ -38,7 +38,7 @@ sf.help.target.9=/sf target d/depth  [d0] [d1] --- 获取/设置探测深度
 sf.help.target.10=/sf target c/color  [color]   --- 获取/设置粒子颜色
 sf.help.target.cla=使用 §econfirm§r 以确认 /sf target cla/clear confirm
 
-sf.help.add.0=用法: /sf target/sub add <name>|hold|look [meta] [<meta>]
+sf.help.add.0=用法: /sf target/sub add <{name|id}|hold|look> [meta] [{0-15}]
 sf.help.add.1=示例: /sf target/sub add stone       添加名为stone的方块,无视元数据
 sf.help.add.2=示例: /sf target/sub add hold meta   添加手中的方块,使用当前元数据
 sf.help.add.3=示例: /sf target/sub add look meta 3 添加光标所在方块,使用指定元数据
