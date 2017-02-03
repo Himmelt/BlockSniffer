@@ -407,7 +407,6 @@ public class CommandSniffer implements ICommand {
             proxy.addChatMessage("sf.help.target.8");
             proxy.addChatMessage("sf.help.target.9");
             proxy.addChatMessage("sf.help.target.10");
-            proxy.addChatMessage("sf.help.target.11");
             proxy.addChatMessage("sf.help.0");
         }
     }

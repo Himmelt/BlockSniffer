@@ -36,7 +36,6 @@ sf.help.target.7=/sf target h/hrange [hrange]  --- 获取/设置水平探测半�
 sf.help.target.8=/sf target v/vrange [vrange]  --- 获取/设置垂直探测半径(方块)
 sf.help.target.9=/sf target d/depth  [d0] [d1] --- 获取/设置探测深度
 sf.help.target.10=/sf target c/color  [color]   --- 获取/设置粒子颜色
-sf.help.target.11=/sf target d/depth  [d0] [d1] --- 获取/设置探测深度
 sf.help.target.cla=使用 §econfirm§r 以确认 /sf target cla/clear confirm
 
 sf.help.add.0=用法: /sf target/sub add <name>|hold|look [meta] [<meta>]
