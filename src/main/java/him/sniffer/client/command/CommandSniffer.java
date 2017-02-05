@@ -60,6 +60,7 @@ public class CommandSniffer implements ICommand {
                     proxy.sniffer.reset();
                     proxy.addChatMessage("sf.reset");
                     break;
+                case "t":
                 case "target":
                     processTarget((EntityPlayer) sender, cmds);
                     break;
@@ -68,6 +69,19 @@ public class CommandSniffer implements ICommand {
                         processSub((EntityPlayer) sender, cmds);
                     } else {
                         proxy.addChatMessage("sf.target.not");
+                    }
+                    break;
+                case "g":
+                case "gamma":
+                    if (cmds.isEmpty()) {
+                        proxy.addChatMessage("sf.gamma.get", proxy.getGamma());
+                    } else {
+                        if (Constant.PATTERN_NUM.matcher(cmds.get(0)).matches()) {
+                            proxy.setGamma(Integer.valueOf(cmds.get(0)));
+                            proxy.addChatMessage("sf.gamma.set", proxy.getGamma());
+                        } else {
+                            proxy.addChatMessage("sf.invalid.num");
+                        }
                     }
                     break;
                 default:
@@ -217,7 +231,6 @@ public class CommandSniffer implements ICommand {
                     } else {
                         if ("confirm".equals(cmds.get(0))) {
                             proxy.sniffer.clearTargets();
-                            proxy.addChatMessage("sf.target.cla.ok");
                         } else {
                             showTargetHelp("clear");
                         }

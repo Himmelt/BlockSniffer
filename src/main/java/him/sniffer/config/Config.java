@@ -32,6 +32,7 @@ public class Config {
         config.load();
         bind();
         proxy.sniffer.reload(jsonFile);
+        proxy.setGamma(1);
         Mod.logger.info("config reloaded!");
     }
 

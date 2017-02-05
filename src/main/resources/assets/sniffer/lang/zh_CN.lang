@@ -15,9 +15,11 @@ sf.avtive=探测器已开启,愉♂悦地挖矿吧! 233333
 sf.inactive=探测器已关闭!
 sf.empty=探测目标为空,请先添加探测目标!
 sf.unknow.block=未知方块
+sf.gamma.get=当前亮度(Gamma)为: §a%.2f§r
+sf.gamma.set=当前亮度(Gamma)设置为: §a%.2f§r
 
 sf.help.0=§e==================================================================§r
-sf.help.1=主页 §1https://coding.net/u/Himmelt/p/Sniffer/git§r
+sf.help.1=主页 §chttps://coding.net/u/Himmelt/p/Sniffer/git§r
 sf.help.2=/sniffer help   --- 帮助
 sf.help.3=/sniffer <cmd>  --- 子命令帮助
 sf.help.4=/sniffer sub    --- 设置子目标

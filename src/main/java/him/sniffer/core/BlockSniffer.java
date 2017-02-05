@@ -202,7 +202,6 @@ public class BlockSniffer {
     public boolean addTarget(Target target) {
         if (!target.invalid() && !targets.containsValue(target)) {
             targets.put(count++, target);
-            System.out.println(count + target.toString());
             return true;
         }
         return false;
