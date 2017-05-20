@@ -1,68 +1,36 @@
-gradle.addListener(new TaskExecutionListener() {
-    @Override
-    void beforeExecute(Task task) {
-        if (task.getName().contains("createChangelog")) {
-            task.deleteAllActions()
-            println("deleteAllActions")
-            return
-        }
-        Object url = task.properties.get("url")
-        if (url instanceof String && url.contains("http://s3.amazonaws.com/Minecraft.Download")) {
-            println("------>" + url)
-            if (url.contains("minecraft_server")) {
-                url = "http://localhost/nexus/content/groups/public/net/minecraft/server/1.7.10/server-1.7.10.jar"
-            } else if (url.contains("1.7.10.jar")) {
-                url = "http://localhost/nexus/content/groups/public/net/minecraft/client/1.7.10/client-1.7.10.jar"
-            } else if (url.contains("1.7.10.json")) {
-                url = "http://localhost/nexus/content/groups/public/net/minecraft/client/1.7.10/client-1.7.10.json"
-            }
-            task.setProperty("url", new net.minecraftforge.gradle.delayed.DelayedString(project, url))
-        }
-    }
-
-    @Override
-    void afterExecute(Task task, TaskState taskState) {
-    }
-})
-allprojects {
-    repositories {
-        maven {
-            url 'http://localhost/nexus/content/groups/public/'
-        }
-    }
-}
 buildscript {
     repositories {
-        maven {
-            url = "http://localhost/nexus/content/groups/public/"
-        }
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
+        jcenter()
+        maven { url = "http://files.minecraftforge.net/maven" }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
 }
+apply plugin: 'net.minecraftforge.gradle.forge'
+//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
-apply plugin: 'forge'
 
-version = "1.7.10-1.1.0"
+version = "1.11.2-1.1.0"
 group = "him.sniffer" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "sniffer"
 
+sourceCompatibility = targetCompatibility = "1.6" // Need this here so eclipse task generates correctly.
 compileJava {
-    sourceCompatibility = targetCompatibility = "1.8"
+    sourceCompatibility = targetCompatibility = "1.6"
 }
 
 minecraft {
-    version = "1.7.10-10.13.4.1614-1.7.10"
+    version = "1.11.2-13.20.0.2299"
     runDir = "run"
+    
+    // the mappings can be changed at any time, and must be in the following format.
+    // snapshot_YYYYMMDD   snapshot are built nightly.
+    // stable_#            stables are built at the discretion of the MCP team.
+    // Use non-default mappings at your own risk. they may not always work.
+    // simply re-run your setup task after changing the mappings to update your workspace.
+    mappings = "snapshot_20161220"
+    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
 dependencies {
@@ -70,10 +38,18 @@ dependencies {
     // or you may define them like so..
     //compile "some.group:artifact:version:classifier"
     //compile "some.group:artifact:version"
-
+      
     // real examples
     //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
     //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
+
+    // the 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
+    //provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+
+    // the deobf configurations:  'deobfCompile' and 'deobfProvided' are the same as the normal compile and provided,
+    // except that these dependencies get remapped to your current MCP mappings
+    //deobfCompile 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+    //deobfProvided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
 
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
@@ -89,12 +65,12 @@ processResources {
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-
+                
         // replace version and mcversion
-        expand 'version': project.version, 'mcversion': project.minecraft.version
+        expand 'version':project.version, 'mcversion':project.minecraft.version
     }
-
-    // copy everything else, thats not the mcmod.info
+        
+    // copy everything else except the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
