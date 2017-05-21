@@ -1,5 +1,6 @@
 package him.sniffer.proxy;
 
+import him.sniffer.client.gui.HudRenderer;
 import him.sniffer.config.Config;
 import him.sniffer.core.BlockSniffer;
 import net.minecraft.client.Minecraft;
@@ -12,9 +13,12 @@ import java.io.File;
 public abstract class CommonProxy {
 
     public Config config;
-    public final BlockSniffer sniffer = new BlockSniffer();
+    public Minecraft client;
+    public BlockSniffer sniffer;
+    public HudRenderer hudRenderer;
     public final KeyBinding keySwitch = new KeyBinding(I18n.format("sf.key.switch"), Keyboard.KEY_O, "key.categories.gameplay");
-    public final Minecraft client = Minecraft.getMinecraft();
+
+    public abstract void init();
 
     public abstract void loadConfig(File cfgDir);
 
@@ -27,7 +31,7 @@ public abstract class CommonProxy {
     public abstract void addChatMessage(String key, Object... objects);
 
     public void setGamma(int gamma) {
-        client.gameSettings.gammaSetting = gamma >= 15? 15 : gamma;
+        client.gameSettings.gammaSetting = gamma >= 15 ? 15 : gamma;
     }
 
     public float getGamma() {

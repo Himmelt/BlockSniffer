@@ -1,21 +1,22 @@
 package him.sniffer;
 
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import him.sniffer.constant.Mod;
+import him.sniffer.constant.IMod;
 import him.sniffer.proxy.CommonProxy;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@cpw.mods.fml.common.Mod(
-        modid = Mod.MODID,
-        name = Mod.NAME,
-        version = Mod.VERSION,
-        acceptedMinecraftVersions = Mod.ACMCVERSION
+@Mod(
+        modid = IMod.MODID,
+        name = IMod.NAME,
+        version = IMod.VERSION,
+        acceptedMinecraftVersions = IMod.ACMCVERSION
 )
 public class Sniffer {
 
-    @SidedProxy(clientSide = Mod.CLIENT_PROXY_CLASS, serverSide = Mod.SERVER_PROXY_CLASS)
+    @SidedProxy(clientSide = IMod.CLIENT_PROXY_CLASS, serverSide = IMod.SERVER_PROXY_CLASS)
     public static CommonProxy proxy;
 
     @EventHandler
@@ -27,6 +28,7 @@ public class Sniffer {
 
     @EventHandler
     public void Init(FMLInitializationEvent event) {
+        proxy.init();
         proxy.registEventHandler();
     }
 }

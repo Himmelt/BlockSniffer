@@ -1,19 +1,17 @@
 package him.sniffer.client.gui;
 
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityAuraFX;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.awt.Color;
+import java.awt.*;
+
+import static him.sniffer.Sniffer.proxy;
 
 @SideOnly(Side.CLIENT)
 public class ParticleEffect {
 
-    private final Minecraft minecraft = FMLClientHandler.instance().getClient();
-    private final float[] colorComponents = new float[3];
+    private final ParticleFX.Factory factory = new ParticleFX.Factory();
 
     public void spawn(World worldObj, double fromX, double fromY, double fromZ, double toX, double toY, double toZ, Color color) {
         spawnSingleParticle(worldObj, 0.5D + toX, 0.5D + toY, 0.5D + toZ, 1.0F, color, 0.0D, 0.0D, 0.0D);
@@ -26,7 +24,7 @@ public class ParticleEffect {
         double dz = toZ - fromZ;
         double steps = Math.max(Math.abs(dx), Math.max(Math.abs(dy), Math.abs(dz))) * 3.0D;
         double dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-        double strength = 0.5D;
+        double strength = 0.8D;
         double ds = strength / 30.0D;
         double vx = dx / dist * 0.015D;
         double vy = dy / dist * 0.015D;
@@ -45,12 +43,8 @@ public class ParticleEffect {
     }
 
     private void spawnSingleParticle(World theWorld, double x, double y, double z, float alpha, Color color, double vx, double vy, double vz) {
-        EntityAuraFX effect = new EntityAuraFX(theWorld, x, y, z, vx, vy, vz);
-        effect.setParticleTextureIndex(147);
-        color.getColorComponents(colorComponents);
-        effect.setRBGColorF(colorComponents[0], colorComponents[1], colorComponents[2]);
-        effect.setAlphaF(alpha);
-        effect.setVelocity(vx, vy, vz);
-        minecraft.effectRenderer.addEffect(effect);
+        int unused = 0;
+        ParticleFX particleFX = factory.getEntityFX(unused, theWorld, x, y, z, vx, vy, vz, color, alpha);
+        proxy.client.effectRenderer.addEffect(particleFX);
     }
 }

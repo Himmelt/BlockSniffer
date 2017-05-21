@@ -1,24 +1,29 @@
 package him.sniffer.handler;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import him.sniffer.client.gui.HudRenderer;
 import him.sniffer.core.BlockSniffer;
+import him.sniffer.core.ScanResult;
+import him.sniffer.core.Target;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import static him.sniffer.Sniffer.*;
+import static him.sniffer.Sniffer.proxy;
 
 @SideOnly(Side.CLIENT)
 public class EventBusHandler {
     @SubscribeEvent
-    public void onPlayerRightClickBlock(PlayerInteractEvent event) {
+    public void onPlayerRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         final BlockSniffer sniffer = proxy.sniffer;
-        if (event.world instanceof WorldClient) {
-            if (event.action == Action.RIGHT_CLICK_BLOCK && sniffer.isActive() && sniffer.last + sniffer.delay < System.currentTimeMillis()) {
-                final EntityPlayer player = event.entityPlayer;
+        if (event.getWorld() instanceof WorldClient) {
+            if (sniffer.isActive() && sniffer.last + sniffer.delay < System.currentTimeMillis()) {
+                final EntityPlayer player = event.getEntityPlayer();
                 sniffer.last = System.currentTimeMillis();
                 new Thread(() -> {
                     //logger.info("Sniffer Thread Started!");
@@ -31,4 +36,39 @@ public class EventBusHandler {
             }
         }
     }
+
+    @SubscribeEvent
+    public void onRender(RenderGameOverlayEvent event) {
+        if (!event.isCancelable() && event.getType() == RenderGameOverlayEvent.ElementType.EXPERIENCE) {
+            if (proxy.sniffer.last + proxy.sniffer.delay >= System.currentTimeMillis()) {
+                Target target = proxy.sniffer.getTarget();
+                ScanResult result = proxy.sniffer.result;
+                ScaledResolution scale = new ScaledResolution(proxy.client);
+                String label = String.format("%s: ---", target.displayName());
+                if (result != null && result.getDistance() >= 1.0D) {
+                    label = String.format("%s: %.2f", result.getItemStack().getDisplayName(), result.getDistance() - 1.0D);
+                }
+                int width = scale.getScaledWidth();
+                int height = scale.getScaledHeight();
+                int iconHeight = 20;
+                int iconWidth = 20;
+                int lbHeight = 10;
+                FontRenderer fontrenderer = proxy.client.fontRendererObj;
+                int lbWidth = fontrenderer.getStringWidth(label + " ");
+                int x = (int) (proxy.config.hudX.get() * (width - iconWidth));
+                int y = (int) (proxy.config.hudY.get() * (height - iconHeight - lbHeight));
+                HudRenderer.drawRect(x - 2, y - 2, 20, 20, 1342177280);
+                if (result != null) {
+                    HudRenderer.renderItem(result.getItemStack(), x, y);
+                } else {
+                    HudRenderer.renderItem(target.getDelegate().getItemStack(), x, y);
+                }
+                int maxX = width - lbWidth;
+                int lbX = Math.max(0, Math.min(x, maxX));
+                int lbY = y + iconHeight;
+                fontrenderer.drawString(label, lbX, lbY, 16777215);
+            }
+        }
+    }
+
 }

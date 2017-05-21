@@ -1,31 +1,33 @@
 package him.sniffer.config;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import him.sniffer.config.property.IProperty.PropertyD;
-import him.sniffer.constant.Mod;
+import him.sniffer.constant.IMod;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.File;
 
-import static him.sniffer.Sniffer.*;
+import static him.sniffer.Sniffer.proxy;
 
 @SideOnly(Side.CLIENT)
 public class Config {
 
-    public final PropertyD hudX = new PropertyD(Mod.MODID, "hudX", 0.05D);
-    public final PropertyD hudY = new PropertyD(Mod.MODID, "hudY", 0.05D);
+    public final PropertyD hudX = new PropertyD(IMod.MODID, "hudX", 0.05D);
+    public final PropertyD hudY = new PropertyD(IMod.MODID, "hudY", 0.05D);
 
     private final Configuration config;
     private final File jsonFile;
 
     public Config(File configDir) {
-        config = new Configuration(new File(configDir, Mod.MODID + ".cfg"), Mod.VERSION);
-        jsonFile = new File(new File(configDir, Mod.MODID), "target.json");
-        reload();
+        config = new Configuration(new File(configDir, IMod.MODID + ".cfg"), IMod.VERSION);
+        jsonFile = new File(new File(configDir, IMod.MODID), "target.json");
+        config.load();
+        bind();
         comments();
-        save();
+        config.save();
+        IMod.logger.info("config reloaded!");
     }
 
     public void reload() {
@@ -33,7 +35,7 @@ public class Config {
         bind();
         proxy.sniffer.reload(jsonFile);
         proxy.setGamma(1);
-        Mod.logger.info("config reloaded!");
+        IMod.logger.info("config reloaded!");
     }
 
     public void comments() {
@@ -44,7 +46,7 @@ public class Config {
     public void save() {
         config.save();
         proxy.sniffer.save(jsonFile);
-        Mod.logger.info("config saved!");
+        IMod.logger.info("config saved!");
     }
 
     private void bind() {

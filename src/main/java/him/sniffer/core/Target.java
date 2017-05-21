@@ -4,19 +4,19 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import him.sniffer.constant.ColorHelper;
-import him.sniffer.constant.Mod;
+import him.sniffer.constant.IMod;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 
-import java.awt.Color;
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import static him.sniffer.Sniffer.*;
-import static him.sniffer.constant.Constant.*;
+import static him.sniffer.Sniffer.proxy;
+import static him.sniffer.constant.Constant.PATTERN_NAME;
 
 public class Target {
 
@@ -72,10 +72,7 @@ public class Target {
         }
         if (obj instanceof Target) {
             Target target = (Target) obj;
-            if (blocks == target.blocks) {
-                return true;
-            }
-            return blocks.values().containsAll(target.blocks.values()) && target.blocks.values().containsAll(blocks.values());
+            return blocks == target.blocks || blocks.values().containsAll(target.blocks.values()) && target.blocks.values().containsAll(blocks.values());
         }
         return false;
     }
@@ -207,11 +204,11 @@ public class Target {
 
     public String displayName() {
         String name = getDelegate().getBlock().getLocalizedName();
-        if (name != null && !PATTERN_NAME.matcher(name).matches()) {
+        if (!PATTERN_NAME.matcher(name).matches()) {
             return name;
         }
         name = getDelegate().getItemStack().getDisplayName();
-        if (name != null && !PATTERN_NAME.matcher(name).matches()) {
+        if (!PATTERN_NAME.matcher(name).matches()) {
             return name;
         }
         return I18n.format("sf.unknow.block");
@@ -243,7 +240,7 @@ public class Target {
                 out.name("color").value(target.getColorValue());
                 out.endObject();
             } catch (Exception e) {
-                Mod.logger.catching(e);
+                IMod.logger.catching(e);
             }
         }
 
@@ -291,7 +288,7 @@ public class Target {
                 target.setMode(mode).setDepth(depth0, depth1).setHrange(hrange).setVrange(vrange).setColor(color);
                 in.endObject();
             } catch (Exception e) {
-                Mod.logger.catching(e);
+                IMod.logger.catching(e);
                 throw e;
             }
             return target;

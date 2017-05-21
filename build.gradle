@@ -1,6 +1,7 @@
 buildscript {
     repositories {
-        jcenter()
+        // jcenter()
+        maven { url = "http://localhost/nexus/content/groups/public/"}
         maven { url = "http://files.minecraftforge.net/maven" }
     }
     dependencies {
@@ -15,9 +16,9 @@ version = "1.11.2-1.1.0"
 group = "him.sniffer" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "sniffer"
 
-sourceCompatibility = targetCompatibility = "1.6" // Need this here so eclipse task generates correctly.
+sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
 compileJava {
-    sourceCompatibility = targetCompatibility = "1.6"
+    sourceCompatibility = targetCompatibility = "1.8"
 }
 
 minecraft {

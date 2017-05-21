@@ -4,12 +4,13 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import him.sniffer.constant.Constant;
-import him.sniffer.constant.Mod;
+import him.sniffer.constant.IMod;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
-import java.awt.Color;
+import java.awt.*;
 import java.io.IOException;
 
 public class TBlock {
@@ -20,12 +21,12 @@ public class TBlock {
 
     public TBlock(Block block, Integer meta) {
         this.block = block;
-        this.meta = meta == null? null : meta < 0? 0 : meta > 15? 15 : meta;
-        itemStack = new ItemStack(block, 1, meta == null? 0 : meta);
+        this.meta = meta == null ? null : meta < 0 ? 0 : meta > 15 ? 15 : meta;
+        itemStack = new ItemStack(block, 1, meta == null ? 0 : meta);
     }
 
     public TBlock(String name, Integer meta) {
-        this((Block) Block.blockRegistry.getObject(name), meta);
+        this(Block.REGISTRY.getObject(new ResourceLocation(name)), meta);
     }
 
     @Override
@@ -40,7 +41,7 @@ public class TBlock {
         }
         if (obj instanceof TBlock) {
             TBlock blk = (TBlock) obj;
-            return block.equals(blk.block) && (meta == null? blk.meta == null : blk.meta == null? false : meta.equals(blk.meta));
+            return block.equals(blk.block) && (meta == null ? blk.meta == null : blk.meta != null && meta.equals(blk.meta));
         }
         return false;
     }
@@ -63,24 +64,25 @@ public class TBlock {
 
     public String getName() {
         String name = itemStack.getDisplayName();
-        if (name != null && !name.isEmpty() && !Constant.PATTERN_NAME.matcher(name).matches()) {
+        if (!name.isEmpty() && !Constant.PATTERN_NAME.matcher(name).matches()) {
             return name;
         }
         name = block.getLocalizedName();
-        if (name != null && !name.isEmpty() && !Constant.PATTERN_NAME.matcher(name).matches()) {
+        if (!name.isEmpty() && !Constant.PATTERN_NAME.matcher(name).matches()) {
             return name;
         }
         return I18n.format("sf.unknow.block");
     }
 
     public Color getMapColor() {
-        return new Color(block.getMapColor(meta == null? 0 : meta).colorValue);
+
+        return new Color(block.getMapColor(block.getStateFromMeta(meta == null ? 0 : meta)).colorValue);
     }
 
     @Override
     public String toString() {
-        String name = Block.blockRegistry.getNameForObject(block);
-        return meta == null? name : String.format("%s/%d", name, meta);
+        String name = Block.REGISTRY.getNameForObject(block).toString();
+        return meta == null ? name : String.format("%s/%d", name, meta);
     }
 
     public static class Adapter extends TypeAdapter<TBlock> {
@@ -93,7 +95,7 @@ public class TBlock {
                 }
                 out.value(block.toString());
             } catch (Exception e) {
-                Mod.logger.catching(e);
+                IMod.logger.catching(e);
                 throw e;
             }
         }
@@ -104,23 +106,21 @@ public class TBlock {
             try {
                 String[] s = in.nextString().split("/");
                 if (s.length >= 1) {
-                    Block blk = (Block) Block.blockRegistry.getObject(s[0]);
-                    if (blk != null) {
-                        Integer meta = null;
-                        if (s.length >= 2 && Constant.PATTERN_NUM.matcher(s[1]).matches()) {
-                            meta = Integer.valueOf(s[1]);
-                            if (meta < 0 || meta > 15) {
-                                meta = 0;
-                            }
+                    Block blk = Block.REGISTRY.getObject(new ResourceLocation(s[0]));
+                    Integer meta = null;
+                    if (s.length >= 2 && Constant.PATTERN_NUM.matcher(s[1]).matches()) {
+                        meta = Integer.valueOf(s[1]);
+                        if (meta < 0 || meta > 15) {
+                            meta = 0;
                         }
-                        block = new TBlock(blk, meta);
-                        if (block.invalid()) {
-                            return null;
-                        }
+                    }
+                    block = new TBlock(blk, meta);
+                    if (block.invalid()) {
+                        return null;
                     }
                 }
             } catch (Exception e) {
-                Mod.logger.catching(e);
+                IMod.logger.catching(e);
                 throw e;
             }
             return block;
