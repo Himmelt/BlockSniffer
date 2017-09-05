@@ -1,8 +1,7 @@
-.gradle
-build
-out
-replace
-run
+/.idea
+/.gradle
+/build
+
 *.iml
 *.ipr
 *.iws
