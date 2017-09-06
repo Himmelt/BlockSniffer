@@ -5,18 +5,18 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import org.soraworld.sniffer.constant.IMod;
+import org.soraworld.sniffer.constant.Constants;
 import org.soraworld.sniffer.proxy.CommonProxy;
 
 @Mod(
-        modid = IMod.MODID,
-        name = IMod.NAME,
-        version = IMod.VERSION,
-        acceptedMinecraftVersions = IMod.ACMCVERSION
+        modid = Constants.MODID,
+        name = Constants.NAME,
+        version = Constants.VERSION,
+        acceptedMinecraftVersions = Constants.ACMCVERSION
 )
 public class Sniffer {
 
-    @SidedProxy(clientSide = IMod.CLIENT_PROXY_CLASS, serverSide = IMod.SERVER_PROXY_CLASS)
+    @SidedProxy(clientSide = Constants.CLIENT_PROXY_CLASS, serverSide = Constants.SERVER_PROXY_CLASS)
     public static CommonProxy proxy;
 
     @EventHandler

@@ -6,7 +6,7 @@ import com.google.gson.stream.JsonWriter;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import org.soraworld.sniffer.constant.ColorHelper;
-import org.soraworld.sniffer.constant.IMod;
+import org.soraworld.sniffer.constant.Constants;
 
 import java.awt.*;
 import java.io.IOException;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import static org.soraworld.sniffer.Sniffer.proxy;
-import static org.soraworld.sniffer.constant.Constant.PATTERN_NAME;
+import static org.soraworld.sniffer.constant.Constants.PATTERN_NAME;
 
 public class Target {
 
@@ -240,7 +240,7 @@ public class Target {
                 out.name("color").value(target.getColorValue());
                 out.endObject();
             } catch (Exception e) {
-                IMod.logger.catching(e);
+                Constants.LOGGER.catching(e);
             }
         }
 
@@ -288,7 +288,7 @@ public class Target {
                 target.setMode(mode).setDepth(depth0, depth1).setHrange(hrange).setVrange(vrange).setColor(color);
                 in.endObject();
             } catch (Exception e) {
-                IMod.logger.catching(e);
+                Constants.LOGGER.catching(e);
                 throw e;
             }
             return target;

@@ -7,8 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.soraworld.sniffer.constant.Constant;
-import org.soraworld.sniffer.constant.IMod;
+import org.soraworld.sniffer.constant.Constants;
 
 import java.awt.*;
 import java.io.IOException;
@@ -64,11 +63,11 @@ public class TBlock {
 
     public String getName() {
         String name = itemStack.getDisplayName();
-        if (!name.isEmpty() && !Constant.PATTERN_NAME.matcher(name).matches()) {
+        if (!name.isEmpty() && !Constants.PATTERN_NAME.matcher(name).matches()) {
             return name;
         }
         name = block.getLocalizedName();
-        if (!name.isEmpty() && !Constant.PATTERN_NAME.matcher(name).matches()) {
+        if (!name.isEmpty() && !Constants.PATTERN_NAME.matcher(name).matches()) {
             return name;
         }
         return I18n.format("sf.unknow.block");
@@ -95,7 +94,7 @@ public class TBlock {
                 }
                 out.value(block.toString());
             } catch (Exception e) {
-                IMod.logger.catching(e);
+                Constants.LOGGER.catching(e);
                 throw e;
             }
         }
@@ -108,7 +107,7 @@ public class TBlock {
                 if (s.length >= 1) {
                     Block blk = Block.REGISTRY.getObject(new ResourceLocation(s[0]));
                     Integer meta = null;
-                    if (s.length >= 2 && Constant.PATTERN_NUM.matcher(s[1]).matches()) {
+                    if (s.length >= 2 && Constants.PATTERN_NUM.matcher(s[1]).matches()) {
                         meta = Integer.valueOf(s[1]);
                         if (meta < 0 || meta > 15) {
                             meta = 0;
@@ -120,7 +119,7 @@ public class TBlock {
                     }
                 }
             } catch (Exception e) {
-                IMod.logger.catching(e);
+                Constants.LOGGER.catching(e);
                 throw e;
             }
             return block;

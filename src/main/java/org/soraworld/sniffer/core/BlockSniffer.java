@@ -13,8 +13,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.FileUtils;
 import org.soraworld.sniffer.client.gui.ParticleEffect;
-import org.soraworld.sniffer.constant.Constant;
-import org.soraworld.sniffer.constant.IMod;
+import org.soraworld.sniffer.constant.Constants;
 
 import java.io.File;
 import java.io.IOException;
@@ -86,7 +85,7 @@ public class BlockSniffer {
                 }.getType());
             }
         } catch (Exception e) {
-            IMod.logger.catching(e);
+            Constants.LOGGER.catching(e);
         } finally {
             targets.clear();
             count = 0;
@@ -102,7 +101,7 @@ public class BlockSniffer {
     }
 
     public void switchTarget() {
-        //IMod.logger.info("-----------------" + active + "," + index + ',' + count);
+        //IMod.LOGGER.info("-----------------" + active + "," + index + ',' + count);
         int index = next(active ? this.index : count);
         if (index == -1) {
             reset();
@@ -128,9 +127,9 @@ public class BlockSniffer {
             int chunkX = player.chunkCoordX;
             int chunkZ = player.chunkCoordZ;
             int hRange = getTarget().getHrange();
-            int length = Constant.RANGE.length;
-            for (int i = 0; i < length && Constant.RANGE[i][0] >= -hRange && Constant.RANGE[i][0] <= hRange && Constant.RANGE[i][1] >= -hRange && Constant.RANGE[i][1] <= hRange; i++) {
-                Chunk chunk = player.getEntityWorld().getChunkFromChunkCoords(chunkX + Constant.RANGE[i][0], chunkZ + Constant.RANGE[i][1]);
+            int length = Constants.RANGE.length;
+            for (int i = 0; i < length && Constants.RANGE[i][0] >= -hRange && Constants.RANGE[i][0] <= hRange && Constants.RANGE[i][1] >= -hRange && Constants.RANGE[i][1] <= hRange; i++) {
+                Chunk chunk = player.getEntityWorld().getChunkFromChunkCoords(chunkX + Constants.RANGE[i][0], chunkZ + Constants.RANGE[i][1]);
                 if (!(chunk instanceof EmptyChunk)) {
                     scanChunk(chunk, player);
                     if (result != null) {
@@ -189,7 +188,7 @@ public class BlockSniffer {
         try {
             FileUtils.writeStringToFile(jsonFile, GSON.toJson(targets.values()));
         } catch (IOException e) {
-            IMod.logger.catching(e);
+            Constants.LOGGER.catching(e);
         }
     }
 
