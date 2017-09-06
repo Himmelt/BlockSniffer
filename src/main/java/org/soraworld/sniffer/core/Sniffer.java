@@ -21,10 +21,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.soraworld.sniffer.Sniffer.proxy;
+import static org.soraworld.sniffer.BlockSniffer.proxy;
 
 @SideOnly(Side.CLIENT)
-public class BlockSniffer {
+public class Sniffer {
 
     private int index;
     private int count;
@@ -37,7 +37,7 @@ public class BlockSniffer {
     public long delay = 500;
     public ScanResult result;
 
-    public BlockSniffer() {
+    public Sniffer() {
         particle = new ParticleEffect();
     }
 
@@ -169,8 +169,8 @@ public class BlockSniffer {
                     }
                     int meta = block.getMetaFromState(state);
                     if (target.match(block, meta)) {
-                        int blockX = chunk.xPosition * 16 + x;
-                        int blockZ = chunk.zPosition * 16 + z;
+                        int blockX = chunk.x * 16 + x;
+                        int blockZ = chunk.z * 16 + z;
                         result = new ScanResult(player, target, blockX, y, blockZ);
                         return;
                     }

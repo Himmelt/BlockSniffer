@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import static org.soraworld.sniffer.Sniffer.proxy;
+import static org.soraworld.sniffer.BlockSniffer.proxy;
 import static org.soraworld.sniffer.constant.Constants.PATTERN_NAME;
 
 public class Target {

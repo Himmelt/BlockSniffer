@@ -14,7 +14,7 @@ import org.soraworld.sniffer.proxy.CommonProxy;
         version = Constants.VERSION,
         acceptedMinecraftVersions = Constants.ACMCVERSION
 )
-public class Sniffer {
+public class BlockSniffer {
 
     @SidedProxy(clientSide = Constants.CLIENT_PROXY_CLASS, serverSide = Constants.SERVER_PROXY_CLASS)
     public static CommonProxy proxy;

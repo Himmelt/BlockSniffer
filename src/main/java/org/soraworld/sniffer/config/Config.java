@@ -9,7 +9,7 @@ import org.soraworld.sniffer.constant.Constants;
 
 import java.io.File;
 
-import static org.soraworld.sniffer.Sniffer.proxy;
+import static org.soraworld.sniffer.BlockSniffer.proxy;
 
 @SideOnly(Side.CLIENT)
 public class Config {

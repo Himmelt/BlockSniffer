@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.soraworld.sniffer.client.command.CommandSniffer;
 import org.soraworld.sniffer.client.gui.HudRenderer;
 import org.soraworld.sniffer.config.Config;
-import org.soraworld.sniffer.core.BlockSniffer;
+import org.soraworld.sniffer.core.Sniffer;
 import org.soraworld.sniffer.handler.EventBusHandler;
 import org.soraworld.sniffer.handler.FMLEventHandler;
 
@@ -23,7 +23,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init() {
         client = Minecraft.getMinecraft();
-        sniffer = new BlockSniffer();
+        sniffer = new Sniffer();
         hudRenderer = new HudRenderer();
     }
 

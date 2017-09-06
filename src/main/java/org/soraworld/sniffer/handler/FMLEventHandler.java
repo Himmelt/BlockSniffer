@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import static org.soraworld.sniffer.Sniffer.proxy;
+import static org.soraworld.sniffer.BlockSniffer.proxy;
 
 @SideOnly(Side.CLIENT)
 public class FMLEventHandler {

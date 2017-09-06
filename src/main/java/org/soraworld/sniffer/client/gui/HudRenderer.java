@@ -8,7 +8,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import static org.soraworld.sniffer.Sniffer.proxy;
+import static org.soraworld.sniffer.BlockSniffer.proxy;
 
 @SideOnly(Side.CLIENT)
 public class HudRenderer {
@@ -17,9 +17,6 @@ public class HudRenderer {
         GlStateManager.enableRescaleNormal();
         RenderHelper.enableGUIStandardItemLighting();
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
-        //IMod.logger.info("------>>>>>" + proxy.client);
-        //IMod.logger.info("------>>>>>" + proxy.client.getRenderItem());
-        //IMod.logger.info("------>>>>>" + itemStack);
         proxy.client.getRenderItem().renderItemAndEffectIntoGUI(itemStack, x, y);
         RenderHelper.disableStandardItemLighting();
     }

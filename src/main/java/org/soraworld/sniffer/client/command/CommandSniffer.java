@@ -23,6 +23,7 @@ import org.soraworld.sniffer.constant.Constants;
 import org.soraworld.sniffer.core.TBlock;
 import org.soraworld.sniffer.core.Target;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import static org.soraworld.sniffer.Sniffer.proxy;
+import static org.soraworld.sniffer.BlockSniffer.proxy;
 
 @SideOnly(Side.CLIENT)
 public class CommandSniffer implements ICommand {
@@ -377,25 +378,28 @@ public class CommandSniffer implements ICommand {
         proxy.addChatMessage(list.toString());
     }
 
+    @Nonnull
     @Override
     public String getName() {
         return Constants.MODID;
     }
 
+    @Nonnull
     @Override
-    public String getUsage(ICommandSender sender) {
-        return null;
+    public String getUsage(@Nonnull ICommandSender sender) {
+        return "";
     }
 
+    @Nonnull
     @Override
     public List<String> getAliases() {
-        List<String> alias = new ArrayList<String>();
+        List<String> alias = new ArrayList<>();
         alias.add("sf");
         return alias;
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException {
         if (sender instanceof EntityPlayer && sender.getEntityWorld() instanceof WorldClient) {
             List<String> cmds = new ArrayList<>(Arrays.asList(args));
             if (cmds.size() >= 1) {
@@ -459,17 +463,18 @@ public class CommandSniffer implements ICommand {
     }
 
     @Override
-    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+    public boolean checkPermission(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender) {
         return true;
     }
 
+    @Nonnull
     @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+    public List<String> getTabCompletions(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args, @Nullable BlockPos targetPos) {
         return new ArrayList<>();
     }
 
     @Override
-    public boolean isUsernameIndex(String[] args, int index) {
+    public boolean isUsernameIndex(@Nonnull String[] args, int index) {
         return false;
     }
 
@@ -484,7 +489,7 @@ public class CommandSniffer implements ICommand {
     }
 
     @Override
-    public int compareTo(ICommand command) {
+    public int compareTo(@Nonnull ICommand command) {
         return getName().compareTo(command.getName());
     }
 }
