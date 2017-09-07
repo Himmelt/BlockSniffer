@@ -1,17 +1,16 @@
-package org.soraworld.sniffer.client.gui;
+package org.soraworld.sniffer.gui;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.awt.*;
 
-import static org.soraworld.sniffer.BlockSniffer.proxy;
-
 @SideOnly(Side.CLIENT)
 public class ParticleEffect {
 
-    private final ParticleFX.Factory factory = new ParticleFX.Factory();
+    private static final Minecraft mc = Minecraft.getMinecraft();
 
     public void spawn(World worldObj, double fromX, double fromY, double fromZ, double toX, double toY, double toZ, Color color) {
         spawnSingleParticle(worldObj, 0.5D + toX, 0.5D + toY, 0.5D + toZ, 1.0F, color, 0.0D, 0.0D, 0.0D);
@@ -43,8 +42,6 @@ public class ParticleEffect {
     }
 
     private void spawnSingleParticle(World theWorld, double x, double y, double z, float alpha, Color color, double vx, double vy, double vz) {
-        int unused = 0;
-        ParticleFX particleFX = factory.getEntityFX(unused, theWorld, x, y, z, vx, vy, vz, color, alpha);
-        proxy.client.effectRenderer.addEffect(particleFX);
+        mc.effectRenderer.addEffect(new ParticleFX(theWorld, x, y, z, vx, vy, vz, color, alpha));
     }
 }

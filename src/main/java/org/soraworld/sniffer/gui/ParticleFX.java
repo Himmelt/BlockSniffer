@@ -1,4 +1,4 @@
-package org.soraworld.sniffer.client.gui;
+package org.soraworld.sniffer.gui;
 
 import net.minecraft.client.particle.ParticleSuspendedTown;
 import net.minecraft.world.World;
@@ -10,11 +10,9 @@ import java.awt.*;
 @SideOnly(Side.CLIENT)
 public class ParticleFX extends ParticleSuspendedTown {
 
-    private float targetAlpha;
-
-    public ParticleFX(World world, double x, double y, double z, double vx, double vy, double vz, Color color, float alpha) {
+    ParticleFX(World world, double x, double y, double z, double vx, double vy, double vz, Color color, float alpha) {
         super(world, x, y, z, vx, vy, vz);
-        this.targetAlpha = alpha;
+        this.particleAlpha = alpha;
         this.setParticleTextureIndex(147);
         float[] colorComponents = new float[3];
         color.getColorComponents(colorComponents);
@@ -26,7 +24,7 @@ public class ParticleFX extends ParticleSuspendedTown {
         this.setVelocity(vx, vy, vz);
     }
 
-    public void setVelocity(double vx, double vy, double vz) {
+    private void setVelocity(double vx, double vy, double vz) {
         this.motionX = vx;
         this.motionY = vy;
         this.motionZ = vz;
@@ -37,23 +35,12 @@ public class ParticleFX extends ParticleSuspendedTown {
 
     @Override
     public void onUpdate() {
-        if (this.particleAlpha < this.targetAlpha) {
-            this.setAlphaF(this.particleAlpha + 0.1F);
-        }
-
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
         this.move(this.motionX, this.motionY, this.motionZ);
         if (this.particleMaxAge-- <= 0) {
             this.setExpired();
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static class Factory {
-        public ParticleFX getEntityFX(int particleID, World world, double x, double y, double z, double vx, double vy, double vz, Color color, float alpha) {
-            return new ParticleFX(world, x, y, z, vx, vy, vz, color, alpha);
         }
     }
 }

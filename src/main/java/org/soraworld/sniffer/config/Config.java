@@ -9,8 +9,6 @@ import org.soraworld.sniffer.constant.Constants;
 
 import java.io.File;
 
-import static org.soraworld.sniffer.BlockSniffer.proxy;
-
 @SideOnly(Side.CLIENT)
 public class Config {
 
@@ -18,24 +16,20 @@ public class Config {
     public final PropertyD hudY = new PropertyD(Constants.MODID, "hudY", 0.05D);
 
     private final Configuration config;
-    private final File jsonFile;
+
 
     public Config(File configDir) {
         config = new Configuration(new File(configDir, Constants.MODID + ".cfg"), Constants.VERSION);
-        jsonFile = new File(new File(configDir, Constants.MODID), "target.json");
         config.load();
         bind();
         comments();
         config.save();
-        Constants.LOGGER.info("config reloaded!");
     }
 
     public void reload() {
         config.load();
         bind();
-        proxy.sniffer.reload(jsonFile);
-        proxy.setGamma(1);
-        Constants.LOGGER.info("config reloaded!");
+
     }
 
     public void comments() {
@@ -45,8 +39,6 @@ public class Config {
 
     public void save() {
         config.save();
-        proxy.sniffer.save(jsonFile);
-        Constants.LOGGER.info("config saved!");
     }
 
     private void bind() {

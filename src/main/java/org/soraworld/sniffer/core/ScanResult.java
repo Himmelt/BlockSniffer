@@ -2,9 +2,12 @@ package org.soraworld.sniffer.core;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.awt.*;
 
+@SideOnly(Side.CLIENT)
 public class ScanResult {
 
     private final Target target;
@@ -35,6 +38,6 @@ public class ScanResult {
 
     public Color getColor() {
         Color color = target.getColor();
-        return color != null? color : block.getMapColor();
+        return color != null ? color : block.getMapColor();
     }
 }

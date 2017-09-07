@@ -1,23 +1,32 @@
 package org.soraworld.sniffer.constant;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.google.gson.reflect.TypeToken;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.soraworld.sniffer.core.Target;
 
+import java.lang.reflect.Type;
+import java.util.List;
 import java.util.regex.Pattern;
 
+@SideOnly(Side.CLIENT)
 public final class Constants {
 
     public static final String MODID = "sniffer";
     public static final String NAME = "Block Sniffer";
     public static final String VERSION = "1.11.2-1.1.0";
     public static final String ACMCVERSION = "[1.11.2]";
-    public static final String CLIENT_PROXY_CLASS = "org.soraworld.sniffer.proxy.ClientProxy";
-    public static final String SERVER_PROXY_CLASS = "org.soraworld.sniffer.proxy.ServerProxy";
-    public static final Logger LOGGER = LogManager.getLogger(NAME);
 
     public static final Pattern PATTERN_NUM = Pattern.compile("[0-9]{1,3}");
     public static final Pattern PATTERN_NAME = Pattern.compile("^tile.*name$");
 
+    public static final ITextComponent HEAD = new TextComponentTranslation("sf.chat.head").setStyle(new Style().setColor(TextFormatting.AQUA));
+    public static final Type LIST_TARGET = new TypeToken<List<Target>>() {
+    }.getType();
     public static final int[][] RANGE = {
             {0, 0}, {-1, 0}, {0, -1}, {0, 1}, {1, 0}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1}, {-2, 0}, {0, -2}, {0, 2}, {2, 0}, {-2, -1}, {-2, 1}, {-1, -2}, {-1, 2},
             {1, -2}, {1, 2}, {2, -1}, {2, 1}, {-2, -2}, {-2, 2}, {2, -2}, {2, 2}, {-3, 0}, {0, -3}, {0, 3}, {3, 0}, {-3, -1}, {-3, 1}, {-1, -3}, {-1, 3}, {1, -3},

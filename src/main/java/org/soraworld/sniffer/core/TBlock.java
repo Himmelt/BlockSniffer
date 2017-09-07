@@ -7,11 +7,14 @@ import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.soraworld.sniffer.constant.Constants;
 
 import java.awt.*;
 import java.io.IOException;
 
+@SideOnly(Side.CLIENT)
 public class TBlock {
 
     private final Block block;
@@ -74,8 +77,7 @@ public class TBlock {
     }
 
     public Color getMapColor() {
-
-        return new Color(block.getMapColor(block.getStateFromMeta(meta == null ? 0 : meta)).colorValue);
+        return new Color(block.getStateFromMeta(meta == null ? 0 : meta).getMapColor().colorValue);
     }
 
     @Override
@@ -94,7 +96,7 @@ public class TBlock {
                 }
                 out.value(block.toString());
             } catch (Exception e) {
-                Constants.LOGGER.catching(e);
+                e.printStackTrace();
                 throw e;
             }
         }
@@ -119,7 +121,7 @@ public class TBlock {
                     }
                 }
             } catch (Exception e) {
-                Constants.LOGGER.catching(e);
+                e.printStackTrace();
                 throw e;
             }
             return block;
