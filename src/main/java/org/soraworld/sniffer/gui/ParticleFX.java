@@ -10,9 +10,11 @@ import java.awt.*;
 @SideOnly(Side.CLIENT)
 public class ParticleFX extends ParticleSuspendedTown {
 
+    private float targetAlpha;
+
     ParticleFX(World world, double x, double y, double z, double vx, double vy, double vz, Color color, float alpha) {
         super(world, x, y, z, vx, vy, vz);
-        this.particleAlpha = alpha;
+        this.targetAlpha = alpha;
         this.setParticleTextureIndex(147);
         float[] colorComponents = new float[3];
         color.getColorComponents(colorComponents);
@@ -35,6 +37,9 @@ public class ParticleFX extends ParticleSuspendedTown {
 
     @Override
     public void onUpdate() {
+        if (this.particleAlpha < this.targetAlpha) {
+            this.setAlphaF(this.particleAlpha + 0.1F);
+        }
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;

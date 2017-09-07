@@ -73,17 +73,23 @@ public class SnifferAPI {
         return mc.gameSettings.gammaSetting;
     }
 
-    public boolean update() {
-        if (last + delay < System.currentTimeMillis()) {
-            last = System.currentTimeMillis();
+    public boolean timeout() {
+        long time = System.currentTimeMillis();
+        if (last + delay < time) {
+            last = time;
             return true;
         }
         return false;
     }
 
+    public boolean timein() {
+        return last + delay > System.currentTimeMillis();
+    }
+
     public void reset() {
         active = false;
         index = next(count);
+        current = targets.get(index);
         result = null;
     }
 
@@ -149,6 +155,7 @@ public class SnifferAPI {
             } else {
                 last = System.currentTimeMillis();
                 this.index = index;
+                current = targets.get(index);
                 if (!active) {
                     active = true;
                     sendChat("sf.avtive");
