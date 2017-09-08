@@ -61,7 +61,7 @@ public class SnifferAPI {
 
     public synchronized void sendChat(String key, Object... objects) {
         if (mc.player != null) {
-            mc.player.sendMessage(Constants.HEAD.appendSibling(new TextComponentTranslation(key, objects)));
+            mc.player.sendMessage(Constants.HEAD.createCopy().appendSibling(new TextComponentTranslation(key, objects)));
         }
     }
 
