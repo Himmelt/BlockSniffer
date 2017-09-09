@@ -10,20 +10,12 @@ import java.awt.*;
 @SideOnly(Side.CLIENT)
 public class ScanResult {
 
-    private final Target target;
-    private final EntityPlayer player;
-    private final TBlock block;
+    private Target target;
+    private EntityPlayer player;
+    private TBlock block;
 
-    public final int x, y, z;
-
-    public ScanResult(EntityPlayer player, Target target, int x, int y, int z) {
-        this.player = player;
-        this.target = target;
-        block = target.getDelegate();
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
+    public int x, y, z;
+    public boolean found = false;
 
     public double getDistance() {
         double lx = player.posX - x;
@@ -39,5 +31,15 @@ public class ScanResult {
     public Color getColor() {
         Color color = target.getColor();
         return color != null ? color : block.getMapColor();
+    }
+
+    public void update(EntityPlayer player, Target current, int blockX, int blockY, int blockZ) {
+        this.player = player;
+        this.target = current;
+        this.block = target.getDelegate();
+        this.x = blockX;
+        this.y = blockY;
+        this.z = blockZ;
+        this.found = true;
     }
 }

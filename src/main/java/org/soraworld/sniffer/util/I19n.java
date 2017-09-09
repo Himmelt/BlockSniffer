@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 @SideOnly(Side.CLIENT)
 public class I19n {
 
-    private static final Pattern FORMAT = Pattern.compile("((?<!&)&[0-9a-fk-or]){1,}");
+    private static final Pattern FORMAT = Pattern.compile("((?<!&)&[0-9a-fk-or])+");
 
     private static Style parseStyle(@Nonnull String text) {
         Style style = new Style();
@@ -87,25 +87,13 @@ public class I19n {
                     break;
                 default:
                     style = new Style();
-                    //style.setColor(TextFormatting.BLACK).setObfuscated(false).setBold(false).setStrikethrough(false).setUnderlined(false).setItalic(false);
             }
         }
         return style;
     }
 
     public static ITextComponent formatKey(String key, Object... args) {
-        String text = I18n.format(key, args);
-        Matcher matcher = FORMAT.matcher(text);
-        ITextComponent component = new TextComponentString("");
-        int head = 0;
-        Style style = new Style();
-        while (matcher.find()) {
-            component.appendSibling(new TextComponentString(text.substring(head, matcher.start())).setStyle(style));
-            style = parseStyle(matcher.group());
-            head = matcher.end();
-        }
-        component.appendSibling(new TextComponentString(text.substring(head)).setStyle(style));
-        return component;
+        return format(I18n.format(key, args));
     }
 
     public static ITextComponent format(String text) {
@@ -114,11 +102,11 @@ public class I19n {
         int head = 0;
         Style style = new Style();
         while (matcher.find()) {
-            component.appendSibling(new TextComponentString(text.substring(head, matcher.start())).setStyle(style));
+            component.appendSibling(new TextComponentString(text.substring(head, matcher.start()).replaceAll("&&", "&")).setStyle(style));
             style = parseStyle(matcher.group());
             head = matcher.end();
         }
-        component.appendSibling(new TextComponentString(text.substring(head)).setStyle(style));
+        component.appendSibling(new TextComponentString(text.substring(head).replaceAll("&&", "&")).setStyle(style));
         return component;
     }
 }

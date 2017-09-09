@@ -48,7 +48,7 @@ public class CommandSniffer implements ICommand {
                 switch (cmd) {
                     case "i":
                     case "info":
-                        api.sendChat("sf.target.info", target.getMode(), target.getColorValue(), target.getDepthL(), target.getDepthH(), target.getHrange(), target.getVrange());
+                        api.sendChat("sf.target.info", target.getMode(), target.getChatColor(), target.getDepthL(), target.getDepthH(), target.getHRange(), target.getVRange());
                         break;
                     case "m":
                     case "mode":
@@ -69,11 +69,11 @@ public class CommandSniffer implements ICommand {
                     case "h":
                     case "hrange":
                         if (cmds.isEmpty()) {
-                            api.sendChat("sf.target.h.get", target.getHrange());
+                            api.sendChat("sf.target.h.get", target.getHRange());
                         } else {
                             if (Constants.PATTERN_NUM.matcher(cmds.get(0)).matches()) {
-                                target.setHrange(Integer.valueOf(cmds.get(0)));
-                                api.sendChat("sf.target.h.set", target.getHrange());
+                                target.setHRange(Integer.valueOf(cmds.get(0)));
+                                api.sendChat("sf.target.h.set", target.getHRange());
                             } else {
                                 api.sendChat("sf.invalid.num");
                             }
@@ -82,11 +82,11 @@ public class CommandSniffer implements ICommand {
                     case "v":
                     case "vrange":
                         if (cmds.isEmpty()) {
-                            api.sendChat("sf.target.v.get", target.getVrange());
+                            api.sendChat("sf.target.v.get", target.getVRange());
                         } else {
                             if (Constants.PATTERN_NUM.matcher(cmds.get(0)).matches()) {
-                                target.setVrange(Integer.valueOf(cmds.get(0)));
-                                api.sendChat("sf.target.v.set", target.getVrange());
+                                target.setVRange(Integer.valueOf(cmds.get(0)));
+                                api.sendChat("sf.target.v.set", target.getVRange());
                             } else {
                                 api.sendChat("sf.invalid.num");
                             }
@@ -110,7 +110,7 @@ public class CommandSniffer implements ICommand {
                     case "c":
                     case "color":
                         if (cmds.isEmpty()) {
-                            api.sendChat("sf.target.c.get", target.getColorValue());
+                            api.sendChat("sf.target.c.get", target.getChatColor());
                         } else {
                             String value = cmds.get(0);
                             if ("map".equals(value)) {
@@ -120,7 +120,7 @@ public class CommandSniffer implements ICommand {
                                 Color color = ColorHelper.getColor(value);
                                 if (color != null) {
                                     target.setColor(value);
-                                    api.sendChat("sf.target.c.set", target.getColorValue());
+                                    api.sendChat("sf.target.c.set", target.getChatColor());
                                 } else {
                                     api.sendChat("sf.invalid.color");
                                 }

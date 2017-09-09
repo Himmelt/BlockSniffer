@@ -14,7 +14,7 @@ public final class Constants {
 
     public static final String MODID = "sniffer";
     public static final String NAME = "Block Sniffer";
-    public static final String VERSION = "1.11.2-1.1.0";
+    public static final String VERSION = "1.11.2-1.1.1";
     public static final String ACMCVERSION = "[1.11.2]";
 
     public static final Pattern PATTERN_NUM = Pattern.compile("[0-9]{1,3}");

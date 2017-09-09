@@ -44,10 +44,10 @@ public class SnifferAPI {
     private int index;
     private int count;
 
-    public long last;
-    public long delay = 500;
+    private long last;
+    private long delay = 1000L;
     public boolean active;
-    public ScanResult result;
+    public final ScanResult result = new ScanResult();
 
     public final Minecraft mc = Minecraft.getMinecraft();
     public final Logger LOGGER = LogManager.getLogger(Constants.NAME);
@@ -90,7 +90,7 @@ public class SnifferAPI {
         active = false;
         index = next(count);
         current = targets.get(index);
-        result = null;
+        result.found = false;
     }
 
     private int next(int start) {
@@ -158,24 +158,24 @@ public class SnifferAPI {
                 current = targets.get(index);
                 if (!active) {
                     active = true;
-                    sendChat("sf.avtive");
+                    sendChat("sf.active");
                 }
             }
         }
     }
 
     public void scanWorld(EntityPlayer player) {
-        result = null;
+        result.found = false;
         if (current != null && player != null) {
             int chunkX = player.chunkCoordX;
             int chunkZ = player.chunkCoordZ;
-            int hRange = current.getHrange();
+            int hRange = current.getHRange();
             int length = Constants.RANGE.length;
             for (int i = 0; i < length && Constants.RANGE[i][0] >= -hRange && Constants.RANGE[i][0] <= hRange && Constants.RANGE[i][1] >= -hRange && Constants.RANGE[i][1] <= hRange; i++) {
                 Chunk chunk = player.getEntityWorld().getChunkFromChunkCoords(chunkX + Constants.RANGE[i][0], chunkZ + Constants.RANGE[i][1]);
                 if (!(chunk instanceof EmptyChunk)) {
                     scanChunk(chunk, player);
-                    if (result != null) {
+                    if (result.found) {
                         return;
                     }
                 }
@@ -194,8 +194,8 @@ public class SnifferAPI {
     }
 
     private void scanChunk(Chunk chunk, EntityPlayer player) {
-        int yl = current.getMode() == 0 ? current.getDepthL() : (int) (player.posY - current.getVrange());
-        int yh = current.getMode() == 0 ? current.getDepthH() : (int) (player.posY + current.getVrange());
+        int yl = current.getMode() == 0 ? current.getDepthL() : (int) (player.posY - current.getVRange());
+        int yh = current.getMode() == 0 ? current.getDepthH() : (int) (player.posY + current.getVRange());
         for (int y = yh; y > 0 && y < 255 && y >= yl; y--) {
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {
@@ -208,7 +208,7 @@ public class SnifferAPI {
                     if (current.match(block, meta)) {
                         int blockX = chunk.x * 16 + x;
                         int blockZ = chunk.z * 16 + z;
-                        result = new ScanResult(player, current, blockX, y, blockZ);
+                        result.update(player, current, blockX, y, blockZ);
                         return;
                     }
                 }

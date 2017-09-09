@@ -48,7 +48,7 @@ public class TBlock {
         return false;
     }
 
-    public boolean invalid() {
+    boolean invalid() {
         return block == null;
     }
 
@@ -56,7 +56,7 @@ public class TBlock {
         return block;
     }
 
-    public Integer getMeta() {
+    Integer getMeta() {
         return meta;
     }
 
@@ -73,10 +73,10 @@ public class TBlock {
         if (!name.isEmpty() && !Constants.PATTERN_NAME.matcher(name).matches()) {
             return name;
         }
-        return I18n.format("sf.unknow.block");
+        return I18n.format("sf.unknown.block");
     }
 
-    public Color getMapColor() {
+    Color getMapColor() {
         return new Color(block.getStateFromMeta(meta == null ? 0 : meta).getMapColor().colorValue);
     }
 

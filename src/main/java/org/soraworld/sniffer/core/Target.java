@@ -26,8 +26,8 @@ public class Target {
     private int mode;
     private int depthL;
     private int depthH;
-    private int hrange;
-    private int vrange;
+    private int hRange;
+    private int vRange;
     private int index;
     private int count;
     private String color;
@@ -42,8 +42,8 @@ public class Target {
         mode = 0;
         depthL = 0;
         depthH = 64;
-        hrange = 1;
-        vrange = 16;
+        hRange = 1;
+        vRange = 16;
         color = "map";
     }
 
@@ -53,8 +53,8 @@ public class Target {
         mode = 0;
         depthL = 0;
         depthH = 64;
-        hrange = 1;
-        vrange = 16;
+        hRange = 1;
+        vRange = 16;
         color = "map";
     }
 
@@ -88,25 +88,29 @@ public class Target {
         return this;
     }
 
-    public int getHrange() {
-        return hrange;
+    public int getHRange() {
+        return hRange;
     }
 
-    public Target setHrange(int hrange) {
-        this.hrange = hrange < 0 ? 0 : hrange > 15 ? 15 : hrange;
+    public Target setHRange(int hRange) {
+        this.hRange = hRange < 0 ? 0 : hRange > 15 ? 15 : hRange;
         return this;
     }
 
-    public int getVrange() {
-        return vrange;
+    public int getVRange() {
+        return vRange;
     }
 
-    public Target setVrange(int vrange) {
-        this.vrange = vrange < 0 ? 0 : vrange > 255 ? 255 : vrange;
+    public Target setVRange(int vRange) {
+        this.vRange = vRange < 0 ? 0 : vRange > 255 ? 255 : vRange;
         return this;
     }
 
-    public String getColorValue() {
+    public String getChatColor() {
+        return color.replaceAll("&", "&&");
+    }
+
+    String getColorValue() {
         return color;
     }
 
@@ -136,12 +140,10 @@ public class Target {
         return match;
     }
 
-    public boolean addBlock(TBlock block) {
+    public void addBlock(TBlock block) {
         if (!block.invalid() && !blocks.containsValue(block)) {
             blocks.put(count++, block);
-            return true;
         }
-        return false;
     }
 
     public void removeBlock(int uid) {
@@ -192,7 +194,7 @@ public class Target {
         if (!PATTERN_NAME.matcher(name).matches()) {
             return name;
         }
-        return I18n.format("sf.unknow.block");
+        return I18n.format("sf.unknown.block");
     }
 
     @Override
@@ -238,8 +240,8 @@ public class Target {
                 out.name("mode").value(target.getMode());
                 out.name("depthL").value(target.getDepthL());
                 out.name("depthH").value(target.getDepthH());
-                out.name("hrange").value(target.getHrange());
-                out.name("vrange").value(target.getVrange());
+                out.name("hRange").value(target.getHRange());
+                out.name("vRange").value(target.getVRange());
                 out.name("color").value(target.getColorValue());
                 out.endObject();
             } catch (Exception e) {
@@ -252,7 +254,7 @@ public class Target {
             Target target;
             try {
                 List<TBlock> blocks = new ArrayList<>();
-                int mode = 0, depth0 = 0, depth1 = 64, hrange = 1, vrange = 16;
+                int mode = 0, depth0 = 0, depth1 = 64, hRange = 1, vRange = 16;
                 String color = "map";
                 in.beginObject();
                 while (in.hasNext()) {
@@ -273,11 +275,11 @@ public class Target {
                         case "depthH":
                             depth1 = in.nextInt();
                             break;
-                        case "hrange":
-                            hrange = in.nextInt();
+                        case "hRange":
+                            hRange = in.nextInt();
                             break;
-                        case "vrange":
-                            vrange = in.nextInt();
+                        case "vRange":
+                            vRange = in.nextInt();
                             break;
                         case "color":
                             color = in.nextString();
@@ -288,7 +290,7 @@ public class Target {
                 if (target.invalid()) {
                     return null;
                 }
-                target.setMode(mode).setDepth(depth0, depth1).setHrange(hrange).setVrange(vrange).setColor(color);
+                target.setMode(mode).setDepth(depth0, depth1).setHRange(hRange).setVRange(vRange).setColor(color);
                 in.endObject();
             } catch (Exception e) {
                 e.printStackTrace();

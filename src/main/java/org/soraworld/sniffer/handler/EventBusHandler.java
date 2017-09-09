@@ -22,7 +22,7 @@ public class EventBusHandler {
             EntityPlayer player = event.getEntityPlayer();
             new Thread(() -> {
                 api.scanWorld(player);
-                if (api.result != null) {
+                if (api.result.found) {
                     api.spawnParticle(player);
                 }
             }).start();
@@ -34,7 +34,7 @@ public class EventBusHandler {
         if (api.active && api.current != null && api.timein() && !event.isCancelable() && event.getType() == RenderGameOverlayEvent.ElementType.EXPERIENCE) {
             ScaledResolution scale = new ScaledResolution(api.mc);
             String label = String.format("%s: ---", api.current.displayName());
-            if (api.result != null && api.result.getDistance() >= 1.0D) {
+            if (api.result.found && api.result.getDistance() >= 1.0D) {
                 label = String.format("%s: %.2f", api.result.getItemStack().getDisplayName(), api.result.getDistance() - 1.0D);
             }
             int width = scale.getScaledWidth();
@@ -46,7 +46,7 @@ public class EventBusHandler {
             int x = (int) (api.config.hudX.get() * (width - iconWidth));
             int y = (int) (api.config.hudY.get() * (height - iconHeight - lbHeight));
             api.drawRect(x - 2, y - 2, 20, 20, 1342177280);
-            if (api.result != null) {
+            if (api.result.found) {
                 api.renderItem(api.result.getItemStack(), x, y);
             } else {
                 api.renderItem(api.current.getDelegate().getItemStack(), x, y);
