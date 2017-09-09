@@ -1,10 +1,6 @@
 package org.soraworld.sniffer.constant;
 
 import com.google.gson.reflect.TypeToken;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.soraworld.sniffer.core.Target;
@@ -24,7 +20,6 @@ public final class Constants {
     public static final Pattern PATTERN_NUM = Pattern.compile("[0-9]{1,3}");
     public static final Pattern PATTERN_NAME = Pattern.compile("^tile.*name$");
 
-    public static final ITextComponent HEAD = new TextComponentTranslation("sf.chat.head").setStyle(new Style().setColor(TextFormatting.AQUA));
     public static final Type LIST_TARGET = new TypeToken<List<Target>>() {
     }.getType();
     public static final int[][] RANGE = {

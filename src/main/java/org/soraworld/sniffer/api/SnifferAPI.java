@@ -13,7 +13,6 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.EmptyChunk;
 import net.minecraftforge.fml.relauncher.Side;
@@ -29,6 +28,7 @@ import org.soraworld.sniffer.core.ScanResult;
 import org.soraworld.sniffer.core.TBlock;
 import org.soraworld.sniffer.core.Target;
 import org.soraworld.sniffer.gui.ParticleEffect;
+import org.soraworld.sniffer.util.I19n;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,9 +59,9 @@ public class SnifferAPI {
 
     private static final Gson GSON = new GsonBuilder().registerTypeAdapter(Target.class, new Target.Adapter()).registerTypeAdapter(TBlock.class, new TBlock.Adapter()).setPrettyPrinting().create();
 
-    public synchronized void sendChat(String key, Object... objects) {
+    public void sendChat(String key, Object... args) {
         if (mc.player != null) {
-            mc.player.sendMessage(Constants.HEAD.createCopy().appendSibling(new TextComponentTranslation(key, objects)));
+            mc.player.sendMessage(I19n.format(I18n.format("sf.chat.head") + I18n.format(key, args)));
         }
     }
 
