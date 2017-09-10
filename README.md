@@ -14,7 +14,6 @@
 ### 注意
 1. 该Mod只能用于客户端, 不会影响其他与服务端匹配的Mod；如果将本Mod用于服务端可能导致崩溃.
 2. 编译环境为JDK 1.8 语言级别 8 ，所以java7及以下可能无法正常运行.如有需要可自行修改并编译源码.
-3. 集成开发环境为IDEA ，其他工具应该也一样, 力荐IDEA.
 
 ### 指令
 |符号|意义|
@@ -65,3 +64,61 @@
 |探测深度范围|`0`层-`64`层|
 |粒子颜色|使用`MapColor`|
 |默认探测目标|钻石原矿,元数据`0`|
+
+---
+
+# Block Sniffer
+
+### Description
+This is a Scenter-like mod. It can show you a way to the target block(s).
+
+### Features
+1. Optimize the scanning rule,by default,it will skip air block.
+2. Use command to add/remove target block(s) or change work mode.
+3. No need to find the name(id) of the block,you can add the block in-hand or looking at (with meta).
+4. Multi thread to scan the world,no lag.
+5. Customizable work mode/range.
+6. Supports several formats of colors. Hex Value(#abcdef),Minecraft Color(&5/&e),Web Color(blue,magenta),MapColor.
+
+### Attentions
+1. This mod only can be used in client side.
+2. Java: JDK 1.8  Language Level: 8
+3. Don't use this mod in multi-player servers to cheat !
+
+### Commands
+
+|command|function|
+|---|---|
+|`/sniffer`|main command, simplify `/sf`|
+|`/sf h/help`|help|
+|`/sf v/version`|version|
+|`/sf s/save`|save config|
+|`/sf reload`|reload config|
+|`/sf reset`|reset target|
+|||
+|`/sf target i/info`|show information of current target|
+|`/sf target m/mode [{0│1}]`|get/set work mode|
+|`/sf target h/hrange [{0-15}]`|get/set horizon range(chunk)|
+|`/sf target v/vrange [{0-255}]`|get/set vertical range(block)|
+|`/sf target d/depth [{0-255}] [{0-255}]`|get/set vertical depth range(0-255)|
+|`/sf target c/color [{#abcdef}│{&e}│{blue}│map]`|get/set particle color|
+|`/sf target rm/remove`|remove current target|
+|`/sf target cla/clear`|clear all targets|
+|`/sf target add <{name│id}│hold│look> [meta] [{0-15}]`|add a new target|
+|`/sf target add {name│id}`|add the block named `name` or id=`id` as a new target(ignore meta)|
+|`/sf target add hold meta`|add the held block as a new target,using it's meta|
+|`/sf target add look meta {0-15}`|add the looking block as a new target with the specific meta(0-15)|
+|||
+|`/sf sub l/list`|show the sub-blocks of current target|
+|`/sf sub add <{name│id}│hold│look> [meta] [{0-15}]`|add sub block to current target|
+|`/sf sub rm/remove <{uid}>`|remove sub block with the uid `uid`|
+
+### Default values
+|option|default value|
+|---|---|
+|work mode|`0` fixed range, using`depth`|
+|horizon range|`1`chunk|
+|vertical range|`16`block|
+|depth range (y)|`0`level-`64`level|
+|particle color|using `MapColor`|
+|default target|`minecraft:diamond_ore/0`,meta`0`|
