@@ -2,6 +2,7 @@ package org.soraworld.sniffer.handler;
 
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -18,7 +19,11 @@ public class EventBusHandler {
     // TODO 减少触发
     @SubscribeEvent
     public void onPlayerRightClickBlock(PlayerInteractEvent event) {
-        if (api.active && api.timeout()) {
+        if (event.getHand() == EnumHand.MAIN_HAND
+                && (event instanceof PlayerInteractEvent.LeftClickBlock
+                || event instanceof PlayerInteractEvent.RightClickBlock
+                || event instanceof PlayerInteractEvent.RightClickEmpty)
+                && api.active && api.timeout()) {
             EntityPlayer player = event.getEntityPlayer();
             new Thread(() -> {
                 api.scanWorld(player);
@@ -57,5 +62,4 @@ public class EventBusHandler {
             api.mc.fontRenderer.drawString(label, lbX, lbY, 16777215);
         }
     }
-
 }

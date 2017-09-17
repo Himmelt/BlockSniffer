@@ -2,15 +2,18 @@
   {
     "modid": "sniffer",
     "name": "Block Sniffer",
-    "description": "Block Sniffer Mod , Copyright (c) 2017 Himmelt",
+    "description": "Block Sniffer Mod , Copyright (c) 2017 Himmelt.",
     "version": "${version}",
     "mcversion": "${mcversion}",
-    "logoFile": "assets/sniffer/logo.png",
     "url": "https://github.com/Himmelt/BlockSniffer",
     "updateUrl": "https://github.com/Himmelt/BlockSniffer/releases",
     "authorList": [
       "Himmelt",
       "MickKay"
-    ]
+    ],
+    "credits": "Himmelt, making this mod.",
+    "logoFile": "assets/sniffer/logo.png",
+    "screenshots": [],
+    "dependencies": []
   }
 ]

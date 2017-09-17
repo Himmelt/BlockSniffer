@@ -9,7 +9,7 @@ public abstract class IProperty {
     String key;
     Property property;
 
-    protected IProperty(String category, String key) {
+    IProperty(String category, String key) {
         this.category = category;
         this.key = key;
     }
@@ -21,7 +21,6 @@ public abstract class IProperty {
     abstract void bind(Configuration config);
 
     public static class PropertyB extends IProperty {
-
         private final boolean defaultValue;
 
         public PropertyB(String category, String key, boolean defaultValue) {
@@ -44,7 +43,6 @@ public abstract class IProperty {
     }
 
     public static class PropertyD extends IProperty {
-
         private final double defaultValue;
 
         public PropertyD(String category, String key, double defaultValue) {
@@ -67,7 +65,6 @@ public abstract class IProperty {
     }
 
     public static class PropertyS extends IProperty {
-
         private final String defaultValue;
 
         PropertyS(String category, String key, String defaultValue) {
@@ -90,7 +87,6 @@ public abstract class IProperty {
     }
 
     public static class PropertyL extends IProperty {
-
         private final long defaultValue;
 
         PropertyL(String category, String key, long defaultValue) {
@@ -113,7 +109,6 @@ public abstract class IProperty {
     }
 
     public static class PropertyI extends IProperty {
-
         private final int defaultValue;
 
         public PropertyI(String category, String key, int defaultValue) {

@@ -4,13 +4,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.soraworld.sniffer.BlockSniffer;
 
 import java.awt.*;
 
 @SideOnly(Side.CLIENT)
 public class ParticleEffect {
 
-    private static final Minecraft mc = Minecraft.getMinecraft();
+    private static final Minecraft mc = BlockSniffer.getAPI().mc;
 
     public void spawn(World worldObj, double fromX, double fromY, double fromZ, double toX, double toY, double toZ, Color color) {
         spawnSingleParticle(worldObj, 0.5D + toX, 0.5D + toY, 0.5D + toZ, 1.0F, color, 0.0D, 0.0D, 0.0D);

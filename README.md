@@ -10,10 +10,12 @@
 4. 子线程探测, 大范围探测时不会导致游戏进程卡顿.
 5. 高度自定义探测范围、探测模式, 水平最大探测半径15区块.
 6. 支持多种颜色格式, 十六进制(#abcdef)、Minecraft颜色(&5、&e)、Web标准色(blue、magenta)、地图色(MapColor).
+7. 添加Gamma设置指令
 
 ### 注意
 1. 该Mod只能用于客户端, 不会影响其他与服务端匹配的Mod；如果将本Mod用于服务端可能导致崩溃.
 2. 编译环境为JDK 1.8 语言级别 8 ，所以java7及以下可能无法正常运行.如有需要可自行修改并编译源码.
+3. 请不要在多人联机时使用本Mod作弊.
 
 ### 指令
 |符号|意义|
@@ -32,24 +34,22 @@
 |指令|功能|
 |---|---|
 |`/sniffer`|总指令, 简写`/sf`|
-|`/sf h/help`|查看帮助|
-|`/sf v/version`|查看版本|
-|`/sf s/save`|保存配置|
+|`/sf g/gamma [0-15]`|查看/设置 Gamma 值|
 |`/sf reload`|重载配置|
 |`/sf reset`|复位探测器|
 |||
-|`/sf target i/info`|查看当前探测目标信息|
-|`/sf target m/mode [{0│1}]`|查看/设置探测模式|
-|`/sf target h/hrange [{0-15}]`|查看/设置水平探测半径(区块)|
-|`/sf target v/vrange [{0-255}]`|查看/设置垂直探测半径(方块)|
-|`/sf target d/depth [{0-255}] [{0-255}]`|查看/设置探测深度范围|
-|`/sf target c/color [{#abcdef}│{&e}│{blue}│map]`|查看/设置粒子颜色|
-|`/sf target rm/remove`|移除当前探测目标|
-|`/sf target cla/clear`|清除所有探测目标|
-|`/sf target add <{name│id}│hold│look> [meta] [{0-15}]`|添加探测目标|
-|`/sf target add {name│id}`|添加名为`name`或id为`id`的方块到新的探测目标, 将无视元数据|
-|`/sf target add hold meta`|添加手持方块到新的探测目标, 并使用当前元数据|
-|`/sf target add look meta {0-15}`|添加光标处方块到新的探测目标, 并使用指定的元数据|
+|`/sf t/target i/info`|查看当前探测目标信息|
+|`/sf t/target m/mode [{0│1}]`|查看/设置探测模式|
+|`/sf t/target h/hrange [{0-15}]`|查看/设置水平探测半径(区块)|
+|`/sf t/target v/vrange [{0-255}]`|查看/设置垂直探测半径(方块)|
+|`/sf t/target d/depth [{0-255}] [{0-255}]`|查看/设置探测深度范围|
+|`/sf t/target c/color [{#abcdef}│{&e}│{blue}│map]`|查看/设置粒子颜色|
+|`/sf t/target rm/remove`|移除当前探测目标|
+|`/sf t/target cla/clear`|清除所有探测目标|
+|`/sf t/target add <{name│id}│hold│look> [meta] [{0-15}]`|添加探测目标|
+|`/sf t/target add {name│id}`|添加名为`name`或id为`id`的方块到新的探测目标, 将无视元数据|
+|`/sf t/target add hold meta`|添加手持方块到新的探测目标, 并使用当前元数据|
+|`/sf t/target add look meta {0-15}`|添加光标处方块到新的探测目标, 并使用指定的元数据|
 |||
 |`/sf sub l/list`|显示当前目标包含的子目标|
 |`/sf sub add <{name│id}│hold│look> [meta] [{0-15}]`|添加子目标|
@@ -79,6 +79,7 @@ This is a Scenter-like mod. It can show you a way to the target block(s).
 4. Multi thread to scan the world,no lag.
 5. Customizable work mode/range.
 6. Supports several formats of colors. Hex Value(#abcdef),Minecraft Color(&5/&e),Web Color(blue,magenta),MapColor.
+7. Add Gamma settings command
 
 ### Attentions
 1. This mod only can be used in client side.
@@ -90,24 +91,22 @@ This is a Scenter-like mod. It can show you a way to the target block(s).
 |command|function|
 |---|---|
 |`/sniffer`|main command, simplify `/sf`|
-|`/sf h/help`|help|
-|`/sf v/version`|version|
-|`/sf s/save`|save config|
+|`/sf g/gamma [0-15]`|get/set Gamma|
 |`/sf reload`|reload config|
 |`/sf reset`|reset target|
 |||
-|`/sf target i/info`|show information of current target|
-|`/sf target m/mode [{0│1}]`|get/set work mode|
-|`/sf target h/hrange [{0-15}]`|get/set horizon range(chunk)|
-|`/sf target v/vrange [{0-255}]`|get/set vertical range(block)|
-|`/sf target d/depth [{0-255}] [{0-255}]`|get/set vertical depth range(0-255)|
-|`/sf target c/color [{#abcdef}│{&e}│{blue}│map]`|get/set particle color|
-|`/sf target rm/remove`|remove current target|
-|`/sf target cla/clear`|clear all targets|
-|`/sf target add <{name│id}│hold│look> [meta] [{0-15}]`|add a new target|
-|`/sf target add {name│id}`|add the block named `name` or id=`id` as a new target(ignore meta)|
-|`/sf target add hold meta`|add the held block as a new target,using it's meta|
-|`/sf target add look meta {0-15}`|add the looking block as a new target with the specific meta(0-15)|
+|`/sf t/target i/info`|show information of current target|
+|`/sf t/target m/mode [{0│1}]`|get/set work mode|
+|`/sf t/target h/hrange [{0-15}]`|get/set horizon range(chunk)|
+|`/sf t/target v/vrange [{0-255}]`|get/set vertical range(block)|
+|`/sf t/target d/depth [{0-255}] [{0-255}]`|get/set vertical depth range(0-255)|
+|`/sf t/target c/color [{#abcdef}│{&e}│{blue}│map]`|get/set particle color|
+|`/sf t/target rm/remove`|remove current target|
+|`/sf t/target cla/clear`|clear all targets|
+|`/sf t/target add <{name│id}│hold│look> [meta] [{0-15}]`|add a new target|
+|`/sf t/target add {name│id}`|add the block named `name` or id=`id` as a new target(ignore meta)|
+|`/sf t/target add hold meta`|add the held block as a new target,using it's meta|
+|`/sf t/target add look meta {0-15}`|add the looking block as a new target with the specific meta(0-15)|
 |||
 |`/sf sub l/list`|show the sub-blocks of current target|
 |`/sf sub add <{name│id}│hold│look> [meta] [{0-15}]`|add sub block to current target|

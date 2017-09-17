@@ -39,25 +39,22 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class SnifferAPI {
 
-    public Config config;
-    public File jsonFile;
     private int index;
     private int count;
-
     private long last;
     private long delay = 1000L;
-    public boolean active;
-    public final ScanResult result = new ScanResult();
+    private final ParticleEffect particle = new ParticleEffect();
+    private final HashMap<Integer, Target> targets = new HashMap<>();
+    private static final Gson GSON = new GsonBuilder().registerTypeAdapter(Target.class, new Target.Adapter()).registerTypeAdapter(TBlock.class, new TBlock.Adapter()).setPrettyPrinting().create();
 
+    public Config config;
+    public File jsonFile;
+    public Target current;
+    public boolean active = false;
+    public final ScanResult result = new ScanResult();
     public final Minecraft mc = Minecraft.getMinecraft();
     public final Logger LOGGER = LogManager.getLogger(Constants.NAME);
     public final KeyBinding KEY_SWITCH = new KeyBinding(I18n.format("sf.key.switch"), Keyboard.KEY_O, "key.categories.gameplay");
-    private final ParticleEffect particle = new ParticleEffect();
-    private final HashMap<Integer, Target> targets = new HashMap<>();
-
-    public Target current;
-
-    private static final Gson GSON = new GsonBuilder().registerTypeAdapter(Target.class, new Target.Adapter()).registerTypeAdapter(TBlock.class, new TBlock.Adapter()).setPrettyPrinting().create();
 
     public void sendChat(String key, Object... args) {
         if (mc.player != null) {
@@ -91,25 +88,6 @@ public class SnifferAPI {
         index = next(count);
         current = targets.get(index);
         result.found = false;
-    }
-
-    private int next(int start) {
-        start = start >= count - 1 ? 0 : start + 1;
-        int time = 0, index = start;
-        while (true) {
-            if (index == start) {
-                time++;
-                if (time >= 2) {
-                    return -1;
-                }
-            }
-            if (targets.containsKey(index)) {
-                return index;
-            }
-            if (index >= count - 1) {
-                index = 0;
-            }
-        }
     }
 
     public void reload() {
@@ -193,29 +171,6 @@ public class SnifferAPI {
         }
     }
 
-    private void scanChunk(Chunk chunk, EntityPlayer player) {
-        int yl = current.getMode() == 0 ? current.getDepthL() : (int) (player.posY - current.getVRange());
-        int yh = current.getMode() == 0 ? current.getDepthH() : (int) (player.posY + current.getVRange());
-        for (int y = yh; y > 0 && y < 255 && y >= yl; y--) {
-            for (int x = 0; x < 16; x++) {
-                for (int z = 0; z < 16; z++) {
-                    IBlockState state = chunk.getBlockState(x, y, z);
-                    Block block = state.getBlock();
-                    if (block.equals(Blocks.AIR)) {
-                        continue;
-                    }
-                    int meta = block.getMetaFromState(state);
-                    if (current.match(block, meta)) {
-                        int blockX = chunk.x * 16 + x;
-                        int blockZ = chunk.z * 16 + z;
-                        result.update(player, current, blockX, y, blockZ);
-                        return;
-                    }
-                }
-            }
-        }
-    }
-
     public void spawnParticle(EntityPlayer player) {
         particle.spawn(player.getEntityWorld(), player.posX, player.posY + player.getEyeHeight(), player.posZ, result.x, result.y, result.z, result.getColor());
     }
@@ -264,4 +219,45 @@ public class SnifferAPI {
         GL11.glPopMatrix();
     }
 
+    private int next(int start) {
+        start = start >= count - 1 ? 0 : start + 1;
+        int time = 0, index = start;
+        while (true) {
+            if (index == start) {
+                time++;
+                if (time >= 2) {
+                    return -1;
+                }
+            }
+            if (targets.containsKey(index)) {
+                return index;
+            }
+            if (index >= count - 1) {
+                index = 0;
+            }
+        }
+    }
+
+    private void scanChunk(Chunk chunk, EntityPlayer player) {
+        int yl = current.getMode() == 0 ? current.getDepthL() : (int) (player.posY - current.getVRange());
+        int yh = current.getMode() == 0 ? current.getDepthH() : (int) (player.posY + current.getVRange());
+        for (int y = yh; y > 0 && y < 255 && y >= yl; y--) {
+            for (int x = 0; x < 16; x++) {
+                for (int z = 0; z < 16; z++) {
+                    IBlockState state = chunk.getBlockState(x, y, z);
+                    Block block = state.getBlock();
+                    if (block.equals(Blocks.AIR)) {
+                        continue;
+                    }
+                    int meta = block.getMetaFromState(state);
+                    if (current.match(block, meta)) {
+                        int blockX = chunk.x * 16 + x;
+                        int blockZ = chunk.z * 16 + z;
+                        result.update(player, current, blockX, y, blockZ);
+                        return;
+                    }
+                }
+            }
+        }
+    }
 }

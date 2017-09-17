@@ -1,4 +1,4 @@
-# 中文简体语言文件 zh_CN.lang
+# 中文简体语言文件 zh_cn.lang
 
 sf.chat.head=&b[方块探测] &r
 
@@ -7,43 +7,21 @@ sf.key.switch=启用/禁用方块探测
 sf.cfg.hudX=GUI x坐标,有效值[0.0(左) - 1.0(右)].
 sf.cfg.hudY=GUI y坐标,有效值[0.0(上) - 1.0(下)].
 
-sf.version=探测器版本为: &a%s
-sf.save=配置已保存.
 sf.reload=配置已重新加载.
 sf.reset=探测器已复位!
-sf.active=探测器已开启,愉♂悦地挖矿吧! 233333
+sf.active=探测器已开启,愉♂悦地挖矿吧!
 sf.inactive=探测器已关闭!
 sf.empty=探测目标为空,请先添加探测目标!
 sf.unknown.block=未知方块
 sf.gamma.get=当前亮度(Gamma)为: &a%.2f
 sf.gamma.set=当前亮度(Gamma)设置为: &a%.2f
 
-sf.help.0=&e==================================================================&r
-sf.help.1=主页&c https://github.com/Himmelt/BlockSniffer
-sf.help.2=/sniffer help   --- 帮助
-sf.help.3=/sniffer <cmd>  --- 子命令帮助
-sf.help.4=/sniffer sub    --- 设置子目标
-sf.help.5=/sniffer target --- 设置目标
-sf.help.6=/sniffer reload --- 重载配置
-sf.help.7=/sniffer save   --- 保存配置
+sf.help=用法: /sf reload|reset|target|sub
 
-sf.help.target.0=/sf target rm/remove          --- 移除当前探测目标
-sf.help.target.1=/sf target cla/clear          --- 移除所有探测目标
-sf.help.target.2=/sf target rm/remove          --- 移除当前探测目标
-sf.help.target.3=/sf target add                --- 添加新的探测目标
-sf.help.target.4=&9&o以下指令需要在探测器开启并有一个目标处于激活状态时方可使用.
-sf.help.target.5=/sf target i/info             --- 获取当前探测目标信息
-sf.help.target.6=/sf target m/mode   [mode]    --- 获取/设置探测模式
-sf.help.target.7=/sf target h/hrange [hrange]  --- 获取/设置水平探测半径(区块)
-sf.help.target.8=/sf target v/vrange [vrange]  --- 获取/设置垂直探测半径(方块)
-sf.help.target.9=/sf target d/depth  [d0] [d1] --- 获取/设置探测深度
-sf.help.target.10=/sf target c/color  [color]   --- 获取/设置粒子颜色
+sf.help.target=用法: /sf t rm/cla/add/info/mode/hrange/vrange/depth/color
 sf.help.target.cla=使用&e confirm &r以确认 /sf target cla/clear confirm
 
-sf.help.add.0=用法: /sf target/sub add <{name|id}|hold|look> [meta] [{0-15}]
-sf.help.add.1=示例: /sf target/sub add stone       添加名为stone的方块,无视元数据
-sf.help.add.2=示例: /sf target/sub add hold meta   添加手中的方块,使用当前元数据
-sf.help.add.3=示例: /sf target/sub add look meta 3 添加光标所在方块,使用指定元数据
+sf.help.add=用法: /sf target/sub add <{name|id}|hold|look> [meta] [{0-15}]
 
 sf.add.holdair=请检查手持物是否为有效方块.
 sf.add.lookair=请检查光标处是否为有效方块.

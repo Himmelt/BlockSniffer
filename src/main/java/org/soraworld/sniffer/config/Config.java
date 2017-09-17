@@ -17,7 +17,6 @@ public class Config {
 
     private final Configuration config;
 
-
     public Config(File configDir) {
         config = new Configuration(new File(configDir, Constants.MODID + ".cfg"), Constants.VERSION);
         config.load();
@@ -29,10 +28,9 @@ public class Config {
     public void reload() {
         config.load();
         bind();
-
     }
 
-    public void comments() {
+    private void comments() {
         hudX.setComment(I18n.format("sf.cfg.hudX"));
         hudY.setComment(I18n.format("sf.cfg.hudY"));
     }
@@ -45,5 +43,4 @@ public class Config {
         hudX.bind(config);
         hudY.bind(config);
     }
-
 }
