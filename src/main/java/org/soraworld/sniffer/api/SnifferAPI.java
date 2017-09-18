@@ -41,8 +41,10 @@ public class SnifferAPI {
 
     private int index;
     private int count;
-    private long last;
-    private long delay = 1000L;
+    private long clickLast;
+    private long clickDelay = 1000L;
+    private long guiLast;
+    private long guiDelay = 1000L;
     private final ParticleEffect particle = new ParticleEffect();
     private final HashMap<Integer, Target> targets = new HashMap<>();
     private static final Gson GSON = new GsonBuilder().registerTypeAdapter(Target.class, new Target.Adapter()).registerTypeAdapter(TBlock.class, new TBlock.Adapter()).setPrettyPrinting().create();
@@ -70,17 +72,18 @@ public class SnifferAPI {
         return mc.gameSettings.gammaSetting;
     }
 
-    public boolean timeout() {
+    public boolean clickTimeOut() {
         long time = System.currentTimeMillis();
-        if (last + delay < time) {
-            last = time;
+        if (clickLast + clickDelay < time) {
+            clickLast = time;
+            guiLast = clickLast;
             return true;
         }
         return false;
     }
 
-    public boolean timein() {
-        return last + delay > System.currentTimeMillis();
+    public boolean guiInTime() {
+        return guiLast + guiDelay > System.currentTimeMillis();
     }
 
     public void reset() {
@@ -131,7 +134,8 @@ public class SnifferAPI {
                 reset();
                 sendChat("sf.inactive");
             } else {
-                last = System.currentTimeMillis();
+                clickLast = System.currentTimeMillis();
+                guiLast = clickLast;
                 this.index = index;
                 current = targets.get(index);
                 if (!active) {

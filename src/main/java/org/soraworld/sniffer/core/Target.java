@@ -4,7 +4,6 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.minecraft.block.Block;
-import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.soraworld.sniffer.BlockSniffer;
@@ -17,8 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-
-import static org.soraworld.sniffer.constant.Constants.PATTERN_NAME;
 
 @SideOnly(Side.CLIENT)
 public class Target {
@@ -186,15 +183,7 @@ public class Target {
     }
 
     public String displayName() {
-        String name = getDelegate().getBlock().getLocalizedName();
-        if (!PATTERN_NAME.matcher(name).matches()) {
-            return name;
-        }
-        name = getDelegate().getItemStack().getDisplayName();
-        if (!PATTERN_NAME.matcher(name).matches()) {
-            return name;
-        }
-        return I18n.format("sf.unknown.block");
+        return getDelegate().getName();
     }
 
     @Override

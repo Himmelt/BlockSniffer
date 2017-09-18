@@ -16,14 +16,13 @@ public class EventBusHandler {
 
     private final SnifferAPI api = BlockSniffer.getAPI();
 
-    // TODO 减少触发
     @SubscribeEvent
-    public void onPlayerRightClickBlock(PlayerInteractEvent event) {
+    public void onPlayerClick(PlayerInteractEvent event) {
         if (event.getHand() == EnumHand.MAIN_HAND
                 && (event instanceof PlayerInteractEvent.LeftClickBlock
                 || event instanceof PlayerInteractEvent.RightClickBlock
                 || event instanceof PlayerInteractEvent.RightClickEmpty)
-                && api.active && api.timeout()) {
+                && api.active && api.clickTimeOut()) {
             EntityPlayer player = event.getEntityPlayer();
             new Thread(() -> {
                 api.scanWorld(player);
@@ -36,7 +35,8 @@ public class EventBusHandler {
 
     @SubscribeEvent
     public void onRender(RenderGameOverlayEvent event) {
-        if (api.active && api.current != null && api.timein() && !event.isCancelable() && event.getType() == RenderGameOverlayEvent.ElementType.EXPERIENCE) {
+        //&& api.guiInTime()
+        if (api.active && api.current != null && !event.isCancelable() && event.getType() == RenderGameOverlayEvent.ElementType.EXPERIENCE) {
             ScaledResolution scale = new ScaledResolution(api.mc);
             String label = String.format("%s: ---", api.current.displayName());
             if (api.result.found && api.result.getDistance() >= 1.0D) {

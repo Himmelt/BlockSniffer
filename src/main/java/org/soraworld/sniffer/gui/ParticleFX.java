@@ -22,7 +22,7 @@ public class ParticleFX extends ParticleSuspendedTown {
         this.setAlphaF(0.0F);
         this.setSize(0.02F, 0.02F);
         this.particleScale *= this.rand.nextFloat() * 0.6F + 0.5F;
-        this.particleMaxAge = (int) (20.0D / (Math.random() * 0.8D + 0.2D));
+        this.particleMaxAge = 120;
         this.setVelocity(vx, vy, vz);
     }
 
