@@ -110,10 +110,14 @@ public abstract class IProperty {
 
     public static class PropertyI extends IProperty {
         private final int defaultValue;
+        private final int min;
+        private final int max;
 
-        public PropertyI(String category, String key, int defaultValue) {
+        public PropertyI(String category, String key, int defaultI, int min, int max) {
             super(category, key);
-            this.defaultValue = defaultValue;
+            this.min = min;
+            this.max = max;
+            this.defaultValue = defaultI < min ? min : defaultI > max ? max : defaultI;
         }
 
         public int get() {
@@ -121,7 +125,7 @@ public abstract class IProperty {
         }
 
         public void set(int value) {
-            property.set(value);
+            property.set(value < min ? min : value > max ? max : value);
         }
 
         @Override

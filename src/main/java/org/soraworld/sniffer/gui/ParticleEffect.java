@@ -12,12 +12,12 @@ public class ParticleEffect {
 
     private static final Minecraft mc = Minecraft.getMinecraft();
 
-    public void spawn(World worldObj, double fromX, double fromY, double fromZ, double toX, double toY, double toZ, Color color) {
-        spawnSingleParticle(worldObj, 0.5D + toX, 0.5D + toY, 0.5D + toZ, 1.0F, color, 0.0D, 0.0D, 0.0D);
-        intSpawnParticleTrail(worldObj, fromX, fromY, fromZ, toX + 0.5D, toY + 0.5D, toZ + 0.5D, color);
+    public void spawn(World worldObj, double fromX, double fromY, double fromZ, double toX, double toY, double toZ, Color color, int delay) {
+        spawnSingleParticle(worldObj, 0.5D + toX, 0.5D + toY, 0.5D + toZ, 1.0F, color, 0.0D, 0.0D, 0.0D, delay);
+        intSpawnParticleTrail(worldObj, fromX, fromY, fromZ, toX + 0.5D, toY + 0.5D, toZ + 0.5D, color, delay);
     }
 
-    private void intSpawnParticleTrail(World theWorld, double fromX, double fromY, double fromZ, double toX, double toY, double toZ, Color color) {
+    private void intSpawnParticleTrail(World theWorld, double fromX, double fromY, double fromZ, double toX, double toY, double toZ, Color color, int delay) {
         double dx = toX - fromX;
         double dy = toY - fromY;
         double dz = toZ - fromZ;
@@ -37,11 +37,11 @@ public class ParticleEffect {
             if (strength < 0.2D) {
                 strength = 0.2D;
             }
-            spawnSingleParticle(theWorld, x, y, z, (float) strength, color, vx, vy, vz);
+            spawnSingleParticle(theWorld, x, y, z, (float) strength, color, vx, vy, vz, delay);
         }
     }
 
-    private void spawnSingleParticle(World theWorld, double x, double y, double z, float alpha, Color color, double vx, double vy, double vz) {
-        mc.effectRenderer.addEffect(new ParticleFX(theWorld, x, y, z, vx, vy, vz, color, alpha));
+    private void spawnSingleParticle(World theWorld, double x, double y, double z, float alpha, Color color, double vx, double vy, double vz, int delay) {
+        mc.effectRenderer.addEffect(new ParticleFX(theWorld, x, y, z, vx, vy, vz, color, alpha, delay));
     }
 }

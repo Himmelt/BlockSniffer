@@ -42,9 +42,7 @@ public class SnifferAPI {
     private int index;
     private int count;
     private long clickLast;
-    private long clickDelay = 1000L;
     private long guiLast;
-    private long guiDelay = 1000L;
     private final ParticleEffect particle = new ParticleEffect();
     private final HashMap<Integer, Target> targets = new HashMap<>();
     private static final Gson GSON = new GsonBuilder().registerTypeAdapter(Target.class, new Target.Adapter()).registerTypeAdapter(TBlock.class, new TBlock.Adapter()).setPrettyPrinting().create();
@@ -74,7 +72,7 @@ public class SnifferAPI {
 
     public boolean clickTimeOut() {
         long time = System.currentTimeMillis();
-        if (clickLast + clickDelay < time) {
+        if (clickLast + config.clickDelay.get() < time) {
             clickLast = time;
             guiLast = clickLast;
             return true;
@@ -83,7 +81,7 @@ public class SnifferAPI {
     }
 
     public boolean guiInTime() {
-        return guiLast + guiDelay > System.currentTimeMillis();
+        return config.guiDelay.get() <= 500 || guiLast + config.guiDelay.get() > System.currentTimeMillis();
     }
 
     public void reset() {
@@ -118,7 +116,7 @@ public class SnifferAPI {
     public void save() {
         config.save();
         try {
-            FileUtils.writeStringToFile(jsonFile, GSON.toJson(targets.values()));
+            FileUtils.writeStringToFile(jsonFile, GSON.toJson(targets.values()), "UTF-8");
         } catch (IOException e) {
             LOGGER.catching(e);
         }
@@ -176,7 +174,7 @@ public class SnifferAPI {
     }
 
     public void spawnParticle(EntityPlayer player) {
-        particle.spawn(player.getEntityWorld(), player.posX, player.posY + player.getEyeHeight(), player.posZ, result.x, result.y, result.z, result.getColor());
+        particle.spawn(player.getEntityWorld(), player.posX, player.posY + player.getEyeHeight(), player.posZ, result.x, result.y, result.z, result.getColor(), config.particleDelay.get());
     }
 
     public void clearTargets() {

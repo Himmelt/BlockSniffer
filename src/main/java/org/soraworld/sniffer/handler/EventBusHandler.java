@@ -35,8 +35,7 @@ public class EventBusHandler {
 
     @SubscribeEvent
     public void onRender(RenderGameOverlayEvent event) {
-        //&& api.guiInTime()
-        if (api.active && api.current != null && !event.isCancelable() && event.getType() == RenderGameOverlayEvent.ElementType.EXPERIENCE) {
+        if (api.active && api.current != null && api.guiInTime() && !event.isCancelable() && event.getType() == RenderGameOverlayEvent.ElementType.EXPERIENCE) {
             ScaledResolution scale = new ScaledResolution(api.mc);
             String label = String.format("%s: ---", api.current.displayName());
             if (api.result.found && api.result.getDistance() >= 1.0D) {

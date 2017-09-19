@@ -12,7 +12,7 @@ public class ParticleFX extends ParticleSuspendedTown {
 
     private float targetAlpha;
 
-    ParticleFX(World world, double x, double y, double z, double vx, double vy, double vz, Color color, float alpha) {
+    ParticleFX(World world, double x, double y, double z, double vx, double vy, double vz, Color color, float alpha, int delay) {
         super(world, x, y, z, vx, vy, vz);
         this.targetAlpha = alpha;
         this.setParticleTextureIndex(147);
@@ -22,7 +22,7 @@ public class ParticleFX extends ParticleSuspendedTown {
         this.setAlphaF(0.0F);
         this.setSize(0.02F, 0.02F);
         this.particleScale *= this.rand.nextFloat() * 0.6F + 0.5F;
-        this.particleMaxAge = 120;
+        this.particleMaxAge = delay * 20;
         this.setVelocity(vx, vy, vz);
     }
 
