@@ -18,6 +18,7 @@ import net.minecraft.world.chunk.EmptyChunk;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
@@ -116,7 +117,12 @@ public class SnifferAPI {
     public void save() {
         config.save();
         try {
-            FileUtils.writeStringToFile(jsonFile, GSON.toJson(targets.values()), "UTF-8");
+            FileWriterWithEncoding writer = new FileWriterWithEncoding(jsonFile, "UTF-8");
+            GSON.toJson(targets.values(), writer);
+            writer.flush();
+            writer.close();
+            //FileUtils.writeStringToFile(jsonFile, GSON.toJson(targets.values()), "UTF-8");
+            LOGGER.info("config saved.");
         } catch (IOException e) {
             LOGGER.catching(e);
         }
