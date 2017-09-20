@@ -4,8 +4,12 @@ sf.chat.head=&b[方块探测] &r
 
 sf.key.switch=启用/禁用方块探测
 
-sf.cfg.hudX=GUI x坐标,有效值[0.0(左) - 1.0(右)].
-sf.cfg.hudY=GUI y坐标,有效值[0.0(上) - 1.0(下)].
+sf.cfg.hudX=HUD(显示仪) X坐标,有效值[0.0(左) - 1.0(右)].
+sf.cfg.hudY=HUD(显示仪) Y坐标,有效值[0.0(上) - 1.0(下)].
+sf.cfg.gamma=Gamma(亮度) 值[0.0 - 15.0]
+sf.cfg.hudDelay=HUD(显示仪) 显示时长(毫秒)[0 - MAX](小于500时始终显示)
+sf.cfg.scanDelay=扫描间隔时长(毫秒)[100 - MAX]
+sf.cfg.particleDelay=粒子显示时长(秒)[1 - MAX]
 
 sf.reload=配置已重新加载.
 sf.reset=探测器已复位!
@@ -22,10 +26,6 @@ sf.help.target=用法: /sf t rm/cla/add/info/mode/hrange/vrange/depth/color
 sf.help.target.cla=使用&e confirm &r以确认 /sf target cla/clear confirm
 
 sf.help.add=用法: /sf target/sub add <{name|id}|hold|look> [meta] [{0-15}]
-
-sf.add.holdair=请检查手持物是否为有效方块.
-sf.add.lookair=请检查光标处是否为有效方块.
-sf.add.notname=你输入的不是有效方块的名称.
 
 sf.target.info=当前: 模式[&a%d&r] 颜色[&a%s&r] 深度[&a%d&r - &a%d&r] 水平[&a%d&r 区块] 垂直[&a%d&r 方块]
 sf.target.m.get=当前探测模式: &a%s
@@ -61,5 +61,7 @@ sf.cmd.error=不符合指令执行条件,该命令只能由玩家在游戏世界
 sf.mode.0=固定深度探测
 sf.mode.1=相对深度探测
 
+sf.invalid.add=&6目标不是有效方块或没有对应的方块.
 sf.invalid.num=&6数字输入无效!
+sf.invalid.name=&6名字输入无效!
 sf.invalid.color=&6颜色输入无效!

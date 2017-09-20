@@ -13,12 +13,12 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.EmptyChunk;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
@@ -64,16 +64,17 @@ public class SnifferAPI {
     }
 
     public void setGamma(int gamma) {
-        mc.gameSettings.gammaSetting = gamma >= 15 ? 15 : gamma;
+        if (gamma >= 0) config.gamma.set(gamma);
+        mc.gameSettings.gammaSetting = config.gamma.get();
     }
 
-    public float getGamma() {
-        return mc.gameSettings.gammaSetting;
+    public double getGamma() {
+        return config.gamma.get();
     }
 
     public boolean clickTimeOut() {
         long time = System.currentTimeMillis();
-        if (clickLast + config.clickDelay.get() < time) {
+        if (clickLast + config.scanDelay.get() < time) {
             clickLast = time;
             guiLast = clickLast;
             return true;
@@ -82,7 +83,7 @@ public class SnifferAPI {
     }
 
     public boolean guiInTime() {
-        return config.guiDelay.get() <= 500 || guiLast + config.guiDelay.get() > System.currentTimeMillis();
+        return config.hudDelay.get() <= 500 || guiLast + config.hudDelay.get() > System.currentTimeMillis();
     }
 
     public void reset() {
@@ -110,18 +111,15 @@ public class SnifferAPI {
             }
             reset();
         }
-        setGamma(1);
+        setGamma(-1);
         LOGGER.info("config reloaded!");
     }
 
     public void save() {
         config.save();
         try {
-            FileWriterWithEncoding writer = new FileWriterWithEncoding(jsonFile, "UTF-8");
-            GSON.toJson(targets.values(), writer);
-            writer.flush();
-            writer.close();
-            //FileUtils.writeStringToFile(jsonFile, GSON.toJson(targets.values()), "UTF-8");
+            jsonFile.delete();
+            FileUtils.writeStringToFile(jsonFile, GSON.toJson(targets.values()), "UTF-8");
             LOGGER.info("config saved.");
         } catch (IOException e) {
             LOGGER.catching(e);
@@ -180,7 +178,11 @@ public class SnifferAPI {
     }
 
     public void spawnParticle(EntityPlayer player) {
-        particle.spawn(player.getEntityWorld(), player.posX, player.posY + player.getEyeHeight(), player.posZ, result.x, result.y, result.z, result.getColor(), config.particleDelay.get());
+        Vec3d look = player.getLookVec();
+        double fromX = look.x + player.posX;
+        double fromY = look.y + player.posY + player.getEyeHeight();
+        double fromZ = look.z + player.posZ;
+        particle.spawn(player.getEntityWorld(), fromX, fromY, fromZ, result.x, result.y, result.z, result.getColor(), config.particleDelay.get());
     }
 
     public void clearTargets() {

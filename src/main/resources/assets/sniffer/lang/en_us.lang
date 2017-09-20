@@ -4,8 +4,12 @@ sf.chat.head=&b[BlockSniffer] &r
 
 sf.key.switch=Enable/Disable Sniffer
 
-sf.cfg.hudX=GUI x [0.0(left) - 1.0(right)].
-sf.cfg.hudY=GUI y [0.0(top) - 1.0(bottom)].
+sf.cfg.hudX=HUD(Head Up Display) X [0.0(left) - 1.0(right)].
+sf.cfg.hudY=HUD(Head Up Display) Y [0.0(top) - 1.0(bottom)].
+sf.cfg.gamma=Gamma [0.0 - 15.0]
+sf.cfg.hudDelay=HUD(Head Up Display) display time (ms)[0 - MAX](always show if less than 500)
+sf.cfg.scanDelay=scan spacing(ms)[100 - MAX]
+sf.cfg.particleDelay=particles' max age (s)[1 - MAX]
 
 sf.reload=Config reloaded.
 sf.reset=Reset!
@@ -23,10 +27,6 @@ sf.help.target.cla=Use&e confirm &rto confirm /sf target cla/clear confirm
 
 sf.help.add=Usage: /sf target/sub add <{name|id}|hold|look> [meta] [{0-15}]
 
-sf.add.holdair=Checkout the block you held.
-sf.add.lookair=Checkout the block you look.
-sf.add.notname=The name you entered is not a valid block's name.
-
 sf.target.info=current: mode[&a%d&r] color[&a%s&r] depth[&a%d&r - &a%d&r] h range[&a%d&r chunk] v range[&a%d&r block]
 sf.target.m.get=current mode: &a%s&r
 sf.target.m.set=set current mode to: &a%s&r
@@ -39,20 +39,20 @@ sf.target.d.set=set current depth range to: &a%d&r floor - &a%d&r floor
 sf.target.c.get=current color: &a%s&r
 sf.target.c.set=set current color to: &a%s&r
 sf.target.c.map=color will use the block's &aMapColor&r
-sf.target.rm.ok=target &6%s&r removed.
-sf.target.rm.fail=&ctarget removed failed!&r
+sf.target.rm.ok=Target &6%s&r removed.
+sf.target.rm.fail=&cTarget removed failed!&r
 sf.target.cla.hint=Do you confirm to remove all the targets?(enter `/sf target cla/clear confirm` to clean)
-sf.target.cla.ok=&eall targets removed,sniffer will be shutdown!&r
-sf.target.not=sniffer is not actived,or there is no target.
+sf.target.cla.ok=&eAll targets removed,sniffer will be shutdown!&r
+sf.target.not=Sniffer is not activated, or there is no target.
 
-sf.target.add.ok=add a new target &a%s&r.
+sf.target.add.ok=Add a new target &a%s&r.
 
 sf.sub.list=sub blocks of the current target:
 
-sf.sub.rm.list=use `/sf sub rm <uid>` to remove the following sub blocks:
-sf.sub.rm.ok=removed block &6%s&r.
-sf.sub.rm.fail=&cremove failed,maybe there is no block with the specific uid.use `/sf sub l/list` first.&r
-sf.sub.rm.t=&eall blocks removed,will remove current target.&r
+sf.sub.rm.list=Use `/sf sub rm <uid>` to remove the following sub blocks:
+sf.sub.rm.ok=Removed block &6%s&r.
+sf.sub.rm.fail=&cRemove failed,maybe there is no block with the specific uid.use `/sf sub l/list` first.&r
+sf.sub.rm.t=&eRemoved all blocks, will remove current target.&r
 
 sf.sub.add.ok=add a new block &a%s&r.
 
@@ -61,5 +61,7 @@ sf.cmd.error=command can only be used by player in the game world.
 sf.mode.0=fixed depth
 sf.mode.1=relative tp player
 
-sf.invalid.num=&6invalid number!&r
-sf.invalid.color=&6invaild color value or name!&r
+sf.invalid.add=&6Target is not a block or it has no linked block.
+sf.invalid.num=&6Invalid Number!
+sf.invalid.name=&6Invalid block name(id)!
+sf.invalid.color=&6Invalid Color value or name!

@@ -215,6 +215,7 @@ public class Target {
         @Override
         public void write(JsonWriter out, Target target) throws IOException {
             try {
+                out.setHtmlSafe(false);
                 if (target == null || target.invalid()) {
                     out.nullValue();
                     return;

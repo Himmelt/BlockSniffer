@@ -3,7 +3,6 @@ package org.soraworld.sniffer.command;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -201,7 +200,7 @@ public class CommandSniffer implements ICommand {
                     block = Block.getBlockFromItem(itemStack.getItem());
                     meta = itemStack.getItemDamage();
                     if (block.equals(Blocks.AIR)) {
-                        api.sendChat("sf.add.holdair");
+                        api.sendChat("sf.invalid.add");
                         return;
                     }
                     break;
@@ -213,7 +212,7 @@ public class CommandSniffer implements ICommand {
                         meta = block.getMetaFromState(state);
                     }
                     if (block == null || block.equals(Blocks.AIR)) {
-                        api.sendChat("sf.add.lookair");
+                        api.sendChat("sf.invalid.add");
                         return;
                     }
                     break;
@@ -221,7 +220,7 @@ public class CommandSniffer implements ICommand {
                     block = Block.getBlockFromName(args.get(0));
                     meta = 0;
                     if (block == null || block.equals(Blocks.AIR)) {
-                        api.sendChat("sf.add.notname");
+                        api.sendChat("sf.invalid.name");
                         return;
                     }
                     break;
@@ -282,7 +281,7 @@ public class CommandSniffer implements ICommand {
                     block = Block.getBlockFromItem(itemStack.getItem());
                     meta = itemStack.getItemDamage();
                     if (block.equals(Blocks.AIR)) {
-                        api.sendChat("sf.add.holdair");
+                        api.sendChat("sf.invalid.add");
                         return;
                     }
                     break;
@@ -294,7 +293,7 @@ public class CommandSniffer implements ICommand {
                         meta = block.getMetaFromState(state);
                     }
                     if (block == null || block.equals(Blocks.AIR)) {
-                        api.sendChat("sf.add.lookair");
+                        api.sendChat("sf.invalid.add");
                         return;
                     }
                     break;
@@ -302,7 +301,7 @@ public class CommandSniffer implements ICommand {
                     block = Block.getBlockFromName(args.get(0));
                     meta = 0;
                     if (block == null || block.equals(Blocks.AIR)) {
-                        api.sendChat("sf.add.notname");
+                        api.sendChat("sf.invalid.name");
                         return;
                     }
             }
@@ -351,7 +350,7 @@ public class CommandSniffer implements ICommand {
 
     @Override
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException {
-        if (sender instanceof EntityPlayer && sender.getEntityWorld() instanceof WorldClient) {
+        if (sender instanceof EntityPlayer) {
             List<String> argList = new ArrayList<>(Arrays.asList(args));
             if (argList.size() >= 1) {
                 argList.remove(0);

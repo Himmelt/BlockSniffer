@@ -42,10 +42,10 @@ public abstract class IProperty {
         }
     }
 
-    public static class PropertyD extends IProperty {
+    public static class D extends IProperty {
         private final double defaultValue;
 
-        public PropertyD(String category, String key, double defaultValue) {
+        public D(String category, String key, double defaultValue) {
             super(category, key);
             this.defaultValue = defaultValue;
         }
@@ -63,6 +63,33 @@ public abstract class IProperty {
             property = config.get(category, key, defaultValue);
         }
     }
+
+    public static class F extends IProperty {
+        private final float defaultValue;
+        private final float min;
+        private final float max;
+
+        public F(String category, String key, float defaultF, float min, float max) {
+            super(category, key);
+            this.min = min;
+            this.max = max;
+            this.defaultValue = defaultF < min ? min : defaultF > max ? max : defaultF;
+        }
+
+        public float get() {
+            return (float) property.getDouble();
+        }
+
+        public void set(float value) {
+            property.set(value < min ? min : value > max ? max : value);
+        }
+
+        @Override
+        public void bind(Configuration config) {
+            property = config.get(category, key, defaultValue);
+        }
+    }
+
 
     public static class PropertyS extends IProperty {
         private final String defaultValue;
@@ -108,12 +135,12 @@ public abstract class IProperty {
         }
     }
 
-    public static class PropertyI extends IProperty {
+    public static class I extends IProperty {
         private final int defaultValue;
         private final int min;
         private final int max;
 
-        public PropertyI(String category, String key, int defaultI, int min, int max) {
+        public I(String category, String key, int defaultI, int min, int max) {
             super(category, key);
             this.min = min;
             this.max = max;
