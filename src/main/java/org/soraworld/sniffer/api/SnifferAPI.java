@@ -5,15 +5,8 @@ import com.google.gson.GsonBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.EmptyChunk;
 import net.minecraftforge.fml.relauncher.Side;
@@ -21,14 +14,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
 import org.soraworld.sniffer.config.Config;
 import org.soraworld.sniffer.constant.Constants;
 import org.soraworld.sniffer.core.ScanResult;
 import org.soraworld.sniffer.core.TBlock;
 import org.soraworld.sniffer.core.Target;
-import org.soraworld.sniffer.gui.ParticleEffect;
 import org.soraworld.sniffer.util.I19n;
 
 import java.io.File;
@@ -40,36 +30,35 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class SnifferAPI {
 
+    private static final Gson GSON = new GsonBuilder().registerTypeAdapter(Target.class, new Target.Adapter()).registerTypeAdapter(TBlock.class, new TBlock.Adapter()).setPrettyPrinting().create();
+    public final ScanResult result = new ScanResult();
+    public final Logger LOGGER = LogManager.getLogger(Constants.NAME);
+    private final Minecraft mc = Minecraft.getMinecraft();
+    private final HashMap<Integer, Target> targets = new HashMap<>();
+    public Config config;
+    public Target current;
+    public boolean active = false;
     private int index;
     private int count;
     private long clickLast;
     private long guiLast;
-    private final ParticleEffect particle = new ParticleEffect();
-    private final HashMap<Integer, Target> targets = new HashMap<>();
-    private static final Gson GSON = new GsonBuilder().registerTypeAdapter(Target.class, new Target.Adapter()).registerTypeAdapter(TBlock.class, new TBlock.Adapter()).setPrettyPrinting().create();
+    private File jsonFile;
 
-    public Config config;
-    public File jsonFile;
-    public Target current;
-    public boolean active = false;
-    public final ScanResult result = new ScanResult();
-    public final Minecraft mc = Minecraft.getMinecraft();
-    public final Logger LOGGER = LogManager.getLogger(Constants.NAME);
-    public final KeyBinding KEY_SWITCH = new KeyBinding(I18n.format("sf.key.switch"), Keyboard.KEY_O, "key.categories.gameplay");
+    private SnifferAPI() {
+    }
 
-    public void sendChat(String key, Object... args) {
-        if (mc.player != null) {
-            mc.player.sendMessage(I19n.format(I18n.format("sf.chat.head") + I18n.format(key, args)));
-        }
+    public SnifferAPI(File cfgDir) {
+        config = new Config(cfgDir);
+        jsonFile = new File(new File(cfgDir, Constants.MODID), "target.json");
+    }
+
+    public double getGamma() {
+        return config.gamma.get();
     }
 
     public void setGamma(int gamma) {
         if (gamma >= 0) config.gamma.set(gamma);
         mc.gameSettings.gammaSetting = config.gamma.get();
-    }
-
-    public double getGamma() {
-        return config.gamma.get();
     }
 
     public boolean clickTimeOut() {
@@ -130,11 +119,11 @@ public class SnifferAPI {
         int index = next(active ? this.index : count);
         if (index == -1) {
             reset();
-            sendChat("sf.empty");
+            I19n.sendChat("sf.empty");
         } else {
             if (active && index == next(count)) {
                 reset();
-                sendChat("sf.inactive");
+                I19n.sendChat("sf.inactive");
             } else {
                 clickLast = System.currentTimeMillis();
                 guiLast = clickLast;
@@ -142,7 +131,7 @@ public class SnifferAPI {
                 current = targets.get(index);
                 if (!active) {
                     active = true;
-                    sendChat("sf.active");
+                    I19n.sendChat("sf.active");
                 }
             }
         }
@@ -169,7 +158,7 @@ public class SnifferAPI {
 
     public void removeTarget() {
         targets.remove(index);
-        sendChat("sf.target.rm.ok", current.displayName());
+        I19n.sendChat("sf.target.rm.ok", current.displayName());
         if (targets.isEmpty()) {
             clearTargets();
         } else {
@@ -177,56 +166,17 @@ public class SnifferAPI {
         }
     }
 
-    public void spawnParticle(EntityPlayer player) {
-        Vec3d look = player.getLookVec();
-        double fromX = look.x + player.posX;
-        double fromY = look.y + player.posY + player.getEyeHeight();
-        double fromZ = look.z + player.posZ;
-        particle.spawn(player.getEntityWorld(), fromX, fromY, fromZ, result.x, result.y, result.z, result.getColor(), config.particleDelay.get());
-    }
-
     public void clearTargets() {
         targets.clear();
         count = 0;
         reset();
-        sendChat("sf.target.cla.ok");
+        I19n.sendChat("sf.target.cla.ok");
     }
 
     public void addTarget(Target target) {
         if (!target.invalid() && !targets.containsValue(target)) {
             targets.put(count++, target);
         }
-    }
-
-    public void renderItem(ItemStack itemStack, int x, int y) {
-        GlStateManager.enableRescaleNormal();
-        RenderHelper.enableGUIStandardItemLighting();
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
-        mc.getRenderItem().renderItemAndEffectIntoGUI(itemStack, x, y);
-        RenderHelper.disableStandardItemLighting();
-    }
-
-    public void drawRect(int x, int y, int width, int height, int color) {
-        GL11.glPushMatrix();
-        GL11.glPushClientAttrib(-1);
-        GL11.glDisable(2929);
-        GL11.glDisable(3553);
-        GL11.glBlendFunc(770, 771);
-        double red = (double) (color >> 16 & 255) / 255.0D;
-        double green = (double) (color >> 8 & 255) / 255.0D;
-        double blue = (double) (color & 255) / 255.0D;
-        double alpha = (double) (color >> 24 & 255) / 255.0D;
-        GL11.glColor4d(red, green, blue, alpha);
-        GL11.glBegin(7);
-        GL11.glVertex2i(x, y);
-        GL11.glVertex2i(x, y + height);
-        GL11.glVertex2i(x + width, y + height);
-        GL11.glVertex2i(x + width, y);
-        GL11.glEnd();
-        GL11.glEnable(3553);
-        GL11.glEnable(2929);
-        GL11.glPopClientAttrib();
-        GL11.glPopMatrix();
     }
 
     private int next(int start) {

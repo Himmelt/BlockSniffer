@@ -21,7 +21,7 @@ compileJava {
 }
 
 minecraft {
-    version = "1.11.2-13.20.1.2454"
+    version = "1.11.2-13.20.1.2476"
     runDir = "build/run"
     mappings = "snapshot_20170612"
 }

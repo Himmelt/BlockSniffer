@@ -2,6 +2,7 @@ package org.soraworld.sniffer.core;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -10,12 +11,15 @@ import java.awt.*;
 @SideOnly(Side.CLIENT)
 public class ScanResult {
 
+    public boolean found = false;
     private Target target;
     private EntityPlayer player;
     private TBlock block;
+    private int x, y, z;
 
-    public int x, y, z;
-    public boolean found = false;
+    public Vec3d getV3d() {
+        return new Vec3d(x, y, z);
+    }
 
     public double getDistance() {
         double lx = player.posX - x;

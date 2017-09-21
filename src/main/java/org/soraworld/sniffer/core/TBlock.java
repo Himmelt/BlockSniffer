@@ -19,10 +19,10 @@ import java.io.IOException;
 @SideOnly(Side.CLIENT)
 public class TBlock {
 
-    private String name;
     private final Block block;
     private final Integer meta;
     private final ItemStack itemStack;
+    private String name;
 
     public TBlock(Block block, Integer meta) {
         this.block = block;

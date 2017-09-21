@@ -23,6 +23,7 @@ import org.soraworld.sniffer.constant.ColorHelper;
 import org.soraworld.sniffer.constant.Constants;
 import org.soraworld.sniffer.core.TBlock;
 import org.soraworld.sniffer.core.Target;
+import org.soraworld.sniffer.util.I19n;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,81 +48,81 @@ public class CommandSniffer implements ICommand {
                 switch (arg) {
                     case "i":
                     case "info":
-                        api.sendChat("sf.target.info", target.getMode(), target.getChatColor(), target.getDepthL(), target.getDepthH(), target.getHRange(), target.getVRange());
+                        I19n.sendChat("sf.target.info", target.getMode(), target.getChatColor(), target.getDepthL(), target.getDepthH(), target.getHRange(), target.getVRange());
                         break;
                     case "m":
                     case "mode":
                         if (args.isEmpty()) {
                             int m = target.getMode();
                             String mode = I18n.format(m == 0 ? "sf.mode.0" : "sf.mode.1");
-                            api.sendChat("sf.target.m.get", mode);
+                            I19n.sendChat("sf.target.m.get", mode);
                         } else {
                             if ("1".equals(args.get(0))) {
                                 target.setMode(1);
-                                api.sendChat("sf.target.m.set", I18n.format("sf.mode.1"));
+                                I19n.sendChat("sf.target.m.set", I18n.format("sf.mode.1"));
                             } else {
                                 target.setMode(0);
-                                api.sendChat("sf.target.m.set", I18n.format("sf.mode.0"));
+                                I19n.sendChat("sf.target.m.set", I18n.format("sf.mode.0"));
                             }
                         }
                         break;
                     case "h":
                     case "hrange":
                         if (args.isEmpty()) {
-                            api.sendChat("sf.target.h.get", target.getHRange());
+                            I19n.sendChat("sf.target.h.get", target.getHRange());
                         } else {
                             if (Constants.PATTERN_NUM.matcher(args.get(0)).matches()) {
                                 target.setHRange(Integer.valueOf(args.get(0)));
-                                api.sendChat("sf.target.h.set", target.getHRange());
+                                I19n.sendChat("sf.target.h.set", target.getHRange());
                             } else {
-                                api.sendChat("sf.invalid.num");
+                                I19n.sendChat("sf.invalid.num");
                             }
                         }
                         break;
                     case "v":
                     case "vrange":
                         if (args.isEmpty()) {
-                            api.sendChat("sf.target.v.get", target.getVRange());
+                            I19n.sendChat("sf.target.v.get", target.getVRange());
                         } else {
                             if (Constants.PATTERN_NUM.matcher(args.get(0)).matches()) {
                                 target.setVRange(Integer.valueOf(args.get(0)));
-                                api.sendChat("sf.target.v.set", target.getVRange());
+                                I19n.sendChat("sf.target.v.set", target.getVRange());
                             } else {
-                                api.sendChat("sf.invalid.num");
+                                I19n.sendChat("sf.invalid.num");
                             }
                         }
                         break;
                     case "d":
                     case "depth":
                         if (args.isEmpty()) {
-                            api.sendChat("sf.target.d.get", target.getDepthL(), target.getDepthH());
+                            I19n.sendChat("sf.target.d.get", target.getDepthL(), target.getDepthH());
                         } else if (args.size() >= 2) {
                             if (Constants.PATTERN_NUM.matcher(args.get(0)).matches() && Constants.PATTERN_NUM.matcher(args.get(1)).matches()) {
                                 target.setDepth(Integer.valueOf(args.get(0)), Integer.valueOf(args.get(1)));
-                                api.sendChat("sf.target.d.set", target.getDepthL(), target.getDepthH());
+                                I19n.sendChat("sf.target.d.set", target.getDepthL(), target.getDepthH());
                             } else {
-                                api.sendChat("sf.invalid.num");
+                                I19n.sendChat("sf.invalid.num");
                             }
                         } else {
-                            api.sendChat("sf.invalid.num");
+                            I19n.sendChat("sf.invalid.num");
                         }
                         break;
                     case "c":
                     case "color":
                         if (args.isEmpty()) {
-                            api.sendChat("sf.target.c.get", target.getChatColor());
+                            I19n.sendChat("sf.target.c.get", target.getChatColor());
                         } else {
                             String value = args.get(0);
                             if ("map".equals(value)) {
                                 target.setColor(value);
-                                api.sendChat("sf.target.c.map");
+                                I19n.sendChat("sf.target.c.map");
                             } else {
                                 Color color = ColorHelper.getColor(value);
                                 if (color != null) {
                                     target.setColor(value);
-                                    api.sendChat("sf.target.c.set", target.getChatColor());
+                                    I19n.sendChat("sf.target.c.set", target.getChatColor());
                                 } else {
-                                    api.sendChat("sf.invalid.color");
+                                    I19n.sendChat("sf.invalid.color");
                                 }
                             }
                         }
@@ -133,12 +134,12 @@ public class CommandSniffer implements ICommand {
                     case "cla":
                     case "clear":
                         if (args.isEmpty()) {
-                            api.sendChat("sf.target.cla.hint");
+                            I19n.sendChat("sf.target.cla.hint");
                         } else {
                             if ("confirm".equals(args.get(0))) {
                                 api.clearTargets();
                             } else {
-                                api.sendChat("sf.help.target.cla");
+                                I19n.sendChat("sf.help.target.cla");
                             }
                         }
                         break;
@@ -146,7 +147,7 @@ public class CommandSniffer implements ICommand {
                         processTargetAdd(player, args);
                         break;
                     default:
-                        api.sendChat("sf.help.target");
+                        I19n.sendChat("sf.help.target");
                 }
             } else {
                 switch (arg) {
@@ -164,17 +165,17 @@ public class CommandSniffer implements ICommand {
                     case "color":
                     case "rm":
                     case "remove":
-                        api.sendChat("sf.target.not");
+                        I19n.sendChat("sf.target.not");
                         break;
                     case "cla":
                     case "clear":
                         if (args.isEmpty()) {
-                            api.sendChat("sf.target.cla.hint");
+                            I19n.sendChat("sf.target.cla.hint");
                         } else {
                             if ("confirm".equals(args.get(0))) {
                                 api.clearTargets();
                             } else {
-                                api.sendChat("sf.help.target.cla");
+                                I19n.sendChat("sf.help.target.cla");
                             }
                         }
                         break;
@@ -182,11 +183,11 @@ public class CommandSniffer implements ICommand {
                         processTargetAdd(player, args);
                         break;
                     default:
-                        api.sendChat("sf.help.target");
+                        I19n.sendChat("sf.help.target");
                 }
             }
         } else {
-            api.sendChat("sf.help.target");
+            I19n.sendChat("sf.help.target");
         }
     }
 
@@ -200,7 +201,7 @@ public class CommandSniffer implements ICommand {
                     block = Block.getBlockFromItem(itemStack.getItem());
                     meta = itemStack.getItemDamage();
                     if (block.equals(Blocks.AIR)) {
-                        api.sendChat("sf.invalid.add");
+                        I19n.sendChat("sf.invalid.add");
                         return;
                     }
                     break;
@@ -212,7 +213,7 @@ public class CommandSniffer implements ICommand {
                         meta = block.getMetaFromState(state);
                     }
                     if (block == null || block.equals(Blocks.AIR)) {
-                        api.sendChat("sf.invalid.add");
+                        I19n.sendChat("sf.invalid.add");
                         return;
                     }
                     break;
@@ -220,7 +221,7 @@ public class CommandSniffer implements ICommand {
                     block = Block.getBlockFromName(args.get(0));
                     meta = 0;
                     if (block == null || block.equals(Blocks.AIR)) {
-                        api.sendChat("sf.invalid.name");
+                        I19n.sendChat("sf.invalid.name");
                         return;
                     }
                     break;
@@ -232,9 +233,9 @@ public class CommandSniffer implements ICommand {
             }
             TBlock blk = new TBlock(block, meta);
             api.addTarget(new Target(blk));
-            api.sendChat("sf.target.add.ok", blk.getName());
+            I19n.sendChat("sf.target.add.ok", blk.getName());
         } else {
-            api.sendChat("sf.help.add");
+            I19n.sendChat("sf.help.add");
         }
     }
 
@@ -257,17 +258,17 @@ public class CommandSniffer implements ICommand {
                             int uid = Integer.valueOf(args.get(0));
                             api.current.removeBlock(uid);
                         } else {
-                            api.sendChat("sf.invalid.num");
+                            I19n.sendChat("sf.invalid.num");
                         }
                     } else {
                         showSubList(1);
                     }
                     break;
                 default:
-                    api.sendChat("sf.help.add");
+                    I19n.sendChat("sf.help.add");
             }
         } else {
-            api.sendChat("sf.help.add");
+            I19n.sendChat("sf.help.add");
         }
     }
 
@@ -281,7 +282,7 @@ public class CommandSniffer implements ICommand {
                     block = Block.getBlockFromItem(itemStack.getItem());
                     meta = itemStack.getItemDamage();
                     if (block.equals(Blocks.AIR)) {
-                        api.sendChat("sf.invalid.add");
+                        I19n.sendChat("sf.invalid.add");
                         return;
                     }
                     break;
@@ -293,7 +294,7 @@ public class CommandSniffer implements ICommand {
                         meta = block.getMetaFromState(state);
                     }
                     if (block == null || block.equals(Blocks.AIR)) {
-                        api.sendChat("sf.invalid.add");
+                        I19n.sendChat("sf.invalid.add");
                         return;
                     }
                     break;
@@ -301,7 +302,7 @@ public class CommandSniffer implements ICommand {
                     block = Block.getBlockFromName(args.get(0));
                     meta = 0;
                     if (block == null || block.equals(Blocks.AIR)) {
-                        api.sendChat("sf.invalid.name");
+                        I19n.sendChat("sf.invalid.name");
                         return;
                     }
             }
@@ -312,9 +313,9 @@ public class CommandSniffer implements ICommand {
             }
             TBlock blk = new TBlock(block, meta);
             api.current.addBlock(blk);
-            api.sendChat("sf.sub.add.ok", blk.getName());
+            I19n.sendChat("sf.sub.add.ok", blk.getName());
         } else {
-            api.sendChat("sf.help.add");
+            I19n.sendChat("sf.help.add");
         }
     }
 
@@ -324,8 +325,8 @@ public class CommandSniffer implements ICommand {
         for (Entry<Integer, TBlock> entry : map.entrySet()) {
             list.append(entry.getKey()).append(" -> ").append(entry.getValue().getName()).append("; ");
         }
-        api.sendChat(way == 0 ? "sf.sub.list" : "sf.sub.rm.list");
-        api.sendChat(list.toString());
+        I19n.sendChat(way == 0 ? "sf.sub.list" : "sf.sub.rm.list");
+        I19n.sendChat(list.toString());
     }
 
     @Nonnull
@@ -357,11 +358,11 @@ public class CommandSniffer implements ICommand {
                 switch (args[0]) {
                     case "reload":
                         api.reload();
-                        api.sendChat("sf.reload");
+                        I19n.sendChat("sf.reload");
                         break;
                     case "reset":
                         api.reset();
-                        api.sendChat("sf.reset");
+                        I19n.sendChat("sf.reset");
                         break;
                     case "t":
                     case "target":
@@ -371,27 +372,27 @@ public class CommandSniffer implements ICommand {
                         if (api.active && api.current != null) {
                             processSub((EntityPlayer) sender, argList);
                         } else {
-                            api.sendChat("sf.target.not");
+                            I19n.sendChat("sf.target.not");
                         }
                         break;
                     case "g":
                     case "gamma":
                         if (argList.isEmpty()) {
-                            api.sendChat("sf.gamma.get", api.getGamma());
+                            I19n.sendChat("sf.gamma.get", api.getGamma());
                         } else {
                             if (Constants.PATTERN_NUM.matcher(argList.get(0)).matches()) {
                                 api.setGamma(Integer.valueOf(argList.get(0)));
-                                api.sendChat("sf.gamma.set", api.getGamma());
+                                I19n.sendChat("sf.gamma.set", api.getGamma());
                             } else {
-                                api.sendChat("sf.invalid.num");
+                                I19n.sendChat("sf.invalid.num");
                             }
                         }
                         break;
                     default:
-                        api.sendChat("sf.help");
+                        I19n.sendChat("sf.help");
                 }
             } else {
-                api.sendChat("sf.help");
+                I19n.sendChat("sf.help");
             }
         } else {
             api.LOGGER.info(I18n.format("sf.cmd.error"));

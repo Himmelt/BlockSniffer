@@ -9,6 +9,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.soraworld.sniffer.BlockSniffer;
 import org.soraworld.sniffer.api.SnifferAPI;
 import org.soraworld.sniffer.constant.ColorHelper;
+import org.soraworld.sniffer.util.I19n;
 
 import java.awt.*;
 import java.io.IOException;
@@ -20,6 +21,8 @@ import java.util.Map.Entry;
 @SideOnly(Side.CLIENT)
 public class Target {
 
+    private final HashMap<Integer, TBlock> blocks = new HashMap<>();
+    private final SnifferAPI api = BlockSniffer.getAPI();
     private int mode;
     private int depthL;
     private int depthH;
@@ -28,8 +31,6 @@ public class Target {
     private int index;
     private int count;
     private String color;
-    private final HashMap<Integer, TBlock> blocks = new HashMap<>();
-    private final SnifferAPI api = BlockSniffer.getAPI();
 
     private Target(List<TBlock> blocks) {
         this.blocks.clear();
@@ -147,17 +148,17 @@ public class Target {
         if (blocks.containsKey(uid)) {
             TBlock block = blocks.get(uid);
             blocks.remove(uid);
-            api.sendChat("sf.sub.rm.ok", block.getName());
+            I19n.sendChat("sf.sub.rm.ok", block.getName());
             if (blocks.size() >= 1) {
                 if (index == uid) {
                     loop();
                 }
             } else {
-                api.sendChat("sf.sub.rm.t");
+                I19n.sendChat("sf.sub.rm.t");
                 api.removeTarget();
             }
         } else {
-            api.sendChat("sf.sub.rm.fail");
+            I19n.sendChat("sf.sub.rm.fail");
         }
     }
 

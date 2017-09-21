@@ -1,5 +1,6 @@
 package org.soraworld.sniffer.util;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
@@ -15,6 +16,7 @@ import java.util.regex.Pattern;
 @SideOnly(Side.CLIENT)
 public class I19n {
 
+    private static final Minecraft mc = Minecraft.getMinecraft();
     private static final Pattern FORMAT = Pattern.compile("((?<!&)&[0-9a-fk-or])+");
 
     private static Style parseStyle(@Nonnull String text) {
@@ -92,11 +94,7 @@ public class I19n {
         return style;
     }
 
-    public static ITextComponent formatKey(String key, Object... args) {
-        return format(I18n.format(key, args));
-    }
-
-    public static ITextComponent format(String text) {
+    private static ITextComponent format(String text) {
         Matcher matcher = FORMAT.matcher(text);
         ITextComponent component = new TextComponentString("");
         int head = 0;
@@ -109,4 +107,13 @@ public class I19n {
         component.appendSibling(new TextComponentString(text.substring(head).replaceAll("&&", "&")).setStyle(style));
         return component;
     }
+
+    public static ITextComponent formatKey(String key, Object... args) {
+        return format(I18n.format(key, args));
+    }
+
+    public static void sendChat(String key, Object... args) {
+        mc.player.sendMessage(I19n.format(I18n.format("sf.chat.head") + I18n.format(key, args)));
+    }
+
 }
