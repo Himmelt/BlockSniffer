@@ -9,7 +9,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jetbrains.annotations.Contract;
 import org.soraworld.sniffer.api.SnifferAPI;
 import org.soraworld.sniffer.command.*;
 import org.soraworld.sniffer.constant.Constants;
@@ -32,7 +31,6 @@ public class BlockSniffer {
 
     private static SnifferAPI api;
 
-    @Contract(pure = true)
     public static SnifferAPI getAPI() {
         return api;
     }

@@ -11,7 +11,7 @@ buildscript {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.11.2-1.1.2"
+version = "1.11.2-1.2.0"
 group = "org.soraworld.sniffer"
 archivesBaseName = "BlockSniffer"
 
