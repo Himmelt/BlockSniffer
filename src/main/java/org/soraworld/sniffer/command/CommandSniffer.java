@@ -28,10 +28,8 @@ import org.soraworld.sniffer.util.I19n;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 @SideOnly(Side.CLIENT)
@@ -344,61 +342,66 @@ public class CommandSniffer implements ICommand {
     @Nonnull
     @Override
     public List<String> getAliases() {
-        List<String> alias = new ArrayList<>();
-        alias.add("sf");
-        return alias;
+        return Collections.singletonList("sf");
     }
 
     @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException {
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] argArray) throws CommandException {
         if (sender instanceof EntityPlayer) {
-            List<String> argList = new ArrayList<>(Arrays.asList(args));
-            if (argList.size() >= 1) {
-                argList.remove(0);
-                switch (args[0]) {
-                    case "reload":
-                        api.reload();
-                        I19n.sendChat("sf.reload");
-                        break;
-                    case "reset":
-                        api.reset();
-                        I19n.sendChat("sf.reset");
-                        break;
-                    case "t":
-                    case "target":
-                        processTarget((EntityPlayer) sender, argList);
-                        break;
-                    case "sub":
-                        if (api.active && api.current != null) {
-                            processSub((EntityPlayer) sender, argList);
-                        } else {
-                            I19n.sendChat("sf.target.not");
-                        }
-                        break;
-                    case "g":
-                    case "gamma":
-                        if (argList.isEmpty()) {
-                            I19n.sendChat("sf.gamma.get", api.getGamma());
-                        } else {
-                            if (Constants.PATTERN_NUM.matcher(argList.get(0)).matches()) {
-                                api.setGamma(Integer.valueOf(argList.get(0)));
-                                I19n.sendChat("sf.gamma.set", api.getGamma());
-                            } else {
-                                I19n.sendChat("sf.invalid.num");
-                            }
-                        }
-                        break;
-                    default:
-                        I19n.sendChat("sf.help");
-                }
+            ArrayList<String> args = new ArrayList<>(Arrays.asList(argArray));
+            if (args.isEmpty()) {
+                I19n.sendChat("sf.help");
+                return;
+            }
+            String alias = args.get(0);
+            args.remove(0);
+            ISubCommand subCommand = CommandManager.INSTANCE.getCommand(alias);
+            if (subCommand != null) {
+                subCommand.execute(args);
             } else {
                 I19n.sendChat("sf.help");
             }
+
+            /*switch (argArray[0]) {
+                case "reload":
+                    api.reload();
+                    I19n.sendChat("sf.reload");
+                    break;
+                case "reset":
+                    api.reset();
+                    I19n.sendChat("sf.reset");
+                    break;
+                case "t":
+                case "target":
+                    processTarget((EntityPlayer) sender, args);
+                    break;
+                case "sub":
+                    if (api.active && api.current != null) {
+                        processSub((EntityPlayer) sender, args);
+                    } else {
+                        I19n.sendChat("sf.target.not");
+                    }
+                    break;
+                case "g":
+                case "gamma":
+                    if (args.isEmpty()) {
+                        I19n.sendChat("sf.gamma.get", api.getGamma());
+                    } else {
+                        if (Constants.PATTERN_NUM.matcher(args.get(0)).matches()) {
+                            api.setGamma(Integer.valueOf(args.get(0)));
+                            I19n.sendChat("sf.gamma.set", api.getGamma());
+                        } else {
+                            I19n.sendChat("sf.invalid.num");
+                        }
+                    }
+                    break;
+                default:
+                    I19n.sendChat("sf.help");
+            }*/
         } else {
             api.LOGGER.info(I18n.format("sf.cmd.error"));
             sender.sendMessage(new TextComponentString(I18n.format("sf.cmd.error")));
         }
-        api.save();
     }
 
     @Override
@@ -409,6 +412,7 @@ public class CommandSniffer implements ICommand {
     @Nonnull
     @Override
     public List<String> getTabCompletions(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args, @Nullable BlockPos targetPos) {
+        //getListOfStringsMatchingLastWord(args, Block.REGISTRY.getKeys());
         return new ArrayList<>();
     }
 
