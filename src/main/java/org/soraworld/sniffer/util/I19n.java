@@ -116,4 +116,7 @@ public class I19n {
         mc.player.sendMessage(I19n.format(I18n.format("sf.chat.head") + I18n.format(key, args)));
     }
 
+    public static void sendChat2(String message) {
+        mc.player.sendMessage(I19n.format(I18n.format("sf.chat.head") + message));
+    }
 }

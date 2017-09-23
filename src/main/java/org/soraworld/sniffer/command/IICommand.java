@@ -9,18 +9,37 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.soraworld.sniffer.BlockSniffer;
 import org.soraworld.sniffer.api.SnifferAPI;
+import org.soraworld.sniffer.util.I19n;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @SideOnly(Side.CLIENT)
 public abstract class IICommand implements ICommand {
 
+    protected final TreeMap<String, IICommand> subMap = new TreeMap<>();
+    private final String name;
     protected final SnifferAPI api = BlockSniffer.getAPI();
-    protected final HashMap<String, IICommand> subMap = new HashMap<>();
+    private final List<String> aliases;
 
-    public IICommand addSub(IICommand sub) {
+    private IICommand() {
+        name = "invalid";
+        aliases = new ArrayList<>();
+    }
+
+    public IICommand(String name, String... aliases) {
+        this.name = name;
+        this.aliases = Arrays.asList(aliases);
+    }
+
+    private static List<String> getMatchList(String arg, Collection<String> possibles) {
+        if (arg.isEmpty()) return new ArrayList<>(possibles);
+        return possibles.stream().filter(s -> s.startsWith(arg)).collect(Collectors.toList());
+    }
+
+    final void addSub(IICommand sub) {
         this.subMap.put(sub.getName(), sub);
         for (String alias : sub.getAliases()) {
             IICommand command = this.subMap.get(alias);
@@ -28,7 +47,6 @@ public abstract class IICommand implements ICommand {
                 this.subMap.put(alias, sub);
             }
         }
-        return this;
     }
 
     @Nonnull
@@ -39,8 +57,8 @@ public abstract class IICommand implements ICommand {
 
     @Nonnull
     @Override
-    public List<String> getAliases() {
-        return Collections.emptyList();
+    public final String getName() {
+        return name;
     }
 
     @Override
@@ -48,12 +66,10 @@ public abstract class IICommand implements ICommand {
         execute(sender, new ArrayList<>(Arrays.asList(argArray)));
     }
 
-    public void execute(ICommandSender sender, ArrayList<String> args) {
-        if (args.isEmpty()) return;
-        String alias = args.get(0);
-        args.remove(0);
-        IICommand sub = subMap.get(alias);
-        if (sub != null) sub.execute(sender, args);
+    @Nonnull
+    @Override
+    public final List<String> getAliases() {
+        return aliases;
     }
 
     @Override
@@ -67,8 +83,15 @@ public abstract class IICommand implements ICommand {
         return getTabCompletions(sender, new ArrayList<>(Arrays.asList(argArray)));
     }
 
-    public List<String> getTabCompletions(ICommandSender sender, ArrayList<String> args) {
-        return new ArrayList<>(subMap.keySet());
+    public void execute(ICommandSender sender, ArrayList<String> args) {
+        if (args.size() >= 1) {
+            IICommand sub = subMap.get(args.remove(0));
+            if (sub != null) {
+                sub.execute(sender, args);
+                return;
+            }
+        }
+        I19n.sendChat2(getUsage(sender));
     }
 
     @Override
@@ -79,5 +102,17 @@ public abstract class IICommand implements ICommand {
     @Override
     public int compareTo(@Nonnull ICommand command) {
         return getName().compareTo(command.getName());
+    }
+
+    private List<String> getTabCompletions(ICommandSender sender, ArrayList<String> args) {
+        if (args.size() == 1) {
+            return getMatchList(args.get(0), subMap.keySet());
+        } else if (args.size() >= 2) {
+            IICommand sub = subMap.get(args.remove(0));
+            if (sub != null) return sub.getTabCompletions(sender, args);
+            else return Collections.emptyList();
+        } else {
+            return new ArrayList<>(subMap.keySet());
+        }
     }
 }

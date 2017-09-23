@@ -157,11 +157,13 @@ public class SnifferAPI {
     }
 
     public void removeTarget() {
+        active = false;
         targets.remove(index);
-        I19n.sendChat("sf.target.rm.ok", current.displayName());
+        I19n.sendChat("sf.target.rm.ok");
         if (targets.isEmpty()) {
             clearTargets();
         } else {
+            active = true;
             switchTarget();
         }
     }
@@ -194,6 +196,8 @@ public class SnifferAPI {
             }
             if (index >= count - 1) {
                 index = 0;
+            } else {
+                index++;
             }
         }
     }

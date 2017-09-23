@@ -20,9 +20,10 @@ sf.unknown.block=未知方块
 sf.gamma.get=当前亮度(Gamma)为: &a%.2f
 sf.gamma.set=当前亮度(Gamma)设置为: &a%.2f
 
-sf.help=用法: /sf reload|reset|target|sub
+sf.help=用法: /sf gamma | reload | reset | sub | target
+sf.help.sub=用法: /sf sub add | list
+sf.help.target=用法: /sf t add | c | cla | d | h | i | m | rm |v
 
-sf.help.target=用法: /sf t rm/cla/add/info/mode/hrange/vrange/depth/color
 sf.help.target.cla=使用&e confirm &r以确认 /sf target cla/clear confirm
 
 sf.help.add=用法: /sf target/sub add <{name|id}|hold|look> [meta] [{0-15}]
@@ -39,7 +40,7 @@ sf.target.d.set=当前探测深度设置为: &a%d&r 层 - &a%d&r 层
 sf.target.c.get=当前粒子颜色: &a%s
 sf.target.c.set=当前粒子颜色设置为: &a%s.
 sf.target.c.map=当前粒子颜色将使用目标方块的&a地图色&r(MapColor)
-sf.target.rm.ok=已成功移除当前探测目标 &6%s.
+sf.target.rm.ok=已成功移除当前探测目标.
 sf.target.rm.fail=&c目标移除失败!&r
 sf.target.cla.hint=你确定要移除所有探测目标吗?(确认指令/sf target cla/clear confirm)
 sf.target.cla.ok=&e已清除所有探测目标,将自动关闭探测器!
