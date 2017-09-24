@@ -8,7 +8,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.soraworld.sniffer.BlockSniffer;
 import org.soraworld.sniffer.api.SnifferAPI;
-import org.soraworld.sniffer.constant.ColorHelper;
+import org.soraworld.sniffer.util.ColorHelper;
 import org.soraworld.sniffer.util.I19n;
 
 import java.awt.*;

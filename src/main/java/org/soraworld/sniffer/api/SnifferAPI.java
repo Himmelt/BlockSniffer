@@ -116,6 +116,7 @@ public class SnifferAPI {
     }
 
     public void switchTarget() {
+        result.found = false;
         int index = next(active ? this.index : count);
         if (index == -1) {
             reset();

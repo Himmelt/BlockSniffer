@@ -1,4 +1,4 @@
-package org.soraworld.sniffer.constant;
+package org.soraworld.sniffer.util;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -165,6 +165,8 @@ public final class ColorHelper {
     private static final Color WHITESMOKE = new Color(245, 245, 245);
     private static final Color YELLOW = new Color(255, 255, 0);
     private static final Color YELLOWGREEN = new Color(154, 205, 50);
+
+    private static final Color TTT = new Color(0x00cccc);
 
     static {
         colorMap.put("&0", BLACK);
@@ -335,7 +337,7 @@ public final class ColorHelper {
 
     public static Color getColor(String value) {
         try {
-            if (value != null && !value.isEmpty()) {
+            if (value != null && !"map".equals(value) && !value.isEmpty()) {
                 if (PATTERN_COLOR.matcher(value).matches()) {
                     return Color.decode(value);
                 } else {

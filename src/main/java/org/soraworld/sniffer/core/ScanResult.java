@@ -1,7 +1,10 @@
 package org.soraworld.sniffer.core;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -14,8 +17,8 @@ public class ScanResult {
     public boolean found = false;
     private Target target;
     private EntityPlayer player;
-    private TBlock block;
     private int x, y, z;
+    private ItemStack stack = new ItemStack(Items.AIR);
 
     public Vec3d getV3d() {
         return new Vec3d(x, y, z);
@@ -29,21 +32,32 @@ public class ScanResult {
     }
 
     public ItemStack getItemStack() {
-        return block.getItemStack();
+        return stack;
     }
 
     public Color getColor() {
         Color color = target.getColor();
-        return color != null ? color : block.getMapColor();
+        return color != null ? color : new Color(player.world.getBlockState(new BlockPos(x, y, z)).getMapColor().colorValue);
     }
 
     public void update(EntityPlayer player, Target current, int blockX, int blockY, int blockZ) {
         this.player = player;
         this.target = current;
-        this.block = target.getDelegate();
         this.x = blockX;
         this.y = blockY;
         this.z = blockZ;
         this.found = true;
+        IBlockState state = player.world.getBlockState(new BlockPos(x, y, z));
+        stack = state.getBlock().getPickBlock(state, null, player.world, new BlockPos(x, y, z), player);
+        if (stack.getItem() == Items.AIR) {
+            stack = new ItemStack(state.getBlock(), 1, state.getBlock().damageDropped(state));
+        }
+    }
+
+    public String displayName() {
+        if (stack.getItem() == Items.AIR) {
+            return target.displayName();
+        }
+        return stack.getDisplayName();
     }
 }

@@ -24,9 +24,9 @@ sf.help=用法: /sf gamma | reload | reset | sub | target
 sf.help.sub=用法: /sf sub add | list | remove
 sf.help.target=用法: /sf t add | c | cla | d | h | i | m | rm |v
 
-sf.help.target.cla=使用&e confirm &r以确认 /sf target cla/clear confirm
+sf.help.target.cla=使用&e confirm &r以确认 /sf t cla confirm
 
-sf.help.add=用法: /sf target/sub add <{name|id}|hold|look> [meta] [{0-15}]
+sf.help.add=用法: /sf t/sub add <name|id|hold|look> [meta] [0-15]
 
 sf.target.info=当前: 模式[&a%d&r] 颜色[&a%s&r] 深度[&a%d&r - &a%d&r] 水平[&a%d&r 区块] 垂直[&a%d&r 方块]
 sf.target.m.get=当前探测模式: &a%s
@@ -38,24 +38,24 @@ sf.target.v.set=当前垂直探测半径设置为: &a%d&r 方块
 sf.target.d.get=当前探测深度: &a%d&r 层 - &a%d&r 层
 sf.target.d.set=当前探测深度设置为: &a%d&r 层 - &a%d&r 层
 sf.target.c.get=当前粒子颜色: &a%s
-sf.target.c.set=当前粒子颜色设置为: &a%s.
+sf.target.c.set=当前粒子颜色设置为: &a%s
 sf.target.c.map=当前粒子颜色将使用目标方块的&a地图色&r(MapColor)
 sf.target.rm.ok=已成功移除当前探测目标.
-sf.target.rm.fail=&c目标移除失败!&r
-sf.target.cla.hint=你确定要移除所有探测目标吗?(确认指令/sf target cla/clear confirm)
+sf.target.rm.fail=&c目标移除失败!
+sf.target.cla.hint=你确定要移除所有探测目标吗?(确认指令/sf t cla confirm)
 sf.target.cla.ok=&e已清除所有探测目标,将自动关闭探测器!
 sf.target.not=探测器未激活,或当前没有探测目标.
 
-sf.target.add.ok=已成功添加探测目标 &a%s.
+sf.target.add.ok=已成功添加探测目标 &a%s
 
 sf.sub.list=当前探测目标包含以下子目标:
 
 sf.sub.rm.list=使用 /sf sub rm <uid> 移除以下子目标:
-sf.sub.rm.ok=已成功移除子目标 &6%s&r.
+sf.sub.rm.ok=已成功移除子目标 &6%s
 sf.sub.rm.fail=&c移除失败,可能没有该uid对应的子目标,请先用/sf sub l/list 查看当前子目标.
 sf.sub.rm.t=&e当前子目标已被全部移除,将尝试删除当前探测目标.
 
-sf.sub.add.ok=已成功添加子目标 &a%s.
+sf.sub.add.ok=已成功添加子目标 &a%s
 
 sf.cmd.error=不符合指令执行条件,该命令只能由玩家在游戏世界内执行.
 

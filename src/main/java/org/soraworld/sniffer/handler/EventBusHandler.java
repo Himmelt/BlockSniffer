@@ -42,7 +42,7 @@ public class EventBusHandler {
             ScaledResolution scale = new ScaledResolution(mc);
             String label = String.format("%s: ---", api.current.displayName());
             if (api.result.found && api.result.getDistance() >= 1.0D) {
-                label = String.format("%s: %.2f", api.result.getItemStack().getDisplayName(), api.result.getDistance() - 1.0D);
+                label = String.format("%s: %.2f", api.result.displayName(), api.result.getDistance() - 1.0D);
             }
             int width = scale.getScaledWidth();
             int height = scale.getScaledHeight();
@@ -52,7 +52,7 @@ public class EventBusHandler {
             int lbWidth = mc.fontRenderer.getStringWidth(label + " ");
             int x = (int) (api.config.hudX.get() * (width - iconWidth));
             int y = (int) (api.config.hudY.get() * (height - iconHeight - lbHeight));
-            GuiRender.drawRect(x - 2, y - 2, 20, 20, 1342177280);
+            GuiRender.drawRect(x - 2, y - 2, 20, 20, 0xffdddddd);
             if (api.result.found) {
                 GuiRender.renderItem(api.result.getItemStack(), x, y);
             } else {
@@ -61,7 +61,7 @@ public class EventBusHandler {
             int maxX = width - lbWidth;
             int lbX = Math.max(0, Math.min(x, maxX));
             int lbY = y + iconHeight;
-            mc.fontRenderer.drawString(label, lbX, lbY, 16777215);
+            mc.fontRenderer.drawString(label, lbX, lbY, 0xfffeff);
         }
     }
 }
