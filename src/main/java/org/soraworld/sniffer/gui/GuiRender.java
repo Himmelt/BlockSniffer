@@ -52,10 +52,10 @@ public class GuiRender {
 
     public static void spawnParticle(EntityPlayer player, Vec3d to, Color color, int delay) {
         Vec3d look = player.getLookVec();
-        double fromX = look.x + player.posX;
-        double fromY = look.y + player.posY + player.getEyeHeight();
-        double fromZ = look.z + player.posZ;
-        spawn(player.getEntityWorld(), fromX, fromY, fromZ, to.x, to.y, to.z, color, delay);
+        double fromX = look.xCoord + player.posX;
+        double fromY = look.yCoord + player.posY + player.getEyeHeight();
+        double fromZ = look.zCoord + player.posZ;
+        spawn(player.getEntityWorld(), fromX, fromY, fromZ, to.xCoord, to.yCoord, to.zCoord, color, delay);
     }
 
     private static void spawn(World worldObj, double fromX, double fromY, double fromZ, double toX, double toY, double toZ, Color color, int delay) {

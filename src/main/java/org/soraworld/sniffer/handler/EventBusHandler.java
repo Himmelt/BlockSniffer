@@ -49,7 +49,7 @@ public class EventBusHandler {
             int iconHeight = 20;
             int iconWidth = 20;
             int lbHeight = 10;
-            int lbWidth = mc.fontRenderer.getStringWidth(label + " ");
+            int lbWidth = mc.fontRendererObj.getStringWidth(label + " ");
             int x = (int) (api.config.hudX.get() * (width - iconWidth));
             int y = (int) (api.config.hudY.get() * (height - iconHeight - lbHeight));
             GuiRender.drawRect(x - 2, y - 2, 20, 20, 0xffdddddd);
@@ -61,7 +61,7 @@ public class EventBusHandler {
             int maxX = width - lbWidth;
             int lbX = Math.max(0, Math.min(x, maxX));
             int lbY = y + iconHeight;
-            mc.fontRenderer.drawString(label, lbX, lbY, 0xfffeff);
+            mc.fontRendererObj.drawString(label, lbX, lbY, 0xfffeff);
         }
     }
 }

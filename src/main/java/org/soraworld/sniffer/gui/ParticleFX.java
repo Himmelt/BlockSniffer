@@ -43,7 +43,7 @@ public class ParticleFX extends ParticleSuspendedTown {
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
-        this.move(this.motionX, this.motionY, this.motionZ);
+        this.moveEntity(this.motionX, this.motionY, this.motionZ);
         if (this.particleMaxAge-- <= 0) {
             this.setExpired();
         }

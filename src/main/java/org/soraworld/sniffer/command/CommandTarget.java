@@ -164,7 +164,7 @@ public class CommandTarget extends IICommand {
 
     @Nonnull
     @Override
-    public String getUsage(@Nonnull ICommandSender sender) {
+    public String getCommandUsage(@Nonnull ICommandSender sender) {
         return I18n.format("sf.help.target");
     }
 }

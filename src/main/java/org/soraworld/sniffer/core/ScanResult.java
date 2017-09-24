@@ -2,7 +2,7 @@ package org.soraworld.sniffer.core;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -18,7 +18,7 @@ public class ScanResult {
     private Target target;
     private EntityPlayer player;
     private int x, y, z;
-    private ItemStack stack = new ItemStack(Items.AIR);
+    private ItemStack stack = new ItemStack(Blocks.AIR);
 
     public Vec3d getV3d() {
         return new Vec3d(x, y, z);
@@ -37,7 +37,7 @@ public class ScanResult {
 
     public Color getColor() {
         Color color = target.getColor();
-        return color != null ? color : new Color(player.world.getBlockState(new BlockPos(x, y, z)).getMapColor().colorValue);
+        return color != null ? color : new Color(player.worldObj.getBlockState(new BlockPos(x, y, z)).getMapColor().colorValue);
     }
 
     public void update(EntityPlayer player, Target current, int blockX, int blockY, int blockZ) {
@@ -47,15 +47,15 @@ public class ScanResult {
         this.y = blockY;
         this.z = blockZ;
         this.found = true;
-        IBlockState state = player.world.getBlockState(new BlockPos(x, y, z));
-        stack = state.getBlock().getPickBlock(state, null, player.world, new BlockPos(x, y, z), player);
-        if (stack.getItem() == Items.AIR) {
+        IBlockState state = player.worldObj.getBlockState(new BlockPos(x, y, z));
+        stack = state.getBlock().getPickBlock(state, null, player.worldObj, new BlockPos(x, y, z), player);
+        if (stack == null || stack.getItem() == null) {
             stack = new ItemStack(state.getBlock(), 1, state.getBlock().damageDropped(state));
         }
     }
 
     public String displayName() {
-        if (stack.getItem() == Items.AIR) {
+        if (stack == null || stack.getItem() == null) {
             return target.displayName();
         }
         return stack.getDisplayName();

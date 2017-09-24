@@ -40,7 +40,7 @@ public class CommandAdd extends IICommand {
 
     @Nonnull
     @Override
-    public String getUsage(@Nonnull ICommandSender sender) {
+    public String getCommandUsage(@Nonnull ICommandSender sender) {
         return I18n.format("sf.help.add");
     }
 
@@ -54,9 +54,13 @@ public class CommandAdd extends IICommand {
             switch (arg0) {
                 case "hold":
                     ItemStack itemStack = player.getHeldItem(EnumHand.MAIN_HAND);
+                    if (itemStack == null) {
+                        I19n.sendChat("sf.invalid.add");
+                        return;
+                    }
                     block = Block.getBlockFromItem(itemStack.getItem());
                     meta = itemStack.getItemDamage();
-                    if (block.equals(Blocks.AIR)) {
+                    if (block == null || block.equals(Blocks.AIR)) {
                         I19n.sendChat("sf.invalid.add");
                         return;
                     }
@@ -94,11 +98,11 @@ public class CommandAdd extends IICommand {
                         return;
                     }
                 } else if (args.size() >= 3) {
-                    I19n.sendChat2(getUsage(sender));
+                    I19n.sendChat2(getCommandUsage(sender));
                     return;
                 }
             } else {
-                I19n.sendChat2(getUsage(sender));
+                I19n.sendChat2(getCommandUsage(sender));
                 return;
             }
 
@@ -111,7 +115,7 @@ public class CommandAdd extends IICommand {
                 I19n.sendChat("sf.sub.add.ok", blk.getName());
             }
         } else {
-            I19n.sendChat2(getUsage(sender));
+            I19n.sendChat2(getCommandUsage(sender));
         }
     }
 

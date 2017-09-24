@@ -216,8 +216,8 @@ public class SnifferAPI {
                     }
                     int meta = block.getMetaFromState(state);
                     if (current.match(block, meta)) {
-                        int blockX = chunk.x * 16 + x;
-                        int blockZ = chunk.z * 16 + z;
+                        int blockX = chunk.xPosition * 16 + x;
+                        int blockZ = chunk.zPosition * 16 + z;
                         result.update(player, current, blockX, y, blockZ);
                         return;
                     }

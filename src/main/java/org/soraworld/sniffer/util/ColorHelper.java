@@ -166,8 +166,6 @@ public final class ColorHelper {
     private static final Color YELLOW = new Color(255, 255, 0);
     private static final Color YELLOWGREEN = new Color(154, 205, 50);
 
-    private static final Color TTT = new Color(0x00cccc);
-
     static {
         colorMap.put("&0", BLACK);
         colorMap.put("&1", MCCOLOR1);

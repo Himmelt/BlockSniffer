@@ -41,10 +41,10 @@ public abstract class IICommand implements ICommand {
     }
 
     final void addSub(IICommand sub) {
-        this.subMap.put(sub.getName(), sub);
-        for (String alias : sub.getAliases()) {
+        this.subMap.put(sub.getCommandName(), sub);
+        for (String alias : sub.getCommandAliases()) {
             IICommand command = this.subMap.get(alias);
-            if (command == null || !command.getName().equals(alias)) {
+            if (command == null || !command.getCommandName().equals(alias)) {
                 this.subMap.put(alias, sub);
             }
         }
@@ -52,13 +52,13 @@ public abstract class IICommand implements ICommand {
 
     @Nonnull
     @Override
-    public String getUsage(@Nonnull ICommandSender sender) {
+    public String getCommandUsage(@Nonnull ICommandSender sender) {
         return "";
     }
 
     @Nonnull
     @Override
-    public final String getName() {
+    public final String getCommandName() {
         return name;
     }
 
@@ -69,7 +69,7 @@ public abstract class IICommand implements ICommand {
 
     @Nonnull
     @Override
-    public final List<String> getAliases() {
+    public final List<String> getCommandAliases() {
         return aliases;
     }
 
@@ -80,7 +80,7 @@ public abstract class IICommand implements ICommand {
 
     @Nonnull
     @Override
-    public List<String> getTabCompletions(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] argArray, @Nullable BlockPos targetPos) {
+    public List<String> getTabCompletionOptions(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] argArray, @Nullable BlockPos targetPos) {
         return getTabCompletions(sender, new ArrayList<>(Arrays.asList(argArray)));
     }
 
@@ -92,7 +92,7 @@ public abstract class IICommand implements ICommand {
                 return;
             }
         }
-        I19n.sendChat2(getUsage(sender));
+        I19n.sendChat2(getCommandUsage(sender));
     }
 
     @Override
@@ -102,7 +102,7 @@ public abstract class IICommand implements ICommand {
 
     @Override
     public int compareTo(@Nonnull ICommand command) {
-        return getName().compareTo(command.getName());
+        return getCommandName().compareTo(command.getCommandName());
     }
 
     protected List<String> getTabCompletions(ICommandSender sender, ArrayList<String> args) {

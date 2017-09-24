@@ -113,10 +113,10 @@ public class I19n {
     }
 
     public static void sendChat(String key, Object... args) {
-        mc.player.sendMessage(I19n.format(I18n.format("sf.chat.head") + I18n.format(key, args)));
+        mc.thePlayer.addChatMessage(I19n.format(I18n.format("sf.chat.head") + I18n.format(key, args)));
     }
 
     public static void sendChat2(String message) {
-        mc.player.sendMessage(I19n.format(I18n.format("sf.chat.head") + message));
+        mc.thePlayer.addChatMessage(I19n.format(I18n.format("sf.chat.head") + message));
     }
 }

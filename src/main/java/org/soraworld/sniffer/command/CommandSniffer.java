@@ -52,7 +52,7 @@ public class CommandSniffer extends IICommand {
 
     @Nonnull
     @Override
-    public String getUsage(@Nonnull ICommandSender sender) {
+    public String getCommandUsage(@Nonnull ICommandSender sender) {
         return I18n.format("sf.help");
     }
 
@@ -62,7 +62,7 @@ public class CommandSniffer extends IICommand {
             super.execute(sender, args);
         } else {
             api.LOGGER.info(I18n.format("sf.cmd.error"));
-            sender.sendMessage(new TextComponentString(I18n.format("sf.cmd.error")));
+            sender.addChatMessage(new TextComponentString(I18n.format("sf.cmd.error")));
         }
     }
 }

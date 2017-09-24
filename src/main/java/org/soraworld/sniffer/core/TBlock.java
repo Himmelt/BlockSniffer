@@ -5,7 +5,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -13,7 +12,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.soraworld.sniffer.constant.Constants;
 
-import java.awt.*;
 import java.io.IOException;
 
 @SideOnly(Side.CLIENT)
@@ -31,6 +29,9 @@ public class TBlock {
         try {
             stack = block.getPickBlock(meta == null ? block.getDefaultState() : block.getStateFromMeta(meta), null, null, null, null);
         } catch (Exception e) {
+            stack = new ItemStack(Item.getItemFromBlock(block), 1, meta == null ? 0 : meta);
+        }
+        if (stack == null) {
             stack = new ItemStack(Item.getItemFromBlock(block), 1, meta == null ? 0 : meta);
         }
         itemStack = stack;
@@ -75,8 +76,10 @@ public class TBlock {
 
     public String getName() {
         if (name == null || name.isEmpty()) {
-            name = itemStack.getItem().getItemStackDisplayName(itemStack);
-            if (itemStack.getItem() == Items.AIR || name.isEmpty() || Constants.PATTERN_NAME.matcher(name).matches()) {
+            if (itemStack.getItem() != null) {
+                name = itemStack.getItem().getItemStackDisplayName(itemStack);
+            }
+            if (name == null || name.isEmpty() || Constants.PATTERN_NAME.matcher(name).matches()) {
                 name = block.getLocalizedName();
                 if (name.isEmpty() || Constants.PATTERN_NAME.matcher(name).matches()) {
                     name = I18n.format("sf.unknown.block");
@@ -84,10 +87,6 @@ public class TBlock {
             }
         }
         return name;
-    }
-
-    Color getMapColor() {
-        return new Color(block.getStateFromMeta(meta == null ? 0 : meta).getMapColor().colorValue);
     }
 
     @Override
