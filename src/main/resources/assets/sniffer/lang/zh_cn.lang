@@ -21,7 +21,7 @@ sf.gamma.get=当前亮度(Gamma)为: &a%.2f
 sf.gamma.set=当前亮度(Gamma)设置为: &a%.2f
 
 sf.help=用法: /sf gamma | reload | reset | sub | target
-sf.help.sub=用法: /sf sub add | list
+sf.help.sub=用法: /sf sub add | list | remove
 sf.help.target=用法: /sf t add | c | cla | d | h | i | m | rm |v
 
 sf.help.target.cla=使用&e confirm &r以确认 /sf target cla/clear confirm
@@ -50,7 +50,7 @@ sf.target.add.ok=已成功添加探测目标 &a%s.
 
 sf.sub.list=当前探测目标包含以下子目标:
 
-sf.sub.rm.list=可使用 /sf sub rm <uid> 移除以下子目标:
+sf.sub.rm.list=使用 /sf sub rm <uid> 移除以下子目标:
 sf.sub.rm.ok=已成功移除子目标 &6%s&r.
 sf.sub.rm.fail=&c移除失败,可能没有该uid对应的子目标,请先用/sf sub l/list 查看当前子目标.
 sf.sub.rm.t=&e当前子目标已被全部移除,将尝试删除当前探测目标.

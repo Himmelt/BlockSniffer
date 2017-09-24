@@ -10,6 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.soraworld.sniffer.BlockSniffer;
 import org.soraworld.sniffer.api.SnifferAPI;
 import org.soraworld.sniffer.util.I19n;
+import org.soraworld.sniffer.util.Lists;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -19,10 +20,10 @@ import java.util.stream.Collectors;
 @SideOnly(Side.CLIENT)
 public abstract class IICommand implements ICommand {
 
-    protected final TreeMap<String, IICommand> subMap = new TreeMap<>();
     private final String name;
-    protected final SnifferAPI api = BlockSniffer.getAPI();
     private final List<String> aliases;
+    protected final SnifferAPI api = BlockSniffer.getAPI();
+    protected final TreeMap<String, IICommand> subMap = new TreeMap<>();
 
     private IICommand() {
         name = "invalid";
@@ -31,10 +32,10 @@ public abstract class IICommand implements ICommand {
 
     public IICommand(String name, String... aliases) {
         this.name = name;
-        this.aliases = Arrays.asList(aliases);
+        this.aliases = Lists.arrayList(aliases);
     }
 
-    private static List<String> getMatchList(String arg, Collection<String> possibles) {
+    protected static List<String> getMatchList(String arg, Collection<String> possibles) {
         if (arg.isEmpty()) return new ArrayList<>(possibles);
         return possibles.stream().filter(s -> s.startsWith(arg)).collect(Collectors.toList());
     }
@@ -63,7 +64,7 @@ public abstract class IICommand implements ICommand {
 
     @Override
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] argArray) throws CommandException {
-        execute(sender, new ArrayList<>(Arrays.asList(argArray)));
+        execute(sender, Lists.arrayList(argArray));
     }
 
     @Nonnull
@@ -104,13 +105,13 @@ public abstract class IICommand implements ICommand {
         return getName().compareTo(command.getName());
     }
 
-    private List<String> getTabCompletions(ICommandSender sender, ArrayList<String> args) {
+    protected List<String> getTabCompletions(ICommandSender sender, ArrayList<String> args) {
         if (args.size() == 1) {
             return getMatchList(args.get(0), subMap.keySet());
         } else if (args.size() >= 2) {
             IICommand sub = subMap.get(args.remove(0));
             if (sub != null) return sub.getTabCompletions(sender, args);
-            else return Collections.emptyList();
+            else return new ArrayList<>();
         } else {
             return new ArrayList<>(subMap.keySet());
         }
