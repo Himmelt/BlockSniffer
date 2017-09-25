@@ -37,7 +37,10 @@ public class ScanResult {
 
     public Color getColor() {
         Color color = target.getColor();
-        return color != null ? color : new Color(player.worldObj.getBlockState(new BlockPos(x, y, z)).getMapColor().colorValue);
+        if (color != null) return color;
+        BlockPos pos = new BlockPos(x, y, z);
+        IBlockState state = player.worldObj.getBlockState(pos);
+        return new Color(state.getMapColor().colorValue);
     }
 
     public void update(EntityPlayer player, Target current, int blockX, int blockY, int blockZ) {
