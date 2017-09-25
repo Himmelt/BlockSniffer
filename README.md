@@ -10,7 +10,8 @@ This is a Scenter-like mod. It can show you a way to the target block(s).
 4. Multi thread to scan the world,no lag.
 5. Customizable work mode/range.
 6. Supports several formats of colors. Hex Value(#abcdef),Minecraft Color(&5/&e),Web Color(blue,magenta),MapColor.
-7. Add Gamma settings command
+7. Add Gamma settings command.
+8. Full command tabCompletions support.
 
 ### Attentions
 1. This mod only can be used in client side.
@@ -67,7 +68,8 @@ This is a Scenter-like mod. It can show you a way to the target block(s).
 4. 子线程探测, 大范围探测时不会导致游戏进程卡顿.
 5. 高度自定义探测范围、探测模式, 水平最大探测半径15区块.
 6. 支持多种颜色格式, 十六进制(#abcdef)、Minecraft颜色(&5、&e)、Web标准色(blue、magenta)、地图色(MapColor).
-7. 添加Gamma设置指令
+7. 添加Gamma设置指令.
+8. 完全支持的命令补全.
 
 ### 注意
 1. 该Mod只能用于客户端, 不会影响其他与服务端匹配的Mod；如果将本Mod用于服务端可能导致崩溃.
