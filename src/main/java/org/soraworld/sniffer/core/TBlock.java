@@ -13,7 +13,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.soraworld.sniffer.constant.Constants;
 
-import java.awt.*;
 import java.io.IOException;
 
 @SideOnly(Side.CLIENT)
@@ -84,10 +83,6 @@ public class TBlock {
             }
         }
         return name;
-    }
-
-    Color getMapColor() {
-        return new Color(block.getStateFromMeta(meta == null ? 0 : meta).getMapColor().colorValue);
     }
 
     @Override
