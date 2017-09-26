@@ -253,7 +253,8 @@ public class Target {
                         case "blocks":
                             in.beginArray();
                             while (in.hasNext()) {
-                                blocks.add(BLOCK_ADAPTER.read(in));
+                                TBlock block = BLOCK_ADAPTER.read(in);
+                                if (block != null && !block.invalid()) blocks.add(block);
                             }
                             in.endArray();
                             break;
