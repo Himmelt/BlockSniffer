@@ -7,6 +7,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
@@ -53,18 +54,17 @@ public class CommandAdd extends IICommand {
             String arg0 = args.remove(0);
             switch (arg0) {
                 case "hold":
-                    ItemStack itemStack = player.getHeldItem(EnumHand.MAIN_HAND);
-                    if (itemStack == null) {
-                        I19n.sendChat("sf.invalid.add");
-                        return;
+                    ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
+                    if (stack != null) {
+                        Item item = stack.getItem();
+                        if (item != null /* && item != Items.AIR */) {
+                            block = Block.getBlockFromItem(item);
+                            meta = stack.getItemDamage();
+                            if (block != null && !block.equals(Blocks.AIR)) break;
+                        }
                     }
-                    block = Block.getBlockFromItem(itemStack.getItem());
-                    meta = itemStack.getItemDamage();
-                    if (block == null || block.equals(Blocks.AIR)) {
-                        I19n.sendChat("sf.invalid.add");
-                        return;
-                    }
-                    break;
+                    I19n.sendChat("sf.invalid.add");
+                    return;
                 case "look":
                     RayTraceResult focused = Minecraft.getMinecraft().objectMouseOver;
                     if (focused != null && focused.typeOfHit == RayTraceResult.Type.BLOCK) {

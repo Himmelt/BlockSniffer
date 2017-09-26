@@ -5,6 +5,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -59,7 +60,7 @@ public class TBlock {
     }
 
     boolean invalid() {
-        return block == null;
+        return block == null || block == Blocks.AIR;
     }
 
     public Block getBlock() {
