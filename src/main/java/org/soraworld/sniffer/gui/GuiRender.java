@@ -4,7 +4,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -22,10 +21,10 @@ public class GuiRender {
     public static void renderItem(ItemStack itemStack, int x, int y) {
         //RenderHelper.enableRescaleNormal();
         //RenderHelper.enableStandardItemLighting();
-        RenderHelper.enableGUIStandardItemLighting();
+        //RenderHelper.enableGUIStandardItemLighting();
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
         RenderItem.getInstance().renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, itemStack, x, y);
-        RenderHelper.disableStandardItemLighting();
+        //RenderHelper.disableStandardItemLighting();
     }
 
     public static void drawRect(int x, int y, int width, int height, int color) {
