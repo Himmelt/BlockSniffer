@@ -3,6 +3,7 @@ package org.soraworld.sniffer.handler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -54,9 +55,11 @@ public class EventBusHandler {
             int y = (int) (api.config.hudY.get() * (height - iconHeight - lbHeight));
             GuiRender.drawRect(x - 2, y - 2, 20, 20, 0xffdddddd);
             if (api.result.found) {
-                GuiRender.renderItem(api.result.getItemStack(), x, y);
+                ItemStack stack = api.result.getItemStack();
+                if (stack != null && stack.getItem() != null) GuiRender.renderItem(stack, x, y);
             } else {
-                GuiRender.renderItem(api.current.getDelegate().getItemStack(), x, y);
+                ItemStack stack = api.current.getDelegate().getItemStack();
+                if (stack != null && stack.getItem() != null) GuiRender.renderItem(stack, x, y);
             }
             int maxX = width - lbWidth;
             int lbX = Math.max(0, Math.min(x, maxX));
