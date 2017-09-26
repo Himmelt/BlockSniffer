@@ -39,7 +39,7 @@ buildscript {
 
 apply plugin: 'fgow'
 
-version = "1.7.10-1.2.1"
+version = "1.7.10-1.2.2"
 group = "org.soraworld.sniffer"
 archivesBaseName = "BlockSniffer"
 

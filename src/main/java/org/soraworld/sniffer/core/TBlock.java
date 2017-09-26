@@ -7,6 +7,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import org.soraworld.sniffer.constant.Constants;
 
@@ -48,7 +49,7 @@ public class TBlock {
     }
 
     boolean invalid() {
-        return block == null;
+        return block == null || block == Blocks.air;
     }
 
     public Block getBlock() {

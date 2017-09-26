@@ -6,6 +6,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import org.soraworld.sniffer.constant.Constants;
@@ -49,14 +50,17 @@ public class CommandAdd extends IICommand {
             String arg0 = args.remove(0);
             switch (arg0) {
                 case "hold":
-                    ItemStack itemStack = player.getHeldItem();
-                    block = Block.getBlockFromItem(itemStack.getItem());
-                    meta = itemStack.getItemDamage();
-                    if (block.equals(Blocks.air)) {
-                        I19n.sendChat("sf.invalid.add");
-                        return;
+                    ItemStack stack = player.getHeldItem();
+                    if (stack != null) {
+                        Item item = stack.getItem();
+                        if (item != null /* && item != Items.AIR */) {
+                            block = Block.getBlockFromItem(item);
+                            meta = stack.getItemDamage();
+                            if (block != null && !block.equals(Blocks.air)) break;
+                        }
                     }
-                    break;
+                    I19n.sendChat("sf.invalid.add");
+                    return;
                 case "look":
                     MovingObjectPosition focused = Minecraft.getMinecraft().objectMouseOver;
                     if (focused != null && focused.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {

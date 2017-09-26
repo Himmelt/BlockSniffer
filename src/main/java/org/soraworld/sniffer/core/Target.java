@@ -180,7 +180,6 @@ public class Target {
     }
 
     public TBlock getDelegate() {
-        TBlock tBlock = blocks.get(index);
         return blocks.get(index);
     }
 
@@ -254,7 +253,8 @@ public class Target {
                         case "blocks":
                             in.beginArray();
                             while (in.hasNext()) {
-                                blocks.add(BLOCK_ADAPTER.read(in));
+                                TBlock block = BLOCK_ADAPTER.read(in);
+                                if (block != null && !block.invalid()) blocks.add(block);
                             }
                             in.endArray();
                             break;
