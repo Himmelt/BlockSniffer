@@ -46,7 +46,7 @@ public class ParticleFX extends EntityAuraFX {
         this.prevPosZ = this.posZ;
         this.moveEntity(this.motionX, this.motionY, this.motionZ);
         if (this.particleMaxAge-- <= 0) {
-            this.extinguish();
+            this.setDead();
         }
     }
 }
