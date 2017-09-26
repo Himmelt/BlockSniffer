@@ -1,22 +1,19 @@
 package org.soraworld.sniffer.command;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.MovingObjectPosition;
 import org.soraworld.sniffer.constant.Constants;
 import org.soraworld.sniffer.core.TBlock;
 import org.soraworld.sniffer.core.Target;
 import org.soraworld.sniffer.util.I19n;
 import org.soraworld.sniffer.util.Lists;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,13 +31,12 @@ public class CommandAdd extends IICommand {
         List<String> list = new ArrayList<>();
         list.add("hold");
         list.add("look");
-        Block.REGISTRY.getKeys().forEach(key -> list.add(key.toString()));
+        Block.blockRegistry.getKeys().forEach(key -> list.add(key.toString()));
         return list;
     }
 
-    @Nonnull
     @Override
-    public String getUsage(@Nonnull ICommandSender sender) {
+    public String getCommandUsage(ICommandSender sender) {
         return I18n.format("sf.help.add");
     }
 
@@ -53,22 +49,21 @@ public class CommandAdd extends IICommand {
             String arg0 = args.remove(0);
             switch (arg0) {
                 case "hold":
-                    ItemStack itemStack = player.getHeldItem(EnumHand.MAIN_HAND);
+                    ItemStack itemStack = player.getHeldItem();
                     block = Block.getBlockFromItem(itemStack.getItem());
                     meta = itemStack.getItemDamage();
-                    if (block.equals(Blocks.AIR)) {
+                    if (block.equals(Blocks.air)) {
                         I19n.sendChat("sf.invalid.add");
                         return;
                     }
                     break;
                 case "look":
-                    RayTraceResult focused = Minecraft.getMinecraft().objectMouseOver;
-                    if (focused != null && focused.typeOfHit == RayTraceResult.Type.BLOCK) {
-                        IBlockState state = player.getEntityWorld().getBlockState(focused.getBlockPos());
-                        block = state.getBlock();
-                        meta = block.getMetaFromState(state);
+                    MovingObjectPosition focused = Minecraft.getMinecraft().objectMouseOver;
+                    if (focused != null && focused.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+                        block = player.getEntityWorld().getBlock(focused.blockX, focused.blockY, focused.blockZ);
+                        meta = player.getEntityWorld().getBlockMetadata(focused.blockX, focused.blockY, focused.blockZ);
                     }
-                    if (block == null || block.equals(Blocks.AIR)) {
+                    if (block == null || block.equals(Blocks.air)) {
                         I19n.sendChat("sf.invalid.add");
                         return;
                     }
@@ -76,7 +71,7 @@ public class CommandAdd extends IICommand {
                 default:
                     block = Block.getBlockFromName(arg0);
                     meta = 0;
-                    if (block == null || block.equals(Blocks.AIR)) {
+                    if (block == null || block.equals(Blocks.air)) {
                         I19n.sendChat("sf.invalid.name");
                         return;
                     }
@@ -94,11 +89,11 @@ public class CommandAdd extends IICommand {
                         return;
                     }
                 } else if (args.size() >= 3) {
-                    I19n.sendChat2(getUsage(sender));
+                    I19n.sendChat2(getCommandUsage(sender));
                     return;
                 }
             } else {
-                I19n.sendChat2(getUsage(sender));
+                I19n.sendChat2(getCommandUsage(sender));
                 return;
             }
 
@@ -111,7 +106,7 @@ public class CommandAdd extends IICommand {
                 I19n.sendChat("sf.sub.add.ok", blk.getName());
             }
         } else {
-            I19n.sendChat2(getUsage(sender));
+            I19n.sendChat2(getCommandUsage(sender));
         }
     }
 

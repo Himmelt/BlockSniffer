@@ -1,14 +1,13 @@
 package org.soraworld.sniffer.command;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.soraworld.sniffer.constant.Constants;
 import org.soraworld.sniffer.util.ColorHelper;
 import org.soraworld.sniffer.util.I19n;
 
-import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -162,9 +161,8 @@ public class CommandTarget extends IICommand {
         });
     }
 
-    @Nonnull
     @Override
-    public String getUsage(@Nonnull ICommandSender sender) {
+    public String getCommandUsage(ICommandSender sender) {
         return I18n.format("sf.help.target");
     }
 }

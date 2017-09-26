@@ -1,13 +1,12 @@
 package org.soraworld.sniffer.core;
 
-import net.minecraft.block.state.IBlockState;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.Vec3;
 
 import java.awt.*;
 
@@ -18,10 +17,10 @@ public class ScanResult {
     private Target target;
     private EntityPlayer player;
     private int x, y, z;
-    private ItemStack stack = new ItemStack(Items.AIR);
+    private ItemStack stack = new ItemStack(Blocks.air);
 
-    public Vec3d getV3d() {
-        return new Vec3d(x, y, z);
+    public Vec3 getV3d() {
+        return Vec3.createVectorHelper(x, y, z);
     }
 
     public double getDistance() {
@@ -38,9 +37,7 @@ public class ScanResult {
     public Color getColor() {
         Color color = target.getColor();
         if (color != null) return color;
-        BlockPos pos = new BlockPos(x, y, z);
-        IBlockState state = player.world.getBlockState(pos);
-        return new Color(state.getMapColor(player.world, pos).colorValue);
+        return new Color(player.worldObj.getBlock(x, y, z).getMapColor(player.worldObj.getBlockMetadata(x, y, z)).colorValue);
     }
 
     public void update(EntityPlayer player, Target current, int blockX, int blockY, int blockZ) {
@@ -50,15 +47,14 @@ public class ScanResult {
         this.y = blockY;
         this.z = blockZ;
         this.found = true;
-        IBlockState state = player.world.getBlockState(new BlockPos(x, y, z));
-        stack = state.getBlock().getPickBlock(state, null, player.world, new BlockPos(x, y, z), player);
-        if (stack.getItem() == Items.AIR) {
-            stack = new ItemStack(state.getBlock(), 1, state.getBlock().damageDropped(state));
+        stack = player.worldObj.getBlock(x, y, z).getPickBlock(Minecraft.getMinecraft().objectMouseOver, player.worldObj, x, y, z, player);
+        if (stack == null || stack.getItem() == null) {
+            stack = new ItemStack(player.worldObj.getBlock(x, y, z), 1, player.worldObj.getBlockMetadata(x, y, z));
         }
     }
 
     public String displayName() {
-        if (stack.getItem() == Items.AIR) {
+        if (stack == null || stack.getItem() == null) {
             return target.displayName();
         }
         return stack.getDisplayName();

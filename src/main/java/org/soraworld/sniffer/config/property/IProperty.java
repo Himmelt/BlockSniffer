@@ -15,7 +15,7 @@ public abstract class IProperty {
     }
 
     public void setComment(String comment) {
-        property.setComment(comment);
+        property.comment = comment;
     }
 
     abstract void bind(Configuration config);

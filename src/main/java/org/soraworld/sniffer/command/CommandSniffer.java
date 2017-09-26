@@ -1,15 +1,14 @@
 package org.soraworld.sniffer.command;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.ChatComponentText;
 import org.soraworld.sniffer.constant.Constants;
 import org.soraworld.sniffer.util.I19n;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 @SideOnly(Side.CLIENT)
@@ -50,9 +49,8 @@ public class CommandSniffer extends IICommand {
         });
     }
 
-    @Nonnull
     @Override
-    public String getUsage(@Nonnull ICommandSender sender) {
+    public String getCommandUsage(ICommandSender sender) {
         return I18n.format("sf.help");
     }
 
@@ -62,7 +60,7 @@ public class CommandSniffer extends IICommand {
             super.execute(sender, args);
         } else {
             api.LOGGER.info(I18n.format("sf.cmd.error"));
-            sender.sendMessage(new TextComponentString(I18n.format("sf.cmd.error")));
+            sender.addChatMessage(new ChatComponentText(I18n.format("sf.cmd.error")));
         }
     }
 }

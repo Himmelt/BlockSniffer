@@ -1,14 +1,14 @@
 package org.soraworld.sniffer.gui;
 
-import net.minecraft.client.particle.ParticleSuspendedTown;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.particle.EntityAuraFX;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.awt.*;
 
 @SideOnly(Side.CLIENT)
-public class ParticleFX extends ParticleSuspendedTown {
+public class ParticleFX extends EntityAuraFX {
 
     private float targetAlpha;
 
@@ -26,7 +26,8 @@ public class ParticleFX extends ParticleSuspendedTown {
         this.setVelocity(vx, vy, vz);
     }
 
-    private void setVelocity(double vx, double vy, double vz) {
+    @Override
+    public void setVelocity(double vx, double vy, double vz) {
         this.motionX = vx;
         this.motionY = vy;
         this.motionZ = vz;
@@ -43,9 +44,9 @@ public class ParticleFX extends ParticleSuspendedTown {
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
-        this.move(this.motionX, this.motionY, this.motionZ);
+        this.moveEntity(this.motionX, this.motionY, this.motionZ);
         if (this.particleMaxAge-- <= 0) {
-            this.setExpired();
+            this.extinguish();
         }
     }
 }

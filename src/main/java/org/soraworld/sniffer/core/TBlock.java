@@ -3,14 +3,11 @@ package org.soraworld.sniffer.core;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.soraworld.sniffer.constant.Constants;
 
 import java.io.IOException;
@@ -26,17 +23,11 @@ public class TBlock {
     public TBlock(Block block, Integer meta) {
         this.block = block;
         this.meta = meta == null ? null : meta < 0 ? 0 : meta > 15 ? 15 : meta;
-        ItemStack stack;
-        try {
-            stack = block.getPickBlock(meta == null ? block.getDefaultState() : block.getStateFromMeta(meta), null, null, null, null);
-        } catch (Exception e) {
-            stack = new ItemStack(Item.getItemFromBlock(block), 1, meta == null ? 0 : meta);
-        }
-        itemStack = stack;
+        itemStack = new ItemStack(block, 1, meta == null ? 0 : meta);
     }
 
     public TBlock(String name, Integer meta) {
-        this(Block.REGISTRY.getObject(new ResourceLocation(name)), meta);
+        this((Block) Block.blockRegistry.getObject(name), meta);
     }
 
     @Override
@@ -74,8 +65,10 @@ public class TBlock {
 
     public String getName() {
         if (name == null || name.isEmpty()) {
-            name = itemStack.getItem().getItemStackDisplayName(itemStack);
-            if (itemStack.getItem() == Items.AIR || name.isEmpty() || Constants.PATTERN_NAME.matcher(name).matches()) {
+            if (itemStack.getItem() != null) {
+                name = itemStack.getItem().getItemStackDisplayName(itemStack);
+            }
+            if (name == null || name.isEmpty() || Constants.PATTERN_NAME.matcher(name).matches()) {
                 name = block.getLocalizedName();
                 if (name.isEmpty() || Constants.PATTERN_NAME.matcher(name).matches()) {
                     name = I18n.format("sf.unknown.block");
@@ -87,7 +80,7 @@ public class TBlock {
 
     @Override
     public String toString() {
-        String name = Block.REGISTRY.getNameForObject(block).toString();
+        String name = Block.blockRegistry.getNameForObject(block);
         return meta == null ? name : String.format("%s/%d", name, meta);
     }
 
@@ -112,7 +105,7 @@ public class TBlock {
             try {
                 String[] s = in.nextString().split("/");
                 if (s.length >= 1) {
-                    Block blk = Block.REGISTRY.getObject(new ResourceLocation(s[0]));
+                    Block blk = (Block) Block.blockRegistry.getObject(s[0]);
                     Integer meta = null;
                     if (s.length >= 2 && Constants.PATTERN_NUM.matcher(s[1]).matches()) {
                         meta = Integer.valueOf(s[1]);

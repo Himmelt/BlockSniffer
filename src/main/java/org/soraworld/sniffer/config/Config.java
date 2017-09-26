@@ -1,9 +1,9 @@
 package org.soraworld.sniffer.config;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.soraworld.sniffer.config.property.IProperty;
 import org.soraworld.sniffer.constant.Constants;
 

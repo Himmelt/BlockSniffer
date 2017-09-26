@@ -1,15 +1,15 @@
 package org.soraworld.sniffer.gui;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -20,10 +20,11 @@ public class GuiRender {
     private static final Minecraft mc = Minecraft.getMinecraft();
 
     public static void renderItem(ItemStack itemStack, int x, int y) {
-        GlStateManager.enableRescaleNormal();
+        //RenderHelper.enableRescaleNormal();
+        //RenderHelper.enableStandardItemLighting();
         RenderHelper.enableGUIStandardItemLighting();
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
-        mc.getRenderItem().renderItemAndEffectIntoGUI(itemStack, x, y);
+        RenderItem.getInstance().renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, itemStack, x, y);
         RenderHelper.disableStandardItemLighting();
     }
 
@@ -50,12 +51,12 @@ public class GuiRender {
         GL11.glPopMatrix();
     }
 
-    public static void spawnParticle(EntityPlayer player, Vec3d to, Color color, int delay) {
-        Vec3d look = player.getLookVec();
-        double fromX = look.x + player.posX;
-        double fromY = look.y + player.posY + player.getEyeHeight();
-        double fromZ = look.z + player.posZ;
-        spawn(player.getEntityWorld(), fromX, fromY, fromZ, to.x, to.y, to.z, color, delay);
+    public static void spawnParticle(EntityPlayer player, Vec3 to, Color color, int delay) {
+        Vec3 look = player.getLookVec();
+        double fromX = look.xCoord + player.posX;
+        double fromY = look.yCoord + player.posY + player.getEyeHeight();
+        double fromZ = look.zCoord + player.posZ;
+        spawn(player.getEntityWorld(), fromX, fromY, fromZ, to.xCoord, to.yCoord, to.xCoord, color, delay);
     }
 
     private static void spawn(World worldObj, double fromX, double fromY, double fromZ, double toX, double toY, double toZ, Color color, int delay) {

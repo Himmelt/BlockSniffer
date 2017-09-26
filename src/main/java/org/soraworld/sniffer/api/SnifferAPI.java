@@ -2,15 +2,14 @@ package org.soraworld.sniffer.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.EmptyChunk;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -93,7 +92,7 @@ public class SnifferAPI {
             targets.clear();
             count = 0;
             if (list.isEmpty()) {
-                list.add(new Target(new TBlock(Blocks.DIAMOND_ORE, 0)));
+                list.add(new Target(new TBlock(Blocks.diamond_ore, 0)));
             }
             for (Target target : list) {
                 addTarget(target);
@@ -209,15 +208,14 @@ public class SnifferAPI {
         for (int y = yh; y > 0 && y < 255 && y >= yl; y--) {
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {
-                    IBlockState state = chunk.getBlockState(x, y, z);
-                    Block block = state.getBlock();
-                    if (block.equals(Blocks.AIR)) {
+                    Block block = chunk.getBlock(x, y, z);
+                    if (block.equals(Blocks.air)) {
                         continue;
                     }
-                    int meta = block.getMetaFromState(state);
+                    int meta = chunk.getBlockMetadata(x, y, z);
                     if (current.match(block, meta)) {
-                        int blockX = chunk.x * 16 + x;
-                        int blockZ = chunk.z * 16 + z;
+                        int blockX = chunk.xPosition * 16 + x;
+                        int blockZ = chunk.zPosition * 16 + z;
                         result.update(player, current, blockX, y, blockZ);
                         return;
                     }

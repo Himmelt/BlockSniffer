@@ -3,9 +3,9 @@ package org.soraworld.sniffer.core;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.soraworld.sniffer.BlockSniffer;
 import org.soraworld.sniffer.api.SnifferAPI;
 import org.soraworld.sniffer.util.ColorHelper;
@@ -180,6 +180,7 @@ public class Target {
     }
 
     public TBlock getDelegate() {
+        TBlock tBlock = blocks.get(index);
         return blocks.get(index);
     }
 

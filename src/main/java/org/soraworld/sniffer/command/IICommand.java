@@ -1,19 +1,15 @@
 package org.soraworld.sniffer.command;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.soraworld.sniffer.BlockSniffer;
 import org.soraworld.sniffer.api.SnifferAPI;
 import org.soraworld.sniffer.util.I19n;
 import org.soraworld.sniffer.util.Lists;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,46 +37,42 @@ public abstract class IICommand implements ICommand {
     }
 
     final void addSub(IICommand sub) {
-        this.subMap.put(sub.getName(), sub);
-        for (String alias : sub.getAliases()) {
+        this.subMap.put(sub.getCommandName(), sub);
+        for (String alias : sub.getCommandAliases()) {
             IICommand command = this.subMap.get(alias);
-            if (command == null || !command.getName().equals(alias)) {
+            if (command == null || !command.getCommandName().equals(alias)) {
                 this.subMap.put(alias, sub);
             }
         }
     }
 
-    @Nonnull
     @Override
-    public String getUsage(@Nonnull ICommandSender sender) {
+    public String getCommandUsage(ICommandSender sender) {
         return "";
     }
 
-    @Nonnull
     @Override
-    public final String getName() {
+    public final String getCommandName() {
         return name;
     }
 
     @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] argArray) throws CommandException {
+    public void processCommand(ICommandSender sender, String[] argArray) throws CommandException {
         execute(sender, Lists.arrayList(argArray));
     }
 
-    @Nonnull
     @Override
-    public final List<String> getAliases() {
+    public final List<String> getCommandAliases() {
         return aliases;
     }
 
     @Override
-    public boolean checkPermission(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender) {
+    public boolean canCommandSenderUseCommand(ICommandSender sender) {
         return true;
     }
 
-    @Nonnull
     @Override
-    public List<String> getTabCompletions(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] argArray, @Nullable BlockPos targetPos) {
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] argArray) {
         return getTabCompletions(sender, new ArrayList<>(Arrays.asList(argArray)));
     }
 
@@ -92,17 +84,17 @@ public abstract class IICommand implements ICommand {
                 return;
             }
         }
-        I19n.sendChat2(getUsage(sender));
+        I19n.sendChat2(getCommandUsage(sender));
     }
 
     @Override
-    public boolean isUsernameIndex(@Nonnull String[] args, int index) {
+    public boolean isUsernameIndex(String[] args, int index) {
         return false;
     }
 
     @Override
-    public int compareTo(@Nonnull ICommand command) {
-        return getName().compareTo(command.getName());
+    public int compareTo(Object command) {
+        return command instanceof IICommand ? getCommandName().compareTo(((IICommand) command).getCommandName()) : 0;
     }
 
     protected List<String> getTabCompletions(ICommandSender sender, ArrayList<String> args) {

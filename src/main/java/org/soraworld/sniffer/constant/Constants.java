@@ -1,10 +1,10 @@
 package org.soraworld.sniffer.constant;
 
 import com.google.gson.reflect.TypeToken;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 import org.soraworld.sniffer.core.Target;
 
@@ -17,8 +17,8 @@ public final class Constants {
 
     public static final String MODID = "sniffer";
     public static final String NAME = "Block Sniffer";
-    public static final String VERSION = "1.12.x-1.2.1";
-    public static final String ACMCVERSION = "[1.12,1.12.2]";
+    public static final String VERSION = "1.7.10-1.2.1";
+    public static final String ACMCVERSION = "[1.7.10]";
 
     public static final Pattern PATTERN_NUM = Pattern.compile("[0-9]{1,3}");
     public static final Pattern PATTERN_NAME = Pattern.compile("^tile.*name$");

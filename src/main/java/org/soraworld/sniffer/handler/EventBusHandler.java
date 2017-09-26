@@ -1,14 +1,13 @@
 package org.soraworld.sniffer.handler;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumHand;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.soraworld.sniffer.BlockSniffer;
 import org.soraworld.sniffer.api.SnifferAPI;
 import org.soraworld.sniffer.gui.GuiRender;
@@ -21,12 +20,11 @@ public class EventBusHandler {
 
     @SubscribeEvent
     public void onPlayerClick(PlayerInteractEvent event) {
-        if (event.getHand() == EnumHand.MAIN_HAND
-                && (event instanceof PlayerInteractEvent.LeftClickBlock
-                || event instanceof PlayerInteractEvent.RightClickBlock
-                || event instanceof PlayerInteractEvent.RightClickEmpty)
+        if ((event.action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK
+                || event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK
+                || event.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR)
                 && api.active && api.clickTimeOut()) {
-            EntityPlayer player = event.getEntityPlayer();
+            EntityPlayer player = event.entityPlayer;
             new Thread(() -> {
                 api.scanWorld(player);
                 if (api.result.found) {
@@ -38,8 +36,8 @@ public class EventBusHandler {
 
     @SubscribeEvent
     public void onRender(RenderGameOverlayEvent event) {
-        if (api.active && api.current != null && api.guiInTime() && !event.isCancelable() && event.getType() == RenderGameOverlayEvent.ElementType.EXPERIENCE) {
-            ScaledResolution scale = new ScaledResolution(mc);
+        if (api.active && api.current != null && api.guiInTime() && !event.isCancelable() && event.type == RenderGameOverlayEvent.ElementType.EXPERIENCE) {
+            ScaledResolution scale = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
             String label = String.format("%s: ---", api.current.displayName());
             if (api.result.found && api.result.getDistance() >= 1.0D) {
                 label = String.format("%s: %.2f", api.result.displayName(), api.result.getDistance() - 1.0D);
