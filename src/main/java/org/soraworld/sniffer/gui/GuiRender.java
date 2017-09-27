@@ -55,7 +55,7 @@ public class GuiRender {
         double fromX = look.xCoord + player.posX;
         double fromY = look.yCoord + player.posY + player.getEyeHeight();
         double fromZ = look.zCoord + player.posZ;
-        spawn(player.getEntityWorld(), fromX, fromY, fromZ, to.xCoord, to.yCoord, to.xCoord, color, delay);
+        spawn(player.getEntityWorld(), fromX, fromY, fromZ, to.xCoord, to.yCoord, to.zCoord, color, delay);
     }
 
     private static void spawn(World worldObj, double fromX, double fromY, double fromZ, double toX, double toY, double toZ, Color color, int delay) {
