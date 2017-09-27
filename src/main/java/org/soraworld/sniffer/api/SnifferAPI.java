@@ -22,7 +22,6 @@ import org.soraworld.sniffer.core.Target;
 import org.soraworld.sniffer.util.I19n;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -87,7 +86,7 @@ public class SnifferAPI {
         List<Target> list = new ArrayList<>();
         try {
             list = GSON.fromJson(FileUtils.readFileToString(jsonFile, "UTF-8"), Constants.LIST_TARGET);
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOGGER.catching(e);
         } finally {
             targets.clear();
@@ -110,7 +109,7 @@ public class SnifferAPI {
             jsonFile.delete();
             FileUtils.writeStringToFile(jsonFile, GSON.toJson(targets.values()), "UTF-8");
             LOGGER.info("config saved.");
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOGGER.catching(e);
         }
     }
