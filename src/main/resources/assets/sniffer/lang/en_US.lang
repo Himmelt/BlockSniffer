@@ -22,7 +22,7 @@ sf.gamma.set=Set current Gamma to: &a%.2f
 
 sf.help=Usage: /sf gamma | reload | reset | sub | target
 sf.help.sub=Usage: /sf sub add | list | remove
-sf.help.target=Usage: /sf t add | c | cla | d | h | i | m | rm |v
+sf.help.target=Usage: /sf t add | c | cla | d | h | i | m | rm | v
 
 sf.help.target.cla=Use&e confirm &rto confirm /sf t cla confirm
 

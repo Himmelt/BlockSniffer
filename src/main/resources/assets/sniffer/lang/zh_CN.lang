@@ -22,7 +22,7 @@ sf.gamma.set=当前亮度(Gamma)设置为: &a%.2f
 
 sf.help=用法: /sf gamma | reload | reset | sub | target
 sf.help.sub=用法: /sf sub add | list | remove
-sf.help.target=用法: /sf t add | c | cla | d | h | i | m | rm |v
+sf.help.target=用法: /sf t add | c | cla | d | h | i | m | rm | v
 
 sf.help.target.cla=使用&e confirm &r以确认 /sf t cla confirm
 
