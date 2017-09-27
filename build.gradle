@@ -30,14 +30,17 @@ buildscript {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-        classpath 'net.hakugyokurou:fgow:1.1.0'
     }
 }
 
-apply plugin: 'fgow'
+apply plugin: 'forge'
 
 version = "1.7.10-1.2.2"
 group = "org.soraworld.sniffer"
