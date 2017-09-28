@@ -1,14 +1,15 @@
 package org.soraworld.sniffer.util;
 
 import java.awt.*;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 public final class ColorHelper {
 
+    private static final TreeMap<String, Color> colorMap = new TreeMap<>();
     private static final Pattern PATTERN_COLOR = Pattern.compile("#[0-9a-fA-F]{1,6}");
-    private static final HashMap<String, Color> colorMap = new HashMap<>();
-
     private static final Color MCCOLOR1 = new Color(0, 0, 170);
     private static final Color MCCOLOR2 = new Color(0, 170, 0);
     private static final Color MCCOLOR3 = new Color(0, 170, 170);
@@ -23,7 +24,6 @@ public final class ColorHelper {
     private static final Color MCCOLORC = new Color(255, 85, 85);
     private static final Color MCCOLORD = new Color(255, 85, 255);
     private static final Color MCCOLORE = new Color(255, 255, 85);
-
     private static final Color ALICEBLUE = new Color(240, 248, 255);
     private static final Color ANTIQUEWHITE = new Color(250, 235, 215);
     private static final Color AQUA = new Color(0, 255, 255);
@@ -165,8 +165,8 @@ public final class ColorHelper {
     private static final Color WHITESMOKE = new Color(245, 245, 245);
     private static final Color YELLOW = new Color(255, 255, 0);
     private static final Color YELLOWGREEN = new Color(154, 205, 50);
-
     private static final Color TTT = new Color(0x00cccc);
+    private static ArrayList<String> names;
 
     static {
         colorMap.put("&0", BLACK);
@@ -348,5 +348,14 @@ public final class ColorHelper {
         } catch (Exception ignored) {
             return null;
         }
+    }
+
+    public static List<String> getNames() {
+        if (names == null || names.isEmpty()) {
+            names = new ArrayList<>();
+            names.add("map");
+            names.addAll(colorMap.keySet());
+        }
+        return names;
     }
 }

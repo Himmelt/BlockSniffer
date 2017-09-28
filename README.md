@@ -72,7 +72,7 @@ This is a Scenter-like mod. It can show you a way to the target block(s).
 8. 完全支持的命令补全.
 
 ### 注意
-1. 该Mod只能用于客户端, 不会影响其他与服务端匹配的Mod；如果将本Mod用于服务端可能导致崩溃.
+1. 该Mod只能用于客户端, 不会影响其他与服务端匹配的Mod；~~如果将本Mod用于服务端可能导致崩溃~~.
 2. 编译环境为JDK 1.8 语言级别 8 ，所以java7及以下可能无法正常运行.如有需要可自行修改并编译源码.
 3. 请不要在多人联机时使用本Mod作弊.
 
