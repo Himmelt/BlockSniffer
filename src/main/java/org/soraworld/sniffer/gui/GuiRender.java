@@ -3,6 +3,7 @@ package org.soraworld.sniffer.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
@@ -20,10 +21,10 @@ public class GuiRender {
 
     public static void renderItem(ItemStack itemStack, int x, int y) {
         GlStateManager.enableRescaleNormal();
-        //RenderHelper.enableGUIStandardItemLighting();
+        RenderHelper.enableGUIStandardItemLighting();
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
         mc.getRenderItem().renderItemAndEffectIntoGUI(itemStack, x, y);
-        //RenderHelper.disableStandardItemLighting();
+        RenderHelper.disableStandardItemLighting();
     }
 
     public static void drawRect(int x, int y, int width, int height, int color) {

@@ -1,13 +1,16 @@
 package org.soraworld.sniffer.util;
 
 import java.awt.*;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 public final class ColorHelper {
 
+    private static final TreeMap<String, Color> colorMap = new TreeMap<>();
     private static final Pattern PATTERN_COLOR = Pattern.compile("#[0-9a-fA-F]{1,6}");
-    private static final HashMap<String, Color> colorMap = new HashMap<>();
+    private static ArrayList<String> names;
 
     private static final Color MCCOLOR1 = new Color(0, 0, 170);
     private static final Color MCCOLOR2 = new Color(0, 170, 0);
@@ -346,5 +349,14 @@ public final class ColorHelper {
         } catch (Exception ignored) {
             return null;
         }
+    }
+
+    public static List<String> getNames() {
+        if (names == null || names.isEmpty()) {
+            names = new ArrayList<>();
+            names.add("map");
+            names.addAll(colorMap.keySet());
+        }
+        return names;
     }
 }
