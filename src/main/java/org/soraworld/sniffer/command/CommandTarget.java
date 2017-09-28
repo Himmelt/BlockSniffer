@@ -11,6 +11,7 @@ import org.soraworld.sniffer.util.I19n;
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class CommandTarget extends IICommand {
@@ -134,6 +135,12 @@ public class CommandTarget extends IICommand {
                 } else {
                     I19n.sendChat("sf.target.not");
                 }
+            }
+
+            @Override
+            protected List<String> getTabCompletions(ICommandSender sender, ArrayList<String> args) {
+                if (args.size() >= 1) return getMatchList(args.get(0), ColorHelper.getNames());
+                return ColorHelper.getNames();
             }
         });
         addSub(new IICommand("clear", "cla") {
