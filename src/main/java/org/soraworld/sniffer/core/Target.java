@@ -138,6 +138,10 @@ public class Target {
         return match;
     }
 
+    public boolean match(ScanResult result) {
+        return match(result.getBlock(), result.getMeta());
+    }
+
     public void addBlock(TBlock block) {
         if (!block.invalid() && !blocks.containsValue(block)) {
             blocks.put(count++, block);

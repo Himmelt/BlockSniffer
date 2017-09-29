@@ -2,6 +2,7 @@ package org.soraworld.sniffer.core;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -58,5 +59,13 @@ public class ScanResult {
             return target.displayName();
         }
         return stack.getDisplayName();
+    }
+
+    public Block getBlock() {
+        return player.worldObj.getBlock(x, y, z);
+    }
+
+    public Integer getMeta() {
+        return player.worldObj.getBlockMetadata(x, y, z);
     }
 }

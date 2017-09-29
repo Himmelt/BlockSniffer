@@ -137,8 +137,9 @@ public class SnifferAPI {
     }
 
     public void scanWorld(EntityPlayer player) {
-        result.found = false;
         if (current != null && player != null) {
+            if (result.found && current.match(result)) return;
+            result.found = false;
             int chunkX = player.chunkCoordX;
             int chunkZ = player.chunkCoordZ;
             int hRange = current.getHRange();
