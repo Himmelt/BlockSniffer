@@ -10,6 +10,8 @@ public final class ColorHelper {
 
     private static final TreeMap<String, Color> colorMap = new TreeMap<>();
     private static final Pattern PATTERN_COLOR = Pattern.compile("#[0-9a-fA-F]{1,6}");
+    private static ArrayList<String> names;
+
     private static final Color MCCOLOR1 = new Color(0, 0, 170);
     private static final Color MCCOLOR2 = new Color(0, 170, 0);
     private static final Color MCCOLOR3 = new Color(0, 170, 170);
@@ -165,7 +167,6 @@ public final class ColorHelper {
     private static final Color WHITESMOKE = new Color(245, 245, 245);
     private static final Color YELLOW = new Color(255, 255, 0);
     private static final Color YELLOWGREEN = new Color(154, 205, 50);
-    private static ArrayList<String> names;
 
     static {
         colorMap.put("&0", BLACK);
