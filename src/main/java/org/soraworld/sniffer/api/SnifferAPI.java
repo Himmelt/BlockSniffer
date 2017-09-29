@@ -139,15 +139,16 @@ public class SnifferAPI {
     public void scanWorld(EntityPlayer player) {
         if (current != null && player != null) {
             if (result.found && current.match(result)) return;
-            result.found = false;
             int chunkX = player.chunkCoordX;
             int chunkZ = player.chunkCoordZ;
             int hRange = current.getHRange();
             int length = Constants.RANGE.length;
+            int yl = current.getMode() == 0 ? current.getDepthL() : (int) (player.posY - current.getVRange());
+            int yh = current.getMode() == 0 ? current.getDepthH() : (int) (player.posY + current.getVRange());
             for (int i = 0; i < length && Constants.RANGE[i][0] >= -hRange && Constants.RANGE[i][0] <= hRange && Constants.RANGE[i][1] >= -hRange && Constants.RANGE[i][1] <= hRange; i++) {
                 Chunk chunk = player.getEntityWorld().getChunkFromChunkCoords(chunkX + Constants.RANGE[i][0], chunkZ + Constants.RANGE[i][1]);
                 if (!(chunk instanceof EmptyChunk)) {
-                    scanChunk(chunk, player);
+                    scanChunk(chunk, yl, yh, player);
                     if (result.found) {
                         return;
                     }
@@ -202,10 +203,8 @@ public class SnifferAPI {
         }
     }
 
-    private void scanChunk(Chunk chunk, EntityPlayer player) {
-        int yl = current.getMode() == 0 ? current.getDepthL() : (int) (player.posY - current.getVRange());
-        int yh = current.getMode() == 0 ? current.getDepthH() : (int) (player.posY + current.getVRange());
-        for (int y = yh; y > 0 && y < 255 && y >= yl; y--) {
+    private void scanChunk(Chunk chunk, int yl, int yh, EntityPlayer player) {
+        for (int y = yh; y >= 0 && y <= 255 && y >= yl; y--) {
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {
                     Block block = chunk.getBlock(x, y, z);
