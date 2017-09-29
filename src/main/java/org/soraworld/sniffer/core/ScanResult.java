@@ -1,5 +1,6 @@
 package org.soraworld.sniffer.core;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -62,5 +63,14 @@ public class ScanResult {
             return target.displayName();
         }
         return stack.getDisplayName();
+    }
+
+    public Block getBlock() {
+        return player.world.getBlockState(new BlockPos(x, y, z)).getBlock();
+    }
+
+    public Integer getMeta() {
+        IBlockState state = player.world.getBlockState(new BlockPos(x, y, z));
+        return state.getBlock().getMetaFromState(state);
     }
 }
