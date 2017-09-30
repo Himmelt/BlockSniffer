@@ -2,9 +2,7 @@ package org.soraworld.sniffer.handler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -21,20 +19,23 @@ public class EventBusHandler {
     private final SnifferAPI api = BlockSniffer.getAPI();
 
     @SubscribeEvent
-    public void onPlayerClick(PlayerInteractEvent event) {
-        if (event.getHand() == EnumHand.MAIN_HAND
-                && (event instanceof PlayerInteractEvent.LeftClickBlock
-                || event instanceof PlayerInteractEvent.RightClickBlock
-                || event instanceof PlayerInteractEvent.RightClickEmpty)
-                && api.active && api.clickTimeOut()) {
-            EntityPlayer player = event.getEntityPlayer();
-            new Thread(() -> {
-                api.scanWorld(player);
-                if (api.result.found) {
-                    GuiRender.spawnParticle(player, api.result.getV3d(), api.result.getColor(), api.config.particleDelay.get());
-                }
-            }).start();
-        }
+    public void onPlayerClick(PlayerInteractEvent.LeftClickBlock event) {
+        api.scanWorld(event.getEntityPlayer());
+    }
+
+    @SubscribeEvent
+    public void onPlayerClick(PlayerInteractEvent.RightClickBlock event) {
+        api.scanWorld(event.getEntityPlayer());
+    }
+
+    @SubscribeEvent
+    public void onPlayerClick(PlayerInteractEvent.RightClickEmpty event) {
+        api.scanWorld(event.getEntityPlayer());
+    }
+
+    @SubscribeEvent
+    public void onPlayerClick(PlayerInteractEvent.RightClickItem event) {
+        api.scanWorld(event.getEntityPlayer());
     }
 
     @SubscribeEvent
