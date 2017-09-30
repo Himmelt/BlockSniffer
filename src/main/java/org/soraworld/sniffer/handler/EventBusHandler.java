@@ -5,7 +5,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -21,18 +20,7 @@ public class EventBusHandler {
 
     @SubscribeEvent
     public void onPlayerClick(PlayerInteractEvent event) {
-        if ((event.action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK
-                || event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK
-                || event.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR)
-                && api.active && api.clickTimeOut()) {
-            EntityPlayer player = event.entityPlayer;
-            new Thread(() -> {
-                api.scanWorld(player);
-                if (api.result.found) {
-                    GuiRender.spawnParticle(player, api.result.getV3d(), api.result.getColor(), api.config.particleDelay.get());
-                }
-            }).start();
-        }
+        api.scanWorld(event.entityPlayer);
     }
 
     @SubscribeEvent

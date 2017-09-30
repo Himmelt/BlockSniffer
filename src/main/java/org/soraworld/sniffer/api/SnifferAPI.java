@@ -18,6 +18,7 @@ import org.soraworld.sniffer.constant.Constants;
 import org.soraworld.sniffer.core.ScanResult;
 import org.soraworld.sniffer.core.TBlock;
 import org.soraworld.sniffer.core.Target;
+import org.soraworld.sniffer.gui.GuiRender;
 import org.soraworld.sniffer.util.I19n;
 
 import java.io.File;
@@ -41,6 +42,7 @@ public class SnifferAPI {
     private long clickLast;
     private long guiLast;
     private File jsonFile;
+    private volatile boolean lock = false;
 
     private SnifferAPI() {
     }
@@ -59,7 +61,7 @@ public class SnifferAPI {
         mc.gameSettings.gammaSetting = config.gamma.get();
     }
 
-    public boolean clickTimeOut() {
+    private boolean clickTimeOut() {
         long time = System.currentTimeMillis();
         if (clickLast + config.scanDelay.get() < time) {
             clickLast = time;
@@ -137,23 +139,30 @@ public class SnifferAPI {
     }
 
     public void scanWorld(EntityPlayer player) {
-        if (current != null && player != null) {
-            if (result.found && current.match(result)) return;
-            int chunkX = player.chunkCoordX;
-            int chunkZ = player.chunkCoordZ;
-            int hRange = current.getHRange();
-            int length = Constants.RANGE.length;
-            int yl = current.getMode() == 0 ? current.getDepthL() : (int) (player.posY - current.getVRange());
-            int yh = current.getMode() == 0 ? current.getDepthH() : (int) (player.posY + current.getVRange());
-            for (int i = 0; i < length && Constants.RANGE[i][0] >= -hRange && Constants.RANGE[i][0] <= hRange && Constants.RANGE[i][1] >= -hRange && Constants.RANGE[i][1] <= hRange; i++) {
-                Chunk chunk = player.getEntityWorld().getChunkFromChunkCoords(chunkX + Constants.RANGE[i][0], chunkZ + Constants.RANGE[i][1]);
-                if (!(chunk instanceof EmptyChunk)) {
-                    scanChunk(chunk, yl, yh, player);
-                    if (result.found) {
-                        return;
+        if (active && !lock && clickTimeOut() && current != null && player != null) {
+            if (result.found && current.match(result)) {
+                GuiRender.spawnParticle(player, result.getV3d(), result.getColor(), config.particleDelay.get());
+                lock = false;
+                return;
+            }
+            new Thread(() -> {
+                lock = true;
+                int hRange = current.getHRange();
+                int yl = current.getMode() == 0 ? current.getDepthL() : (int) (player.posY - current.getVRange());
+                int yh = current.getMode() == 0 ? current.getDepthH() : (int) (player.posY + current.getVRange());
+                for (int i = 0; i < Constants.RANGE.length && Constants.RANGE[i][0] >= -hRange && Constants.RANGE[i][0] <= hRange && Constants.RANGE[i][1] >= -hRange && Constants.RANGE[i][1] <= hRange; i++) {
+                    Chunk chunk = player.getEntityWorld().getChunkFromChunkCoords(player.chunkCoordX + Constants.RANGE[i][0], player.chunkCoordZ + Constants.RANGE[i][1]);
+                    if (!(chunk instanceof EmptyChunk)) {
+                        scanChunk(chunk, yl, yh, player);
+                        if (result.found) {
+                            GuiRender.spawnParticle(player, result.getV3d(), result.getColor(), config.particleDelay.get());
+                            lock = false;
+                            return;
+                        }
                     }
                 }
-            }
+                lock = false;
+            }).start();
         }
     }
 
