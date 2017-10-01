@@ -141,12 +141,13 @@ public class SnifferAPI {
     public void scanWorld(EntityPlayer player) {
         if (active && !lock && clickTimeOut() && current != null && player != null) {
             if (result.found && current.match(result)) {
-                GuiRender.spawnParticle(player, result.getV3d(), result.getColor(), config.particleDelay.get());
+                GuiRender.spawnParticle(player, result.center(), result.getColor(), config.particleDelay.get());
                 lock = false;
                 return;
             }
             new Thread(() -> {
                 lock = true;
+                result.found = false;
                 int hRange = current.getHRange();
                 int yl = current.getMode() == 0 ? current.getDepthL() : (int) (player.posY - current.getVRange());
                 int yh = current.getMode() == 0 ? current.getDepthH() : (int) (player.posY + current.getVRange());
@@ -155,7 +156,7 @@ public class SnifferAPI {
                     if (!(chunk instanceof EmptyChunk)) {
                         scanChunk(chunk, yl, yh, player);
                         if (result.found) {
-                            GuiRender.spawnParticle(player, result.getV3d(), result.getColor(), config.particleDelay.get());
+                            GuiRender.spawnParticle(player, result.center(), result.getColor(), config.particleDelay.get());
                             lock = false;
                             return;
                         }

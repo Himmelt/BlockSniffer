@@ -4,10 +4,13 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
@@ -20,11 +23,11 @@ public class GuiRender {
 
     public static void renderItem(ItemStack itemStack, int x, int y) {
         //RenderHelper.enableRescaleNormal();
-        //RenderHelper.enableStandardItemLighting();
-        //RenderHelper.enableGUIStandardItemLighting();
+        RenderHelper.enableStandardItemLighting();
+        RenderHelper.enableGUIStandardItemLighting();
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
         RenderItem.getInstance().renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, itemStack, x, y);
-        //RenderHelper.disableStandardItemLighting();
+        RenderHelper.disableStandardItemLighting();
     }
 
     public static void drawRect(int x, int y, int width, int height, int color) {
@@ -50,44 +53,22 @@ public class GuiRender {
         GL11.glPopMatrix();
     }
 
-    public static void spawnParticle(EntityPlayer player, Vec3 to, Color color, int delay) {
+    public static void spawnParticle(EntityPlayer player, Vec3d to, Color color, int lifetime) {
         Vec3 look = player.getLookVec();
-        double fromX = look.xCoord + player.posX;
-        double fromY = look.yCoord + player.posY + player.getEyeHeight();
-        double fromZ = look.zCoord + player.posZ;
-        spawn(player.getEntityWorld(), fromX, fromY, fromZ, to.xCoord, to.yCoord, to.zCoord, color, delay);
+        Vec3d src = new Vec3d(look.xCoord + player.posX, look.yCoord + player.posY + player.getEyeHeight(), look.zCoord + player.posZ);
+        Vec3f rgb = new Vec3f(color.getRed() / 255.0F, color.getGreen() / 255.0F, color.getBlue() / 255.0F);
+        spawnParticle(player.getEntityWorld(), src, to, rgb, lifetime);
     }
 
-    private static void spawn(World worldObj, double fromX, double fromY, double fromZ, double toX, double toY, double toZ, Color color, int delay) {
-        spawnSingleParticle(worldObj, 0.5D + toX, 0.5D + toY, 0.5D + toZ, 1.0F, color, 0.0D, 0.0D, 0.0D, delay);
-        intSpawnParticleTrail(worldObj, fromX, fromY, fromZ, toX + 0.5D, toY + 0.5D, toZ + 0.5D, color, delay);
-    }
-
-    private static void intSpawnParticleTrail(World theWorld, double fromX, double fromY, double fromZ, double toX, double toY, double toZ, Color color, int delay) {
-        double dx = toX - fromX;
-        double dy = toY - fromY;
-        double dz = toZ - fromZ;
+    private static void spawnParticle(World world, Vec3d src, Vec3d to, Vec3f rgb, int lifetime) {
+        mc.effectRenderer.addEffect(new ParticleFX(world, src, to, rgb, lifetime));
+        double dx = to.x - src.x;
+        double dy = to.y - src.y;
+        double dz = to.z - src.z;
         double steps = Math.max(Math.abs(dx), Math.max(Math.abs(dy), Math.abs(dz))) * 3.0D;
-        double dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-        double strength = 0.8D;
-        double ds = strength / 30.0D;
-        double vx = dx / dist * 0.015D;
-        double vy = dy / dist * 0.015D;
-        double vz = dz / dist * 0.015D;
-
         for (int i = 0; i < steps; ++i) {
-            double x = fromX + dx / steps * i;
-            double y = fromY + dy / steps * i;
-            double z = fromZ + dz / steps * i;
-            strength -= ds;
-            if (strength < 0.2D) {
-                strength = 0.2D;
-            }
-            spawnSingleParticle(theWorld, x, y, z, (float) strength, color, vx, vy, vz, delay);
+            Vec3d from = new Vec3d(src.x + dx / steps * i, src.y + dy / steps * i, src.z + dz / steps * i);
+            mc.effectRenderer.addEffect(new ParticleFX(world, from, to, rgb, lifetime));
         }
-    }
-
-    private static void spawnSingleParticle(World theWorld, double x, double y, double z, float alpha, Color color, double vx, double vy, double vz, int delay) {
-        mc.effectRenderer.addEffect(new ParticleFX(theWorld, x, y, z, vx, vy, vz, color, alpha, delay));
     }
 }

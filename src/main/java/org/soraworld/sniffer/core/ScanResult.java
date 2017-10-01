@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 
 import java.awt.*;
 
@@ -20,8 +20,8 @@ public class ScanResult {
     private int x, y, z;
     private ItemStack stack = new ItemStack(Blocks.air);
 
-    public Vec3 getV3d() {
-        return Vec3.createVectorHelper(x, y, z);
+    public Vec3d center() {
+        return new Vec3d(x + 0.5, y + 0.5, z + 0.5);
     }
 
     public double getDistance() {
