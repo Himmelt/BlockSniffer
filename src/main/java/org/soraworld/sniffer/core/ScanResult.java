@@ -21,8 +21,8 @@ public class ScanResult {
     private int x, y, z;
     private ItemStack stack = new ItemStack(Items.AIR);
 
-    public Vec3d getV3d() {
-        return new Vec3d(x, y, z);
+    public Vec3d center() {
+        return new Vec3d(x + 0.5, y + 0.5, z + 0.5);
     }
 
     public double getDistance() {
