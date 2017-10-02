@@ -31,6 +31,7 @@ public class Target {
     private int index;
     private int count;
     private String color;
+    private String display;
 
     private Target(List<TBlock> blocks) {
         this.blocks.clear();
@@ -116,8 +117,9 @@ public class Target {
         return ColorHelper.getColor(color);
     }
 
-    public void setColor(String color) {
+    public Target setColor(String color) {
         this.color = color;
+        return this;
     }
 
     public boolean match(Block blk, int meta) {
@@ -187,7 +189,18 @@ public class Target {
         return blocks.get(index);
     }
 
+    public Target setDisplay(String display) {
+        this.display = display;
+        return this;
+    }
+
+    public String getDisplay() {
+        if (display == null || display.isEmpty()) return "NULL";
+        return display;
+    }
+
     public String displayName() {
+        if (display != null && !display.isEmpty()) return display;
         return getDelegate().getName();
     }
 
@@ -210,6 +223,7 @@ public class Target {
 
     @Override
     public String toString() {
+        if (display != null) return display + "->" + getDelegate().toString();
         return getDelegate().toString();
     }
 
@@ -226,6 +240,7 @@ public class Target {
                     return;
                 }
                 out.beginObject();
+                if (target.display != null && !target.display.isEmpty()) out.name("display").value(target.display);
                 out.name("blocks");
                 out.beginArray();
                 for (TBlock block : target.blocks.values()) {
@@ -250,10 +265,13 @@ public class Target {
             try {
                 List<TBlock> blocks = new ArrayList<>();
                 int mode = 0, depth0 = 0, depth1 = 64, hRange = 1, vRange = 16;
-                String color = "map";
+                String color = "map", display = null;
                 in.beginObject();
                 while (in.hasNext()) {
                     switch (in.nextName()) {
+                        case "display":
+                            display = in.nextString();
+                            break;
                         case "blocks":
                             in.beginArray();
                             while (in.hasNext()) {
@@ -286,7 +304,7 @@ public class Target {
                 if (target.invalid()) {
                     return null;
                 }
-                target.setMode(mode).setDepth(depth0, depth1).setHRange(hRange).setVRange(vRange).setColor(color);
+                target.setDisplay(display).setMode(mode).setDepth(depth0, depth1).setHRange(hRange).setVRange(vRange).setColor(color);
                 in.endObject();
             } catch (Exception e) {
                 e.printStackTrace();
