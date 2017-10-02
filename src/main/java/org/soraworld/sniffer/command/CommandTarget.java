@@ -29,7 +29,7 @@ public class CommandTarget extends IICommand {
                     } else {
                         if (args.get(0).equals("null")) {
                             api.current.setDisplay(null);
-                            I19n.sendChat("sf.target.n.cla");
+                            I19n.sendChat("sf.target.n.nul");
                         } else {
                             api.current.setDisplay(args.get(0));
                             I19n.sendChat("sf.target.n.set", api.current.getDisplay());
