@@ -3,7 +3,6 @@ package org.soraworld.sniffer.gui;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,11 +22,35 @@ public class GuiRender {
 
     public static void renderItem(ItemStack itemStack, int x, int y) {
         //RenderHelper.enableRescaleNormal();
+        //RenderHelper.enableStandardItemLighting();
+        //RenderHelper.enableGUIStandardItemLighting();
+        //OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
+        //RenderItem.getInstance().renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, itemStack, x, y);
+        //RenderHelper.disableStandardItemLighting();
+
+        GL11.glEnable(2929);
+        GL11.glPushMatrix();
+        GL11.glRotatef(120.0F, 1.0F, 0.0F, 0.0F);
         RenderHelper.enableStandardItemLighting();
-        RenderHelper.enableGUIStandardItemLighting();
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
-        RenderItem.getInstance().renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, itemStack, x, y);
-        RenderHelper.disableStandardItemLighting();
+        GL11.glPopMatrix();
+        GL11.glPushMatrix();
+        GL11.glTranslatef(x, y, 0.0F);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glEnable(32826);
+        RenderItem.getInstance().zLevel = 100.0F;
+
+        try {
+            RenderItem.getInstance().renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, itemStack, 0, 0);
+        } catch (RuntimeException ignored) {
+        } finally {
+            RenderItem.getInstance().zLevel = 0.0F;
+            GL11.glDisable(32826);
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderHelper.disableStandardItemLighting();
+            GL11.glDisable(2929);
+            GL11.glDisable(2896);
+            GL11.glPopMatrix();
+        }
     }
 
     public static void drawRect(int x, int y, int width, int height, int color) {
