@@ -29,6 +29,9 @@ sf.help.target.cla=Use&e confirm &rto confirm /sf t cla confirm
 sf.help.add=Usage: /sf t/sub add <name|id|hold|look> [meta] [0-15]
 
 sf.target.info=current: mode[&a%d&r] color[&a%s&r] depth[&a%d&r - &a%d&r] h range[&a%d&r chunk] v range[&a%d&r block]
+sf.target.n.get=current display: &a%s
+sf.target.n.set=set current display to: &a%s
+sf.target.n.nul=current display was cleared.
 sf.target.m.get=current mode: &a%s
 sf.target.m.set=set current mode to: &a%s
 sf.target.h.get=current horizontal range: &a%d&r chunk
