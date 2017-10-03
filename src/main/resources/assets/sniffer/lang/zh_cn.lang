@@ -29,6 +29,9 @@ sf.help.target.cla=使用&e confirm &r以确认 /sf t cla confirm
 sf.help.add=用法: /sf t/sub add <name|id|hold|look> [meta] [0-15]
 
 sf.target.info=当前: 模式[&a%d&r] 颜色[&a%s&r] 深度[&a%d&r - &a%d&r] 水平[&a%d&r 区块] 垂直[&a%d&r 方块]
+sf.target.n.get=当前显示名: &a%s
+sf.target.n.set=当前显示名设置为: &a%s
+sf.target.n.nul=当前显示名已清除.
 sf.target.m.get=当前探测模式: &a%s
 sf.target.m.set=当前探测模式设置为: &a%s
 sf.target.h.get=当前水平探测半径: &a%d&r 区块

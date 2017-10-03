@@ -63,7 +63,7 @@ public class GuiRender {
         double dx = to.xCoord - src.xCoord;
         double dy = to.yCoord - src.yCoord;
         double dz = to.zCoord - src.zCoord;
-        double steps = Math.max(Math.abs(dx), Math.max(Math.abs(dy), Math.abs(dz))) * 3.0D;
+        double steps = Math.max(Math.abs(dx), Math.max(Math.abs(dy), Math.abs(dz))) * 1.5D;
         for (int i = 0; i < steps; ++i) {
             Vec3d from = new Vec3d(src.xCoord + dx / steps * i, src.yCoord + dy / steps * i, src.zCoord + dz / steps * i);
             mc.effectRenderer.addEffect(new ParticleFX(world, from, to, rgb, lifetime));
