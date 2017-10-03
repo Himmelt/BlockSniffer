@@ -7,6 +7,7 @@ import net.minecraft.command.ICommandSender;
 import org.soraworld.sniffer.constant.Constants;
 import org.soraworld.sniffer.util.ColorHelper;
 import org.soraworld.sniffer.util.I19n;
+import org.soraworld.sniffer.util.Lists;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -18,6 +19,31 @@ public class CommandTarget extends IICommand {
     public CommandTarget() {
         super("target", "t");
         addSub(new CommandAdd(this));
+        addSub(new IICommand("name", "n") {
+            @Override
+            public void execute(ICommandSender sender, ArrayList<String> args) {
+                if (api.active && api.current != null) {
+                    if (args.isEmpty()) {
+                        I19n.sendChat("sf.target.n.get", api.current.getDisplay());
+                    } else {
+                        if (args.get(0).equals("null")) {
+                            api.current.setDisplay(null);
+                            I19n.sendChat("sf.target.n.nul");
+                        } else {
+                            api.current.setDisplay(args.get(0));
+                            I19n.sendChat("sf.target.n.set", api.current.getDisplay());
+                        }
+                    }
+                } else {
+                    I19n.sendChat("sf.target.not");
+                }
+            }
+
+            @Override
+            protected List<String> getTabCompletions(ICommandSender sender, ArrayList<String> args) {
+                return Lists.arrayList("null");
+            }
+        });
         addSub(new IICommand("info", "i") {
             @Override
             public void execute(ICommandSender sender, ArrayList<String> args) {

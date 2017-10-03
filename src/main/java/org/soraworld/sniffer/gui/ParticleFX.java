@@ -2,13 +2,13 @@ package org.soraworld.sniffer.gui;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.particle.EntityAuraFX;
+import net.minecraft.client.particle.EntityFX;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
 
 @SideOnly(Side.CLIENT)
-class ParticleFX extends EntityAuraFX {
+class ParticleFX extends EntityFX {
 
     private final Vec3d destination;
 
@@ -17,6 +17,7 @@ class ParticleFX extends EntityAuraFX {
         this.particleRed = rgb.x;
         this.particleGreen = rgb.y;
         this.particleBlue = rgb.z;
+        this.particleAlpha = 0.8F;
         this.setParticleTextureIndex(147);
         this.setSize(0.02F, 0.02F);
         this.particleScale = 1.0F;
@@ -27,10 +28,9 @@ class ParticleFX extends EntityAuraFX {
         double dy = to.y - from.y;
         double dz = to.z - from.z;
         double dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-        double vx = dx / dist * 0.015D;
-        double vy = dy / dist * 0.015D;
-        double vz = dz / dist * 0.015D;
-        this.setVelocity(vx, vy, vz);
+        this.motionX = dx / dist * 0.01D;
+        this.motionY = dy / dist * 0.01D;
+        this.motionZ = dz / dist * 0.01D;
     }
 
     @Override
@@ -38,7 +38,9 @@ class ParticleFX extends EntityAuraFX {
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
-        this.moveEntity(this.motionX, this.motionY, this.motionZ);
+        this.posX += this.motionX;
+        this.posY += this.motionY;
+        this.posZ += this.motionZ;
         if (this.particleMaxAge-- <= 0) {
             this.setDead();
         }
