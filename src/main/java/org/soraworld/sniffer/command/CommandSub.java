@@ -4,27 +4,34 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.soraworld.sniffer.api.SnifferAPI;
 import org.soraworld.sniffer.constant.Constants;
 import org.soraworld.sniffer.core.TBlock;
 import org.soraworld.sniffer.util.I19n;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Map;
 
+@Component
+@Qualifier("sub")
 @SideOnly(Side.CLIENT)
 public class CommandSub extends IICommand {
 
-    public CommandSub() {
-        super("sub");
-        addSub(new CommandAdd(this));
-        addSub(new IICommand("list", "l") {
+    @Autowired
+    public CommandSub(SnifferAPI api) {
+        super(api, "sub");
+        addSub(new CommandAdd(api, this));
+        addSub(new IICommand(api, "list", "l") {
             @Override
             public void execute(ICommandSender sender, ArrayList<String> args) {
                 showSubList(0);
             }
         });
-        addSub(new IICommand("remove", "rm") {
+        addSub(new IICommand(api, "remove", "rm") {
             @Override
             public void execute(ICommandSender sender, ArrayList<String> args) {
                 if (args.size() >= 1) {

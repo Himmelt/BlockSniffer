@@ -6,10 +6,9 @@ import com.google.gson.stream.JsonWriter;
 import net.minecraft.block.Block;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.soraworld.sniffer.BlockSniffer;
-import org.soraworld.sniffer.api.SnifferAPI;
 import org.soraworld.sniffer.util.ColorHelper;
 import org.soraworld.sniffer.util.I19n;
+import org.springframework.stereotype.Component;
 
 import java.awt.*;
 import java.io.IOException;
@@ -22,7 +21,6 @@ import java.util.Map.Entry;
 public class Target {
 
     private final HashMap<Integer, TBlock> blocks = new HashMap<>();
-    private final SnifferAPI api = BlockSniffer.getAPI();
     private int mode;
     private int depthL;
     private int depthH;
@@ -32,6 +30,7 @@ public class Target {
     private int count;
     private String color;
     private String display;
+    private boolean isEmpty;
 
     private Target(List<TBlock> blocks) {
         this.blocks.clear();
@@ -161,11 +160,16 @@ public class Target {
                 }
             } else {
                 I19n.sendChat("sf.sub.rm.t");
-                api.removeTarget();
+                //api.removeTarget();
+                markEmpty();
             }
         } else {
             I19n.sendChat("sf.sub.rm.fail");
         }
+    }
+
+    private void markEmpty() {
+        this.isEmpty = true;
     }
 
     private void loop() {
@@ -227,6 +231,7 @@ public class Target {
         return getDelegate().toString();
     }
 
+    @Component
     public static class Adapter extends TypeAdapter<Target> {
 
         private static final TBlock.Adapter BLOCK_ADAPTER = new TBlock.Adapter();

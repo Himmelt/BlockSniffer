@@ -7,7 +7,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.soraworld.sniffer.BlockSniffer;
 import org.soraworld.sniffer.api.SnifferAPI;
 import org.soraworld.sniffer.util.I19n;
 import org.soraworld.sniffer.util.Lists;
@@ -22,15 +21,11 @@ public abstract class IICommand implements ICommand {
 
     private final String name;
     private final List<String> aliases;
-    protected final SnifferAPI api = BlockSniffer.getAPI();
+    protected final SnifferAPI api;
     protected final TreeMap<String, IICommand> subMap = new TreeMap<>();
 
-    private IICommand() {
-        name = "invalid";
-        aliases = new ArrayList<>();
-    }
-
-    public IICommand(String name, String... aliases) {
+    public IICommand(SnifferAPI api, String name, String... aliases) {
+        this.api = api;
         this.name = name;
         this.aliases = Lists.arrayList(aliases);
     }

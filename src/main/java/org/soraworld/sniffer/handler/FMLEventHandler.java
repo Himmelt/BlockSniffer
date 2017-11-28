@@ -7,15 +7,23 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToSe
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.soraworld.sniffer.BlockSniffer;
 import org.soraworld.sniffer.api.SnifferAPI;
 import org.soraworld.sniffer.constant.Constants;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 @SideOnly(Side.CLIENT)
 public class FMLEventHandler {
 
-    private static final Minecraft mc = Minecraft.getMinecraft();
-    private final SnifferAPI api = BlockSniffer.getAPI();
+    private final Minecraft mc;
+    private final SnifferAPI api;
+
+    @Autowired
+    public FMLEventHandler(Minecraft mc, SnifferAPI api) {
+        this.mc = mc;
+        this.api = api;
+    }
 
     @SubscribeEvent
     public void onKeyInput(KeyInputEvent event) {

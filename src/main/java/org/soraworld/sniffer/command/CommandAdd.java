@@ -12,6 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
+import org.soraworld.sniffer.api.SnifferAPI;
 import org.soraworld.sniffer.constant.Constants;
 import org.soraworld.sniffer.core.TBlock;
 import org.soraworld.sniffer.core.Target;
@@ -27,8 +28,8 @@ public class CommandAdd extends IICommand {
     private final IICommand parent;
     private static final List<String> list = getAddMatchList();
 
-    public CommandAdd(IICommand parent) {
-        super("add");
+    public CommandAdd(SnifferAPI api, IICommand parent) {
+        super(api, "add");
         this.parent = parent;
     }
 

@@ -1,18 +1,15 @@
 package org.soraworld.sniffer.api;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.EmptyChunk;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.soraworld.sniffer.config.Config;
 import org.soraworld.sniffer.constant.Constants;
@@ -21,19 +18,23 @@ import org.soraworld.sniffer.core.TBlock;
 import org.soraworld.sniffer.core.Target;
 import org.soraworld.sniffer.gui.GuiRender;
 import org.soraworld.sniffer.util.I19n;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@Component
 @SideOnly(Side.CLIENT)
 public class SnifferAPI {
 
-    private static final Gson GSON = new GsonBuilder().registerTypeAdapter(Target.class, new Target.Adapter()).registerTypeAdapter(TBlock.class, new TBlock.Adapter()).setPrettyPrinting().create();
+    private final Minecraft mc;
+    private final Gson gson;
+    private final Logger logger;
+
     public final ScanResult result = new ScanResult();
-    public final Logger LOGGER = LogManager.getLogger(Constants.NAME);
-    private final Minecraft mc = Minecraft.getMinecraft();
     private final HashMap<Integer, Target> targets = new HashMap<>();
     public Config config;
     public Target current;
@@ -45,12 +46,16 @@ public class SnifferAPI {
     private File jsonFile;
     private volatile boolean lock = false;
 
-    private SnifferAPI() {
+    @Autowired
+    public SnifferAPI(Minecraft mc, Gson gson, Logger logger) {
+        this.mc = mc;
+        this.gson = gson;
+        this.logger = logger;
     }
 
-    public SnifferAPI(File cfgDir) {
-        config = new Config(cfgDir);
-        jsonFile = new File(new File(cfgDir, Constants.MODID), "target.json");
+    public void setConfigPath(File path, String name) {
+        config = new Config(path);
+        jsonFile = new File(new File(path, Constants.MODID), name);
     }
 
     public double getGamma() {
@@ -87,9 +92,9 @@ public class SnifferAPI {
         config.reload();
         List<Target> list = new ArrayList<>();
         try {
-            list = GSON.fromJson(FileUtils.readFileToString(jsonFile, "UTF-8"), Constants.LIST_TARGET);
+            list = gson.fromJson(FileUtils.readFileToString(jsonFile, "UTF-8"), Constants.LIST_TARGET);
         } catch (Exception e) {
-            LOGGER.catching(e);
+            logger.catching(e);
         } finally {
             targets.clear();
             count = 0;
@@ -102,17 +107,17 @@ public class SnifferAPI {
             reset();
         }
         setGamma(-1);
-        LOGGER.info("config reloaded!");
+        logger.info("config reloaded!");
     }
 
     public void save() {
         config.save();
         try {
             jsonFile.delete();
-            FileUtils.writeStringToFile(jsonFile, GSON.toJson(targets.values()), "UTF-8");
-            LOGGER.info("config saved.");
+            FileUtils.writeStringToFile(jsonFile, gson.toJson(targets.values()), "UTF-8");
+            logger.info("config saved.");
         } catch (Exception e) {
-            LOGGER.catching(e);
+            logger.catching(e);
         }
     }
 
@@ -139,10 +144,10 @@ public class SnifferAPI {
         }
     }
 
-    public void scanWorld(EntityPlayer player) {
-        if (active && !lock && clickTimeOut() && current != null && player != null) {
+    public void scanWorld() {
+        if (active && !lock && clickTimeOut() && current != null && mc.player != null) {
             if (result.found && current.match(result)) {
-                GuiRender.spawnParticle(player, result.center(), result.getColor(), config.particleDelay.get());
+                GuiRender.spawnParticle(mc.player, result.center(), result.getColor(), config.particleDelay.get());
                 lock = false;
                 return;
             }
@@ -150,14 +155,14 @@ public class SnifferAPI {
                 lock = true;
                 result.found = false;
                 int hRange = current.getHRange();
-                int yl = current.getMode() == 0 ? current.getDepthL() : (int) (player.posY - current.getVRange());
-                int yh = current.getMode() == 0 ? current.getDepthH() : (int) (player.posY + current.getVRange());
+                int yl = current.getMode() == 0 ? current.getDepthL() : (int) (mc.player.posY - current.getVRange());
+                int yh = current.getMode() == 0 ? current.getDepthH() : (int) (mc.player.posY + current.getVRange());
                 for (int i = 0; i < Constants.RANGE.length && Constants.RANGE[i][0] >= -hRange && Constants.RANGE[i][0] <= hRange && Constants.RANGE[i][1] >= -hRange && Constants.RANGE[i][1] <= hRange; i++) {
-                    Chunk chunk = player.getEntityWorld().getChunkFromChunkCoords(player.chunkCoordX + Constants.RANGE[i][0], player.chunkCoordZ + Constants.RANGE[i][1]);
+                    Chunk chunk = mc.player.getEntityWorld().getChunkFromChunkCoords(mc.player.chunkCoordX + Constants.RANGE[i][0], mc.player.chunkCoordZ + Constants.RANGE[i][1]);
                     if (!(chunk instanceof EmptyChunk)) {
-                        scanChunk(chunk, yl, yh, player);
+                        scanChunk(chunk, yl, yh);
                         if (result.found) {
-                            GuiRender.spawnParticle(player, result.center(), result.getColor(), config.particleDelay.get());
+                            GuiRender.spawnParticle(mc.player, result.center(), result.getColor(), config.particleDelay.get());
                             lock = false;
                             return;
                         }
@@ -214,7 +219,7 @@ public class SnifferAPI {
         }
     }
 
-    private void scanChunk(Chunk chunk, int yl, int yh, EntityPlayer player) {
+    private void scanChunk(Chunk chunk, int yl, int yh) {
         for (int y = yh; y >= 0 && y <= 255 && y >= yl; y--) {
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {
@@ -227,7 +232,7 @@ public class SnifferAPI {
                     if (current.match(block, meta)) {
                         int blockX = chunk.x * 16 + x;
                         int blockZ = chunk.z * 16 + z;
-                        result.update(player, current, blockX, y, blockZ);
+                        result.update(mc.player, current, blockX, y, blockZ);
                         return;
                     }
                 }

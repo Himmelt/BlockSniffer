@@ -1,5 +1,6 @@
 package org.soraworld.sniffer;
 
+import net.minecraft.command.ICommand;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -14,6 +15,8 @@ import org.soraworld.sniffer.command.CommandSniffer;
 import org.soraworld.sniffer.constant.Constants;
 import org.soraworld.sniffer.handler.EventBusHandler;
 import org.soraworld.sniffer.handler.FMLEventHandler;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 @Mod(
         modid = Constants.MODID,
@@ -24,22 +27,29 @@ import org.soraworld.sniffer.handler.FMLEventHandler;
 @SideOnly(Side.CLIENT)
 public class BlockSniffer {
 
-    private static SnifferAPI api;
+    private final SnifferAPI api;
+    private final ICommand command;
+    private final FMLEventHandler fmlHandler;
+    private final EventBusHandler busHandler;
 
-    public static SnifferAPI getAPI() {
-        return api;
+    public BlockSniffer() {
+        ApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
+        this.api = context.getBean(SnifferAPI.class);
+        this.command = context.getBean(CommandSniffer.class);
+        this.fmlHandler = context.getBean(FMLEventHandler.class);
+        this.busHandler = context.getBean(EventBusHandler.class);
     }
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        api = new SnifferAPI(event.getModConfigurationDirectory());
+        api.setConfigPath(event.getModConfigurationDirectory(), "targets.json");
         ClientRegistry.registerKeyBinding(Constants.KEY_SWITCH);
-        ClientCommandHandler.instance.registerCommand(new CommandSniffer());
+        ClientCommandHandler.instance.registerCommand(command);
     }
 
     @EventHandler
     public void Init(FMLInitializationEvent event) {
-        MinecraftForge.EVENT_BUS.register(new EventBusHandler());
-        MinecraftForge.EVENT_BUS.register(new FMLEventHandler());
+        MinecraftForge.EVENT_BUS.register(fmlHandler);
+        MinecraftForge.EVENT_BUS.register(busHandler);
     }
 }

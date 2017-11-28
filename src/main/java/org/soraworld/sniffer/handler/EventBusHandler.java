@@ -8,34 +8,42 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.soraworld.sniffer.BlockSniffer;
 import org.soraworld.sniffer.api.SnifferAPI;
 import org.soraworld.sniffer.gui.GuiRender;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 @SideOnly(Side.CLIENT)
 public class EventBusHandler {
 
-    private static final Minecraft mc = Minecraft.getMinecraft();
-    private final SnifferAPI api = BlockSniffer.getAPI();
+    private final Minecraft mc;
+    private final SnifferAPI api;
+
+    @Autowired
+    public EventBusHandler(Minecraft mc, SnifferAPI api) {
+        this.mc = mc;
+        this.api = api;
+    }
 
     @SubscribeEvent
     public void onPlayerClick(PlayerInteractEvent.LeftClickBlock event) {
-        api.scanWorld(event.getEntityPlayer());
+        api.scanWorld();
     }
 
     @SubscribeEvent
     public void onPlayerClick(PlayerInteractEvent.RightClickBlock event) {
-        api.scanWorld(event.getEntityPlayer());
+        api.scanWorld();
     }
 
     @SubscribeEvent
     public void onPlayerClick(PlayerInteractEvent.RightClickEmpty event) {
-        api.scanWorld(event.getEntityPlayer());
+        api.scanWorld();
     }
 
     @SubscribeEvent
     public void onPlayerClick(PlayerInteractEvent.RightClickItem event) {
-        api.scanWorld(event.getEntityPlayer());
+        api.scanWorld();
     }
 
     @SubscribeEvent

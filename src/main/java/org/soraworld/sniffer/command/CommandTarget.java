@@ -4,23 +4,30 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.soraworld.sniffer.api.SnifferAPI;
 import org.soraworld.sniffer.constant.Constants;
 import org.soraworld.sniffer.util.ColorHelper;
 import org.soraworld.sniffer.util.I19n;
 import org.soraworld.sniffer.util.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
+@Qualifier("target")
 @SideOnly(Side.CLIENT)
 public class CommandTarget extends IICommand {
 
-    public CommandTarget() {
-        super("target", "t");
-        addSub(new CommandAdd(this));
-        addSub(new IICommand("name", "n") {
+    @Autowired
+    public CommandTarget(SnifferAPI api) {
+        super(api, "target", "t");
+        addSub(new CommandAdd(api, this));
+        addSub(new IICommand(api, "name", "n") {
             @Override
             public void execute(ICommandSender sender, ArrayList<String> args) {
                 if (api.active && api.current != null) {
@@ -45,7 +52,7 @@ public class CommandTarget extends IICommand {
                 return Lists.arrayList("null");
             }
         });
-        addSub(new IICommand("info", "i") {
+        addSub(new IICommand(api, "info", "i") {
             @Override
             public void execute(ICommandSender sender, ArrayList<String> args) {
                 if (api.active && api.current != null) {
@@ -56,7 +63,7 @@ public class CommandTarget extends IICommand {
                 }
             }
         });
-        addSub(new IICommand("mode", "m") {
+        addSub(new IICommand(api, "mode", "m") {
             @Override
             public void execute(ICommandSender sender, ArrayList<String> args) {
                 if (api.active && api.current != null) {
@@ -78,7 +85,7 @@ public class CommandTarget extends IICommand {
                 }
             }
         });
-        addSub(new IICommand("hrange", "h") {
+        addSub(new IICommand(api, "hrange", "h") {
             @Override
             public void execute(ICommandSender sender, ArrayList<String> args) {
                 if (api.active && api.current != null) {
@@ -97,7 +104,7 @@ public class CommandTarget extends IICommand {
                 }
             }
         });
-        addSub(new IICommand("vrange", "v") {
+        addSub(new IICommand(api, "vrange", "v") {
             @Override
             public void execute(ICommandSender sender, ArrayList<String> args) {
                 if (api.active && api.current != null) {
@@ -116,7 +123,7 @@ public class CommandTarget extends IICommand {
                 }
             }
         });
-        addSub(new IICommand("depth", "d") {
+        addSub(new IICommand(api, "depth", "d") {
             @Override
             public void execute(ICommandSender sender, ArrayList<String> args) {
                 if (api.active && api.current != null) {
@@ -137,7 +144,7 @@ public class CommandTarget extends IICommand {
                 }
             }
         });
-        addSub(new IICommand("color", "c") {
+        addSub(new IICommand(api, "color", "c") {
             @Override
             public void execute(ICommandSender sender, ArrayList<String> args) {
                 if (api.active && api.current != null) {
@@ -169,7 +176,7 @@ public class CommandTarget extends IICommand {
                 return ColorHelper.getNames();
             }
         });
-        addSub(new IICommand("clear", "cla") {
+        addSub(new IICommand(api, "clear", "cla") {
             @Override
             public void execute(ICommandSender sender, ArrayList<String> args) {
                 if (args.isEmpty()) {
@@ -183,7 +190,7 @@ public class CommandTarget extends IICommand {
                 }
             }
         });
-        addSub(new IICommand("remove", "rm") {
+        addSub(new IICommand(api, "remove", "rm") {
             @Override
             public void execute(ICommandSender sender, ArrayList<String> args) {
                 if (api.active && api.current != null) {
