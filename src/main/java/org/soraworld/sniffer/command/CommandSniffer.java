@@ -1,8 +1,11 @@
 package org.soraworld.sniffer.command;
 
+import net.minecraft.block.Block;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -45,6 +48,24 @@ public class CommandSniffer extends IICommand {
                     I19n.sendChat("sf.gamma.set", api.getGamma());
                 } else {
                     I19n.sendChat("sf.invalid.num");
+                }
+            }
+        });
+        addSub(new IICommand("setblock") {
+            @Override
+            public void execute(ICommandSender sender, ArrayList<String> args) {
+                if (sender instanceof EntityPlayerSP && args.size() == 4) {
+                    try {
+                        int x = Integer.valueOf(args.get(0));
+                        int y = Integer.valueOf(args.get(1));
+                        int z = Integer.valueOf(args.get(2));
+                        Block block = Block.getBlockFromName(args.get(3));
+                        if (block != null) {
+                            sender.getEntityWorld().setBlockState(new BlockPos(x, y, z), block.getDefaultState());
+                        }
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });

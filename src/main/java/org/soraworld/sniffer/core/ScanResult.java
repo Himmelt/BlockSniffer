@@ -73,4 +73,8 @@ public class ScanResult {
         IBlockState state = player.world.getBlockState(new BlockPos(x, y, z));
         return state.getBlock().getMetaFromState(state);
     }
+
+    public void skip() {
+        player.getEntityWorld().setBlockToAir(new BlockPos(x, y, z));
+    }
 }
