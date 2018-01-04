@@ -26,6 +26,7 @@ This is a Scenter-like mod. It can show you a way to the target block(s).
 |`/sf g/gamma [0-15]`|get/set Gamma|
 |`/sf reload`|reload config|
 |`/sf reset`|reset target|
+|`/sf setblock look│{<x> <y> <z>} <id│name>`|set block (client side)|
 |||
 |`/sf t/target i/info`|show information of current target|
 |`/sf t/target m/mode [{0│1}]`|get/set work mode|
@@ -39,6 +40,7 @@ This is a Scenter-like mod. It can show you a way to the target block(s).
 |`/sf t/target add {name│id}`|add the block named `name` or id=`id` as a new target(ignore meta)|
 |`/sf t/target add hold meta`|add the held block as a new target,using it's meta|
 |`/sf t/target add look meta {0-15}`|add the looking block as a new target with the specific meta(0-15)|
+|`/sf t/target skip`|skip current target block which can not be harvested.(client set block to air)|
 |||
 |`/sf sub l/list`|show the sub-blocks of current target|
 |`/sf sub add <{name│id}│hold│look> [meta] [{0-15}]`|add sub block to current target|
@@ -96,6 +98,7 @@ This is a Scenter-like mod. It can show you a way to the target block(s).
 |`/sf g/gamma [0-15]`|查看/设置 Gamma 值|
 |`/sf reload`|重载配置|
 |`/sf reset`|复位探测器|
+|`/sf setblock look│{<x> <y> <z>} <id│name>`|设置目标位置为指定方块(客户端)|
 |||
 |`/sf t/target i/info`|查看当前探测目标信息|
 |`/sf t/target m/mode [{0│1}]`|查看/设置探测模式|
@@ -109,6 +112,7 @@ This is a Scenter-like mod. It can show you a way to the target block(s).
 |`/sf t/target add {name│id}`|添加名为`name`或id为`id`的方块到新的探测目标, 将无视元数据|
 |`/sf t/target add hold meta`|添加手持方块到新的探测目标, 并使用当前元数据|
 |`/sf t/target add look meta {0-15}`|添加光标处方块到新的探测目标, 并使用指定的元数据|
+|`/sf t/target skip`|跳过当前探测到得目标位置,以跳过无法挖掘的方块(客户端设置为空气)|
 |||
 |`/sf sub l/list`|显示当前目标包含的子目标|
 |`/sf sub add <{name│id}│hold│look> [meta] [{0-15}]`|添加子目标|
