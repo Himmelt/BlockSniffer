@@ -53,19 +53,19 @@ public class GuiRender {
 
     public static void spawnParticle(EntityPlayer player, Vec3d to, Color color, int lifetime) {
         Vec3d look = player.getLookVec();
-        Vec3d src = new Vec3d(look.x + player.posX, look.y + player.posY + player.getEyeHeight(), look.z + player.posZ);
+        Vec3d src = new Vec3d(look.xCoord + player.posX, look.yCoord + player.posY + player.getEyeHeight(), look.zCoord + player.posZ);
         Vec3f rgb = new Vec3f(color.getRed() / 255.0F, color.getGreen() / 255.0F, color.getBlue() / 255.0F);
         spawnParticle(player.getEntityWorld(), src, to, rgb, lifetime);
     }
 
     private static void spawnParticle(World world, Vec3d src, Vec3d to, Vec3f rgb, int lifetime) {
         mc.effectRenderer.addEffect(new ParticleFX(world, src, to, rgb, lifetime));
-        double dx = to.x - src.x;
-        double dy = to.y - src.y;
-        double dz = to.z - src.z;
+        double dx = to.xCoord - src.xCoord;
+        double dy = to.yCoord - src.yCoord;
+        double dz = to.zCoord - src.zCoord;
         double steps = Math.max(Math.abs(dx), Math.max(Math.abs(dy), Math.abs(dz))) * 1.5D;
         for (int i = 0; i < steps; ++i) {
-            Vec3d from = new Vec3d(src.x + dx / steps * i, src.y + dy / steps * i, src.z + dz / steps * i);
+            Vec3d from = new Vec3d(src.xCoord + dx / steps * i, src.yCoord + dy / steps * i, src.zCoord + dz / steps * i);
             mc.effectRenderer.addEffect(new ParticleFX(world, from, to, rgb, lifetime));
         }
     }

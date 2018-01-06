@@ -89,7 +89,7 @@ public class SnifferAPI {
         try {
             list = GSON.fromJson(FileUtils.readFileToString(jsonFile, "UTF-8"), Constants.LIST_TARGET);
         } catch (Exception e) {
-            LOGGER.catching(e);
+            LOGGER.info("targets.json doesn't exist!");
         } finally {
             targets.clear();
             count = 0;
@@ -225,8 +225,8 @@ public class SnifferAPI {
                     }
                     int meta = block.getMetaFromState(state);
                     if (current.match(block, meta)) {
-                        int blockX = chunk.x * 16 + x;
-                        int blockZ = chunk.z * 16 + z;
+                        int blockX = chunk.xPosition * 16 + x;
+                        int blockZ = chunk.zPosition * 16 + z;
                         result.update(player, current, blockX, y, blockZ);
                         return;
                     }
