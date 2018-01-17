@@ -192,6 +192,14 @@ public class CommandTarget extends IICommand {
                 }
             }
         });
+        addSub(new IICommand("skip") {
+            @Override
+            public void execute(ICommandSender sender, ArrayList<String> args) {
+                if (api.active && api.current != null && api.result != null) {
+                    api.result.skip();
+                }
+            }
+        });
     }
 
     @Override

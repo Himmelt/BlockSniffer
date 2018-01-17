@@ -88,7 +88,7 @@ public class SnifferAPI {
         try {
             list = GSON.fromJson(FileUtils.readFileToString(jsonFile, "UTF-8"), Constants.LIST_TARGET);
         } catch (Exception e) {
-            LOGGER.catching(e);
+            LOGGER.info("targets.json doesn't exist!");
         } finally {
             targets.clear();
             count = 0;

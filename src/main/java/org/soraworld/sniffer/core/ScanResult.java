@@ -68,4 +68,8 @@ public class ScanResult {
     public Integer getMeta() {
         return player.worldObj.getBlockMetadata(x, y, z);
     }
+
+    public void skip() {
+        player.getEntityWorld().setBlockToAir(x, y, z);
+    }
 }

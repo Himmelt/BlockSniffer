@@ -2,10 +2,14 @@ package org.soraworld.sniffer.command;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.MovingObjectPosition;
 import org.soraworld.sniffer.constant.Constants;
 import org.soraworld.sniffer.util.I19n;
 
@@ -44,6 +48,35 @@ public class CommandSniffer extends IICommand {
                     I19n.sendChat("sf.gamma.set", api.getGamma());
                 } else {
                     I19n.sendChat("sf.invalid.num");
+                }
+            }
+        });
+        addSub(new IICommand("setblock") {
+            @Override
+            public void execute(ICommandSender sender, ArrayList<String> args) {
+                if (sender instanceof EntityPlayerSP) {
+                    if (args.size() == 2 && args.get(0).equals("look")) {
+                        Block block = Block.getBlockFromName(args.get(1));
+                        if (block != null) {
+                            MovingObjectPosition focused = Minecraft.getMinecraft().objectMouseOver;
+                            if (focused != null && focused.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+                                sender.getEntityWorld().setBlock(focused.blockX, focused.blockY, focused.blockZ, block);
+                            }
+                        }
+                    }
+                    if (args.size() == 4) {
+                        try {
+                            int x = Integer.valueOf(args.get(0));
+                            int y = Integer.valueOf(args.get(1));
+                            int z = Integer.valueOf(args.get(2));
+                            Block block = Block.getBlockFromName(args.get(3));
+                            if (block != null) {
+                                sender.getEntityWorld().setBlock(x, y, z, block);
+                            }
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
         });
