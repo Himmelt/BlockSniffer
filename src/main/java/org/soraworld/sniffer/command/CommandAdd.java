@@ -93,7 +93,7 @@ public class CommandAdd extends IICommand {
             } else if ("meta".equals(args.get(0))) {
                 if (args.size() == 2) {
                     if (Constants.PATTERN_NUM.matcher(args.get(1)).matches()) {
-                        meta = Integer.valueOf(args.get(2));
+                        meta = Integer.valueOf(args.get(1));
                     } else {
                         I19n.sendChat("sf.invalid.num");
                         return;
