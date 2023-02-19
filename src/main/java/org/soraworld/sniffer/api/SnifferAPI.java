@@ -170,8 +170,8 @@ public class SnifferAPI {
 
     public void removeTarget() {
         active = false;
-        targets.remove(index, current);
-        I19n.sendChat("sf.target.rm.ok", current.getBlocks().values());
+        targets.remove(index);
+        I19n.sendChat("sf.target.rm.ok");
         if (targets.isEmpty()) {
             clearTargets();
         } else {
