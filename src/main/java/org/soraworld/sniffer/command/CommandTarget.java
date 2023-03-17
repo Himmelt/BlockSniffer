@@ -124,7 +124,7 @@ public class CommandTarget extends IICommand {
                         I19n.sendChat("sf.target.d.get", api.current.getDepthL(), api.current.getDepthH());
                     } else if (args.size() >= 2) {
                         if (Constants.PATTERN_NUM.matcher(args.get(0)).matches() && Constants.PATTERN_NUM.matcher(args.get(1)).matches()) {
-                            api.current.setDepth(Integer.valueOf(args.get(0)), Integer.valueOf(args.get(1)));
+                            api.current.setDepth(Integer.parseInt(args.get(0)), Integer.parseInt(args.get(1)));
                             I19n.sendChat("sf.target.d.set", api.current.getDepthL(), api.current.getDepthH());
                         } else {
                             I19n.sendChat("sf.invalid.num");
@@ -165,7 +165,9 @@ public class CommandTarget extends IICommand {
 
             @Override
             protected List<String> getTabCompletions(ICommandSender sender, ArrayList<String> args) {
-                if (args.size() >= 1) return getMatchList(args.get(0), ColorHelper.getNames());
+                if (args.size() >= 1) {
+                    return getMatchList(args.get(0), ColorHelper.getNames());
+                }
                 return ColorHelper.getNames();
             }
         });

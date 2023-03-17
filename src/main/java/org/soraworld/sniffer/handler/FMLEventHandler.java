@@ -8,14 +8,14 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.soraworld.sniffer.BlockSniffer;
-import org.soraworld.sniffer.api.SnifferAPI;
+import org.soraworld.sniffer.proxy.ClientProxy;
 import org.soraworld.sniffer.constant.Constants;
 
 @SideOnly(Side.CLIENT)
 public class FMLEventHandler {
 
     private static final Minecraft mc = Minecraft.getMinecraft();
-    private final SnifferAPI api = BlockSniffer.getAPI();
+    private final ClientProxy api = BlockSniffer.getAPI();
 
     @SubscribeEvent
     public void onKeyInput(KeyInputEvent event) {

@@ -2,7 +2,7 @@ package org.soraworld.sniffer.gui;
 
 import net.minecraft.client.particle.Particle;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
+import org.soraworld.sniffer.util.Color3f;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -12,11 +12,11 @@ class ParticleFX extends Particle {
 
     private final Vec3d destination;
 
-    ParticleFX(World world, Vec3d from, Vec3d to, Vec3f rgb, int life) {
+    ParticleFX(World world, Vec3d from, Vec3d to, Color3f rgb, int life) {
         super(world, from.x, from.y, from.z, 0, 0, 0);
-        this.particleRed = rgb.x;
-        this.particleGreen = rgb.y;
-        this.particleBlue = rgb.z;
+        this.particleRed = rgb.red;
+        this.particleGreen = rgb.blue;
+        this.particleBlue = rgb.green;
         this.particleAlpha = 0.8F;
         this.setParticleTextureIndex(147);
         this.setSize(0.02F, 0.02F);
@@ -47,6 +47,8 @@ class ParticleFX extends Particle {
         double dx = this.posX - destination.x;
         double dy = this.posY - destination.y;
         double dz = this.posZ - destination.z;
-        if (Math.sqrt(dx * dx + dy * dy + dz * dz) < 0.15) this.setExpired();
+        if (Math.sqrt(dx * dx + dy * dy + dz * dz) < 0.15) {
+            this.setExpired();
+        }
     }
 }

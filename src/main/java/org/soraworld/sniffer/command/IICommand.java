@@ -8,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.soraworld.sniffer.BlockSniffer;
-import org.soraworld.sniffer.api.SnifferAPI;
+import org.soraworld.sniffer.proxy.ClientProxy;
 import org.soraworld.sniffer.util.I19n;
 import org.soraworld.sniffer.util.Lists;
 
@@ -22,7 +22,7 @@ public abstract class IICommand implements ICommand {
 
     private final String name;
     private final List<String> aliases;
-    protected final SnifferAPI api = BlockSniffer.getAPI();
+    protected final ClientProxy api = BlockSniffer.getAPI();
     protected final TreeMap<String, IICommand> subMap = new TreeMap<>();
 
     private IICommand() {

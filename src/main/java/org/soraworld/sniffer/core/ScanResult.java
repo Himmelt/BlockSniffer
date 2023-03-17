@@ -38,7 +38,9 @@ public class ScanResult {
 
     public Color getColor() {
         Color color = target.getColor();
-        if (color != null) return color;
+        if (color != null) {
+            return color;
+        }
         BlockPos pos = new BlockPos(x, y, z);
         IBlockState state = player.world.getBlockState(pos);
         return new Color(state.getMapColor(player.world, pos).colorValue);

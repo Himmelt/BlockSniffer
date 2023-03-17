@@ -7,7 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.soraworld.sniffer.BlockSniffer;
-import org.soraworld.sniffer.api.SnifferAPI;
+import org.soraworld.sniffer.proxy.ClientProxy;
 import org.soraworld.sniffer.util.ColorHelper;
 import org.soraworld.sniffer.util.I19n;
 
@@ -22,7 +22,7 @@ import java.util.Map.Entry;
 public class Target {
 
     private final HashMap<Integer, TBlock> blocks = new HashMap<>();
-    private final SnifferAPI api = BlockSniffer.getAPI();
+    private final ClientProxy api = BlockSniffer.getAPI();
     private int mode;
     private int depthL;
     private int depthH;

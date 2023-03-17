@@ -2,7 +2,7 @@
   {
     "modid": "sniffer",
     "name": "Block Sniffer",
-    "description": "Block Sniffer Mod , Copyright (c) 2017 Himmelt.",
+    "description": "Block Sniffer Mod , Copyright (c) 2017-2021 Himmelt.",
     "version": "${version}",
     "mcversion": "${mcversion}",
     "url": "https://github.com/Himmelt/BlockSniffer",

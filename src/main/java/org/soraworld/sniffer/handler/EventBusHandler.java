@@ -9,14 +9,14 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.soraworld.sniffer.BlockSniffer;
-import org.soraworld.sniffer.api.SnifferAPI;
+import org.soraworld.sniffer.proxy.ClientProxy;
 import org.soraworld.sniffer.gui.GuiRender;
 
 @SideOnly(Side.CLIENT)
 public class EventBusHandler {
 
     private static final Minecraft mc = Minecraft.getMinecraft();
-    private final SnifferAPI api = BlockSniffer.getAPI();
+    private final ClientProxy api = BlockSniffer.getAPI();
 
     @SubscribeEvent
     public void onPlayerClick(PlayerInteractEvent.LeftClickBlock event) {
@@ -57,10 +57,14 @@ public class EventBusHandler {
             GuiRender.drawRect(x - 2, y - 2, 20, 20, 0xffdddddd);
             if (api.result.found) {
                 ItemStack stack = api.result.getItemStack();
-                if (stack != null && stack.getItem() != null) GuiRender.renderItem(stack, x, y);
+                if (stack != null && stack.getItem() != null) {
+                    GuiRender.renderItem(stack, x, y);
+                }
             } else {
                 ItemStack stack = api.current.getDelegate().getItemStack();
-                if (stack != null && stack.getItem() != null) GuiRender.renderItem(stack, x, y);
+                if (stack != null && stack.getItem() != null) {
+                    GuiRender.renderItem(stack, x, y);
+                }
             }
             int maxX = width - lbWidth;
             int lbX = Math.max(0, Math.min(x, maxX));

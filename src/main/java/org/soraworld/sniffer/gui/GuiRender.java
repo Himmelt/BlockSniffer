@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
+import org.soraworld.sniffer.util.Color3f;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -54,11 +54,11 @@ public class GuiRender {
     public static void spawnParticle(EntityPlayer player, Vec3d to, Color color, int lifetime) {
         Vec3d look = player.getLookVec();
         Vec3d src = new Vec3d(look.x + player.posX, look.y + player.posY + player.getEyeHeight(), look.z + player.posZ);
-        Vec3f rgb = new Vec3f(color.getRed() / 255.0F, color.getGreen() / 255.0F, color.getBlue() / 255.0F);
+        Color3f rgb = new Color3f(color.getRed() / 255.0F, color.getGreen() / 255.0F, color.getBlue() / 255.0F);
         spawnParticle(player.getEntityWorld(), src, to, rgb, lifetime);
     }
 
-    private static void spawnParticle(World world, Vec3d src, Vec3d to, Vec3f rgb, int lifetime) {
+    private static void spawnParticle(World world, Vec3d src, Vec3d to, Color3f rgb, int lifetime) {
         mc.effectRenderer.addEffect(new ParticleFX(world, src, to, rgb, lifetime));
         double dx = to.x - src.x;
         double dy = to.y - src.y;
